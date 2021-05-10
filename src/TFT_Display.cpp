@@ -31,19 +31,23 @@ bool TFT_Display::init() {
     Serial.println("Display init finished, starting LVGL...");
     lv_init();
 
-    lv_disp_draw_buf_init(&_screen_buffer, _pixel_buffer, NULL, BUFFER_SIZE);
-    _screen_buffer.buf1 = _pixel_buffer;
-    _screen_buffer.buf2 = nullptr;
-    _screen_buffer.buf_act = _screen_buffer.buf1;
-    _screen_buffer.size = BUFFER_SIZE;
+    lv_disp_draw_buf_init(&_screenBuffer, _pixelBuffer, NULL, BUFFER_SIZE);
+    _screenBuffer.buf1 = _pixelBuffer;
+    _screenBuffer.buf2 = nullptr;
+    _screenBuffer.buf_act = _screenBuffer.buf1;
+    _screenBuffer.size = BUFFER_SIZE;
 
-    lv_disp_drv_init(&_display_driver);                 // Initialize the display
-    _display_driver.user_data = this;                   // Save `this` for callback functions
-    _display_driver.hor_res = SCREEN_WIDTH;             // Set Resolution
-    _display_driver.ver_res = SCREEN_HEIGHT;
-    _display_driver.flush_cb = wrappedFlushDisplay;     // Callback for display writing
-    _display_driver.draw_buf = &_screen_buffer;
-    lv_disp_drv_register(&_display_driver);             // register Display
+    lv_disp_drv_init(&_displayDriver);                 // Initialize the display
+    _displayDriver.user_data = this;                   // Save `this` for callback functions
+    _displayDriver.hor_res = SCREEN_WIDTH;             // Set Resolution
+    _displayDriver.ver_res = SCREEN_HEIGHT;
+    _displayDriver.flush_cb = wrappedFlushDisplay;     // Callback for display writing
+    _displayDriver.draw_buf = &_screenBuffer;
+    lv_disp_drv_register(&_displayDriver);             // register Display
+
+    Serial.println("Finished registering lvgl display and drivers");
+    Serial.println("Registering touchscreen...");
+
 
     return true;
 }

@@ -89,9 +89,10 @@ protected:
     Adafruit_RA8875 tft_display = Adafruit_RA8875(0, 0);
 
 private:
-    lv_disp_drv_t _display_driver{};
-    lv_disp_draw_buf_t _screen_buffer{};
-    lv_color_t _pixel_buffer[BUFFER_SIZE]{};
+    lv_disp_drv_t _displayDriver{};
+    lv_disp_draw_buf_t _screenBuffer{};
+    lv_color_t _pixelBuffer[BUFFER_SIZE]{};
+    lv_indev_drv_t _inputDriver{};
 };
 
 #endif //UVENT_TFT_DISPLAY_H
