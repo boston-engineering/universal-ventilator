@@ -1,7 +1,8 @@
 #include "memtest.h"
 #include "TftDisplay.h"
 
-#define TFT_INT 18
+#define TOUCH_INT 19
+#define TOUCH_RST 2
 #define TFT_CS 4
 #define TFT_RST 3
 #define PRINT_MEM_DELAY 150000
@@ -9,9 +10,10 @@
 void lv_example_style(void);
 
 bool hasTimeElapsed(uint32_t);
+
 uint32_t timeCount = 0;
 
-TftDisplay tft_display = {TFT_CS, TFT_RST};
+TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 
 bool hasTimeElapsed(uint32_t n) {
     uint32_t ms = millis();
@@ -69,7 +71,7 @@ void lv_example_style(void) {
 
 void loop() {
     tft_display.update();
-    delay(5);
+    delay(2);
     if(hasTimeElapsed(PRINT_MEM_DELAY)) {
         printMem();
     }

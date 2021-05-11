@@ -11,6 +11,7 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_RA8875.h"
 #include "lvgl.h"
+#include "TftTouch.h"
 
 // This is calibration data for the raw touch data to the screen coordinates
 // In the future, we should calibrate the display rather than hardcode and store the values in eeprom
@@ -44,17 +45,18 @@
 #define SCREEN_HEIGHT 480
 #define BUFFER_SIZE SCREEN_WIDTH * 10
 
-void wrappedFlushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p);
+void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p);
+bool wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data);
 
 /**
 * LVGL Callback to handle logging on different platforms.
 * @param buf The char sequence to be printed
 */
-void lvLogFunction(const char *buf);
+void lv_log_function(const char* buf);
 
 class TftDisplay {
 public:
-    TftDisplay(uint8_t csPin, uint8_t rstPin);
+    TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin);
 
     ~TftDisplay() = default;
 
@@ -73,26 +75,41 @@ public:
      */
     void update();
 
-/**
- * <p>
- * Registered with LVGL on init.
- * Will be periodically called with block updates to the display, leaving implementation up to the user.
- * Uses Adafruit RA8875 to write out lines
- * </p>
- * @param lvDispDrv The LVGL display driver, written to when done to signal finished.
- * @param area      The area that needs updating (x, y, x1, y1)
- * @param color_p   An array of colors, either in RGB or uin16_t. Requires <code>COLOR_DEPTH=16</code> in LVGL config.
- */
-    void flushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p);
+    /**
+    * <p>
+    * Registered with LVGL on init.
+    * Will be periodically called with block updates to the display, leaving implementation up to the user.
+    * Uses Adafruit RA8875 to write out lines
+    * </p>
+     *
+    * @param lv_disp_drv The LVGL display driver, written to when done to signal finished.
+    * @param area      The area that needs updating (x, y, x1, y1)
+    * @param color_p   An array of colors, either in RGB or uin16_t. Requires <code>COLOR_DEPTH=16</code> in LVGL config.
+    */
+    void flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p);
+
+    /**
+     * <p>
+     * Registered with LVGL on init.
+     * Callback function to read input from connected touchscreen
+     * Uses Adafruit RA8875 to listen for data
+     * </p>
+     *
+     * @param lvIndevDrv The LVGL Touchscreen Driver
+     * @param data Position data for the touch
+     * @return `true` if there is more data to be read (buffered data), `false` otherwise
+     */
+    bool read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data);
 
 protected:
-    Adafruit_RA8875 tft_display = Adafruit_RA8875(0, 0);
+    Adafruit_RA8875 tft_display{0, 0};
+    TftTouch touch_driver{0, 0};
 
 private:
-    lv_disp_drv_t _displayDriver{};
-    lv_disp_draw_buf_t _screenBuffer{};
-    lv_color_t _pixelBuffer[BUFFER_SIZE]{};
-    lv_indev_drv_t _inputDriver{};
+    lv_disp_drv_t lv_display_driver{};
+    lv_disp_draw_buf_t lv_screen_buffer{};
+    lv_color_t pixel_buffer[BUFFER_SIZE]{};
+    lv_indev_drv_t lv_input_driver{};
 };
 
 #endif //UVENT_TFTDISPLAY_H
