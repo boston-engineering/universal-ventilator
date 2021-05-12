@@ -10,7 +10,7 @@ OUTPUT_DIR = env[LIBDEP_DIR_KEY]
 
 patches = [
     {
-        'patch': join(DIR, 'platform', 'patches', '1-Adafruit_RA8875-enable-highspeed-spi.patch'),
+        'patch': join(DIR, 'platform', 'patches', '001-Adafruit_RA8875-enable-highspeed-spi.patch'),
         'outfolder': join(OUTPUT_DIR, 'due', 'Adafruit RA8875'),
         'outfile': 'Adafruit_RA8875.cpp',
     }
@@ -68,7 +68,7 @@ def applyPatches():
             patchfile_escaped = normpath(patch_file.replace(' ', '\\ '))
 
             # Patch the file
-            env.Execute(f"patch {normpath(outfile_escaped)} -i {normpath(patchfile_escaped)}")
+            env.Execute(f"patch -b {normpath(outfile_escaped)} -i {normpath(patchfile_escaped)}")
 
             # Write the file for patch complete
             env.Execute(lambda *args, **kwargs: _touch(join(output_folder, patchcomplete_file)))

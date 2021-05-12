@@ -1,8 +1,7 @@
-162c162
-< #if defined(ARDUINO_ARCH_ARC32)
----
-> #if defined(ARDUINO_ARCH_ARC32) || defined(SAM3X8)
-173a174,177
+164a165,166
+> #elif defined(SAM3X8)
+>   spi_speed = 15000000L;
+173a176,179
 >   if(Serial) {
 >     Serial.print("SPI speed set to ");
 >     Serial.print(spi_speed);
