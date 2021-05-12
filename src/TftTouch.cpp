@@ -19,7 +19,7 @@ TftTouch::TftTouch(uint8_t int_pin, uint8_t rst_pin) {
 
 void TftTouch::init() {
 
-    Serial.println("Setting pin modes & interrupts");
+    Serial.println("Setting touchscreen pin modes & interrupts");
 
     pinMode(interrupt_pin, INPUT);
     pinMode(reset_pin, OUTPUT);
@@ -32,14 +32,14 @@ void TftTouch::init() {
     attachInterrupt(0, handleInterrupt, FALLING);
 #endif
 
-    Serial.println("Beginning wire");
+    Serial.println("Beginning I2C Wire");
     Wire.begin();
     Wire.beginTransmission(FT_I2C_ADDRESS);
     Wire.write(FT_DEVICE_MODE);
     Wire.write(0);
     Wire.endTransmission(FT_I2C_ADDRESS);
 
-    Serial.println("Setup done.");
+    Serial.println("Touchscreen setup done.");
     // find_address();
     // print_info();
 }

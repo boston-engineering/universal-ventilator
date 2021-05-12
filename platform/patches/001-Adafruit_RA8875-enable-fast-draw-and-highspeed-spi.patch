@@ -1,12 +1,12 @@
 164a165,166
 > #elif defined(SAM3X8)
->   spi_speed = 15000000L;
+>   spi_speed = 25000000L;
 173a176,179
 >   if(Serial) {
 >     Serial.print("SPI speed set to "); Serial.print(spi_speed); Serial.println(". This may have been overridden by the TFT Driver Library.");
 >   }
 > 
-718a725,777
+718a725,783
 >  Draws a series of pixels at the specified location without the overhead.
 >  Allows programming of specified width, instead of full line width.
 > 
@@ -17,7 +17,8 @@
 >  @param width The width of the rectangle to draw in
 >  */
 > /**************************************************************************/
-> void Adafruit_RA8875::drawPixelsArea(uint16_t *p, uint32_t num, int16_t x, int16_t y, int16_t width) {
+> void Adafruit_RA8875::drawPixelsArea(uint16_t* p, uint32_t num, int16_t x, int16_t y, int16_t width)
+> {
 >     x = applyRotationX(x);
 >     y = applyRotationY(y);
 > 
@@ -27,6 +28,7 @@
 >     writeReg(RA8875_CURV1, y >> 8);
 > 
 >     uint16_t pixels = 0;
+>     uint16_t rows = 0;
 >     uint8_t dir = RA8875_MWCR0_LRTD;
 >     if (_rotation == 2) {
 >         dir = RA8875_MWCR0_RLTD;
@@ -35,16 +37,16 @@
 >     writeCommand(RA8875_MRWC);
 >     digitalWrite(_cs, LOW);
 >     SPI.transfer(RA8875_DATAWRITE);
->     while (num--) {
->         if(pixels == width) {
+>     while (num > 0) {
+>         if (pixels == width) {
 >             digitalWrite(_cs, HIGH);
 > 
->             y++;
+>             rows++;
 >             writeReg(RA8875_CURH0, x);
 >             writeReg(RA8875_CURH1, x >> 8);
 > 
->             writeReg(RA8875_CURV0, y);
->             writeReg(RA8875_CURV1, y >> 8);
+>             writeReg(RA8875_CURV0, (y + rows));
+>             writeReg(RA8875_CURV1, (y + rows) >> 8);
 > 
 >             pixels = 0;
 > 
@@ -52,9 +54,13 @@
 >             digitalWrite(_cs, LOW);
 >             SPI.transfer(RA8875_DATAWRITE);
 >         }
->         SPI.transfer16(*p++);
->         pixels++;
+>         uint16_t to_transfer = min(num, width);
+>         auto start = (uint8_t*) (p + (rows * width));
+>         SPI.transfer(start, sizeof(uint16_t) * to_transfer);
+>         pixels += to_transfer;
+>         num -= to_transfer;
 >     }
+> 
 >     digitalWrite(_cs, HIGH);
 > }
 > 

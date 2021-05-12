@@ -33,13 +33,11 @@ bool TftDisplay::init()
     tft_display.GPIOX(true);                                // Enable TFT - display enable tied to GPIOX
     tft_display.PWM1config(true, RA8875_PWM_CLK_DIV1024);   // PWM output for backlight
     tft_display.PWM1out(255);
+    tft_display.graphicsMode();
 
-    // tft_display.fillScreen(RA8875_GREEN);
 
-    Serial.println("Display connected, starting touchscreen capture...");
+    Serial.println("Display connected, starting touchscreen setup...");
 
-    //pinMode(interrupt_pin, INPUT);
-    //digitalWrite(interrupt_pin, HIGH);
     touch_driver.init();
 
     Serial.println("Touchscreen init finished, starting LVGL...");
@@ -67,6 +65,8 @@ bool TftDisplay::init()
     lv_input_driver.user_data = this;
     lv_input_driver.read_cb = wrapped_read_inputs;
     lv_indev_drv_register(&lv_input_driver);
+
+    Serial.println("DONE.");
 
     return true;
 }

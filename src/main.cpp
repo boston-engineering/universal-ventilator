@@ -10,19 +10,24 @@
 #define TFT_RST 3
 #define PRINT_MEM_DELAY 150000
 #define CHART_UPDATE_DELAY 1000
-#define TIMER_COUNTS    2
+#define TIMER_COUNTS    3
 
+void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series);
 void lv_example_style();
-uint8_t next_sin_val();
+uint8_t next_sin_val(int i);
 bool hasTimeElapsed(uint32_t*, uint32_t);
 
 uint32_t timeCounts[TIMER_COUNTS];
 
-int idx = 16;
+uint16_t chart_indexes[] = {(uint16_t) (WAVE_LEN * .25), (uint16_t) (WAVE_LEN * .75)};
 
-lv_obj_t* chart;
+lv_obj_t* chart1;
+
+lv_obj_t* chart2;
 
 lv_chart_series_t* ser1;
+
+lv_chart_series_t* ser2;
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 
@@ -39,12 +44,12 @@ bool hasTimeElapsed(uint32_t* timer_ptr, uint32_t n)
     return false;
 }
 
-uint8_t next_sin_val()
+uint8_t next_sin_val(int i)
 {
-    if (idx >= 64) {
-        idx = 0;
+    if (chart_indexes[i] >= WAVE_LEN) {
+        chart_indexes[i] = 0;
     }
-    return sin_wave_static[idx++];
+    return sin_wave_static[chart_indexes[i]++];
 }
 
 void serial_printf(const char* str, ...)
@@ -68,31 +73,33 @@ void setup()
     memset(timeCounts, 0, sizeof(uint32_t) * 2);
     printMem();
 
-    lv_example_chart_1();
+    //lv_example_style();
+    create_lv_chart(&chart1, &ser1);
+    //create_lv_chart(&chart2, &ser2);
 }
 
-void lv_example_chart_1(void)
+void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series)
 {
     /*Create a chart*/
-    chart = lv_chart_create(lv_scr_act());
-    lv_obj_set_size(chart, 400, 150);
-    lv_obj_center(chart);
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 256);
+    *chart = lv_chart_create(lv_scr_act());
+    lv_obj_set_size(*chart, 460, 100);
+    lv_obj_center(*chart);
+    lv_chart_set_type(*chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
+    lv_chart_set_range(*chart, LV_CHART_AXIS_PRIMARY_Y, 0, 256);
 
     /*Add data series*/
-    ser1 = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
-    lv_chart_set_point_count(chart, 48);
-    lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
+    *series = lv_chart_add_series(*chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
+    lv_chart_set_point_count(*chart, WAVE_LEN * .75);
+    lv_chart_set_update_mode(*chart, LV_CHART_UPDATE_MODE_SHIFT);
 
     for (unsigned char i : sin_wave_static) {
-        lv_chart_set_next_value(chart, ser1, i);
+        lv_chart_set_next_value(*chart, *series, i);
     }
-    for (int i = 0; i < 16; i++) {
-        lv_chart_set_next_value(chart, ser1, sin_wave_static[i]);
+    for (int i = 0; i < (WAVE_LEN * .25); i++) {
+        lv_chart_set_next_value(*chart, *series, sin_wave_static[i]);
     }
 
-    lv_chart_refresh(chart); /*Required after direct set*/
+    lv_chart_refresh(*chart); /*Required after direct set*/
 }
 
 /**
@@ -133,6 +140,6 @@ void loop()
     }
 
     if (hasTimeElapsed(&timeCounts[1], CHART_UPDATE_DELAY)) {
-        lv_chart_set_next_value(chart, ser1, next_sin_val());
+        lv_chart_set_next_value(chart1, ser1, next_sin_val(0));
     }
 }
