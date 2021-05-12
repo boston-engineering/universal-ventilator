@@ -39,24 +39,24 @@ def applyPatches():
             print('#### ERROR ####')
             print('Could not find specified patch file')
             print('###############')
-            return
+            continue
 
         if not isdir(output_folder):
             print('#### ERROR ####')
             print(f"Patch output folder does not exist: {output_folder}")
             print('###############')
-            return
+            continue
 
         if not isfile(outfile):
             print('#### ERROR ####')
             print('File to patch does not exist')
             print('###############')
-            return
+            continue
 
         # If we've already patched, skip
         if isfile(join(output_folder, patchcomplete_file)):
             print(f"File {outfile_name} is already patched, skipping")
-            return
+            continue
 
         outfile_escaped = normpath(outfile.replace(' ', '\\ '))
         patchfile_escaped = normpath(patch_file.replace(' ', '\\ '))
