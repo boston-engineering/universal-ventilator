@@ -148,14 +148,19 @@ void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
 
     /**
      * It seems like for some reason the release data is always the last coordinates exactly reversed.
-     * I've had some weird data where this will be true but the event flag won't always be released.
+     * I've had some weird data where this will be true but the event flag won't always equal released (0x01).
      * This might not be permanent but it seems to help
      */
-    if (last_data.x == data->y && last_data.y == data->x) {
+    if (last_data.x == data->y && last_data.y == data->x && data->state == PRESSED) {
         Serial.println("Overriding state on opposite coordinates to released");
         data->state = RELEASED;
     }
 
+    /**
+     * Depending on the pressure & movement, sometimes a 'Touch Down' event is never fired, and the first event received
+     * is TouchState::HELD (0x02)
+     * If we're idle or we released last, and the state now is 'Held', assume we have another touch down event
+     */
     if ((last_data.state == RELEASED || last_data.state == IDLE) && data->state == HELD) {
         Serial.println("Overriding held state to pressed");
         data->state = PRESSED;

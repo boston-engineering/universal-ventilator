@@ -34,7 +34,7 @@ bool TftDisplay::init()
     tft_display.PWM1config(true, RA8875_PWM_CLK_DIV1024);   // PWM output for backlight
     tft_display.PWM1out(255);
 
-    tft_display.fillScreen(RA8875_GREEN);
+    // tft_display.fillScreen(RA8875_GREEN);
 
     Serial.println("Display connected, starting touchscreen capture...");
 
@@ -77,15 +77,7 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
     lv_coord_t width = lv_area_get_width(area);
     lv_coord_t height = lv_area_get_height(area);
 
-    /**
-     * The way the RA8875 works, you can block write, but only in a straight line.
-     * Attempting to block write the entire area will result in it being spread straight across the current line,
-     * instead of in its intended position. Block writing line by line should fix this issue.
-     */
-    for (int16_t y = 0; y<height; y++) {
-        lv_color_t* pixel_start = color_p+(width*y);
-        tft_display.drawPixels((uint16_t*) pixel_start, width, area->x1, area->y1+y);
-    }
+    tft_display.drawPixelsArea((uint16_t*) color_p, width * height, area->x1, area->y1, width);
 
     lv_disp_flush_ready(lv_disp_drv);
 }
@@ -131,5 +123,6 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
 
 void TftDisplay::update()
 {
+    //TODO add sleep handler code
     lv_task_handler();
 }

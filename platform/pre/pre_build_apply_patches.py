@@ -10,9 +10,14 @@ OUTPUT_DIR = env[LIBDEP_DIR_KEY]
 
 patches = [
     {
-        'patch': join(DIR, 'platform', 'patches', '001-Adafruit_RA8875-enable-highspeed-spi.patch'),
+        'patch': join(DIR, 'platform', 'patches', '001-Adafruit_RA8875-enable-fast-draw-and-highspeed-spi.patch'),
         'outfolder': join(OUTPUT_DIR, 'due', 'Adafruit RA8875'),
         'outfile': 'Adafruit_RA8875.cpp',
+    },
+    {
+        'patch': join(DIR, 'platform', 'patches', '002-Adafruit_RA8875_H-enable-fast-draw.patch'),
+        'outfolder': join(OUTPUT_DIR, 'due', 'Adafruit RA8875'),
+        'outfile': 'Adafruit_RA8875.h',
     }
 ]
 
