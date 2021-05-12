@@ -8,11 +8,12 @@ CONFIG_FILE = 'lv_conf.h'
 DIR = os.getcwd()
 OUTPUT_DIR = env[LIBDEP_DIR_KEY]
 
+
 def dumpEnvData():
     print(env.Dump())
 
-def copyConfigFile():
 
+def copyConfigFile():
     if (OUTPUT_DIR is None) or (not os.path.isdir(OUTPUT_DIR)):
         print('#### ERROR ####')
         print("Library folder doesn't exist, cannot copy configuration file")

@@ -4,22 +4,20 @@
 
 #include <functional>
 #include "TftTouch.h"
+#include "logging.h"
 
 volatile bool has_new_touch = false;
 
-void handle_interrupt()
-{
+void handle_interrupt() {
     has_new_touch = true;
 }
 
-TftTouch::TftTouch(uint8_t int_pin, uint8_t rst_pin)
-{
+TftTouch::TftTouch(uint8_t int_pin, uint8_t rst_pin) {
     interrupt_pin = int_pin;
     reset_pin = rst_pin;
 }
 
-void TftTouch::init()
-{
+void TftTouch::init() {
 
     Serial.println("Setting pin modes & interrupts");
 
@@ -46,8 +44,7 @@ void TftTouch::init()
     // print_info();
 }
 
-bool TftTouch::touched()
-{
+bool TftTouch::touched() {
     if (has_new_touch) {
         has_new_touch = false;
         return true;
@@ -55,8 +52,7 @@ bool TftTouch::touched()
     return false;
 }
 
-void TftTouch::print_info()
-{
+void TftTouch::print_info() {
     byte registers[0xfe];
     memset(registers, 0, 0xfe);
     Wire.beginTransmission(FT_I2C_ADDRESS);
@@ -84,15 +80,13 @@ void TftTouch::print_info()
 
 }
 
-void TftTouch::reset() const
-{
+void TftTouch::reset() const {
     digitalWrite(reset_pin, LOW);
     delay(100);
     digitalWrite(reset_pin, HIGH);
 }
 
-void TftTouch::read_num_touch_points(uint8_t& points)
-{
+void TftTouch::read_num_touch_points(uint8_t &points) {
     Wire.beginTransmission(FT_I2C_ADDRESS);
     Wire.write(FT_TOUCH_POINTS);
     Wire.endTransmission(FT_I2C_ADDRESS);
@@ -102,8 +96,7 @@ void TftTouch::read_num_touch_points(uint8_t& points)
     }
 }
 
-void TftTouch::read_touch_registers(uint8_t len)
-{
+void TftTouch::read_touch_registers(uint8_t len) {
     int array_length = len * NUM_BYTES_PER_INPUT + 1;
     uint8_t raw_data[array_length];
     memset(raw_data, 0, array_length);
@@ -113,42 +106,64 @@ void TftTouch::read_touch_registers(uint8_t len)
     Wire.endTransmission(FT_I2C_ADDRESS);
     Wire.requestFrom(FT_I2C_ADDRESS, array_length);
     int idx = 0;
-    //Serial.println("[");
     while (Wire.available()) {
         raw_data[idx] = Wire.read();
-        //Serial.print("\t"); Serial.println(raw_data[idx]);
         idx++;
     }
-    //Serial.println("]");
 
     for (idx = 0; idx < len; idx++) {
         read_touch(new_touch_data + idx, raw_data, idx);
     }
 
-    print_touch_data(new_touch_data[0]);
+    print_touch_release(new_touch_data[0]);
 }
 
-void TftTouch::read_touch(TsData* data, const uint8_t* raw_data, uint8_t reg)
-{
+void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
     uint8_t values[USED_BYTES_PER_INPUT];
-    uint8_t event;
+    int event_flag;
 
     for (int i = 0; i < USED_BYTES_PER_INPUT; i++) {
         values[i] = raw_data[(reg * NUM_BYTES_PER_INPUT) + i];
     }
 
+    event_flag = constrain(
+            ((values[0] & FT_STATUS_MASK) >> 6),
+            0,
+            static_cast<int>(TouchState::IDLE)
+    ); // Clamp event to TouchState enum
+
+    data->state = static_cast<TouchState>(event_flag);
+
+    if (data->state == TouchState::RESERVED) {
+        return;         // Ignore Reserved Events
+    }
+
     memcpy(data->raw, values, USED_BYTES_PER_INPUT);
-    data->event_flag = ((data->raw[0] & FT_STATUS_MASK) >> 6);
+    data->event_flag = event_flag;
     data->x = word(data->raw[0] & FT_XH_MASK, data->raw[1]);
     data->y = word(data->raw[2] & FT_XH_MASK, data->raw[3]);
     data->weight = data->raw[4];
+
+    TsData last_data = last_touch_data[reg];
+
+    /**
+     * It seems like for some reason the release data is always the last coordinates exactly reversed.
+     * I've had some weird data where this will be true but the event flag won't always be released.
+     * This might not be permanent but it seems to help
+     */
+    if (last_data.x == data->y && last_data.y == data->x) {
+        Serial.println("Overriding state on opposite coordinates to released");
+        data->state = RELEASED;
+    }
+
+    if ((last_data.state == RELEASED || last_data.state == IDLE) && data->state == HELD) {
+        Serial.println("Overriding held state to pressed");
+        data->state = PRESSED;
+    }
 }
 
-void TftTouch::print_touch_data(TsData data)
-{
-    char buffer[128];
+void TftTouch::print_touch_data(TsData data) {
     Serial.println("[");
-#if USE_DEBUG_TS_DATA
     Serial.print("\t0b");
     Serial.print(data.raw[0], BIN);
     Serial.print("\t0b");
@@ -157,10 +172,17 @@ void TftTouch::print_touch_data(TsData data)
     Serial.print(data.raw[2], BIN);
     Serial.print("\t\t0b");
     Serial.println(data.raw[3], BIN);
-#endif
-    sprintf(buffer, "\tX: %d\t\tY: %d", data.x, data.y);
-    Serial.println(buffer);
-    sprintf(buffer, "\tWeight: %d\tEvent: %x\tPoints: %d", data.weight, data.event_flag, data.num_points);
-    Serial.println(buffer);
+    serial_printf("\tX: %d\t\tY: %d\n", data.x, data.y);
+    serial_printf("\tWeight: %d\tEvent: %x\tPoints: %d\n", data.weight, data.event_flag, data.num_points);
     Serial.println("]\n");
+}
+
+void print_touch_release(TsData &data) {
+    if (data.state == PRESSED) {
+        serial_printf("Pressed at\t [%d, %d]\n", data.x, data.y);
+    } else if (data.state == RELEASED) {
+        Serial.println("Released\n");
+    } else if (data.state == HELD) {
+        serial_printf("Held at\t\t [%d, %d]\n", data.x, data.y);
+    }
 }

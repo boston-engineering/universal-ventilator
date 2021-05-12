@@ -1,4 +1,5 @@
 #include "memtest.h"
+#include "logging.h"
 #include "TftDisplay.h"
 
 #define TOUCH_INT 19
@@ -7,15 +8,15 @@
 #define TFT_RST 3
 #define PRINT_MEM_DELAY 150000
 
-void lv_example_style(void);
-
+void lv_example_style();
 bool hasTimeElapsed(uint32_t);
 
 uint32_t timeCount = 0;
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 
-bool hasTimeElapsed(uint32_t n) {
+bool hasTimeElapsed(uint32_t n)
+{
     uint32_t ms = millis();
     bool result = ms - timeCount >= n;
 
@@ -27,10 +28,23 @@ bool hasTimeElapsed(uint32_t n) {
     return false;
 }
 
+void serial_printf(const char* str, ...)
+{
+    char buf[256];
+    va_list args;
+    va_start(args, str);
+    vsnprintf(buf, 127, str, args);
+    va_end(args);
+    Serial.print(buf);
+}
 
-
-void setup() {
+void setup()
+{
     Serial.begin(115200);
+
+#ifdef SAM3X8
+    Serial.println("Arduino Due 3x8e");
+#endif
 
     if (!tft_display.init()) {
         while (1);
@@ -44,7 +58,8 @@ void setup() {
 /**
  * Using the text style properties
  */
-void lv_example_style(void) {
+void lv_example_style(void)
+{
     static lv_style_t style;
     lv_style_init(&style);
 
@@ -61,7 +76,7 @@ void lv_example_style(void) {
     lv_style_set_text_decor(&style, LV_TEXT_DECOR_UNDERLINE);
 
     /*Create an object with the new style*/
-    lv_obj_t *obj = lv_label_create(lv_scr_act());
+    lv_obj_t* obj = lv_label_create(lv_scr_act());
     lv_obj_add_style(obj, &style, 0);
     lv_label_set_text(obj, "Text of\n"
                            "a label");
@@ -69,7 +84,8 @@ void lv_example_style(void) {
     lv_obj_center(obj);
 }
 
-void loop() {
+void loop()
+{
     tft_display.update();
     delay(2);
     if(hasTimeElapsed(PRINT_MEM_DELAY)) {

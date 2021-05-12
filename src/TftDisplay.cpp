@@ -96,7 +96,6 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
     // TODO find out if checking to see if touch1 == old_touch1 is viable without slowing down the entire process.
     bool isPressed = touch_driver.touched();
     if (isPressed) {
-        Serial.println("Found Press");
         touch_driver.read_touch_registers(1);
 
         TsData touch_data = *(touch_driver.new_touch_data);
@@ -106,18 +105,27 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
             return;
         }
 
-        tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
-
         data->point.x = touch_data.x;
         data->point.y = touch_data.y;
-        switch (touch_data.cur_state) {
-            case 0:
+        switch (touch_data.state) {
+            case PRESSED:
+                tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
                 data->state = LV_INDEV_STATE_PR;
                 break;
-            case 1:
+            case RELEASED:
+                data->state = LV_INDEV_STATE_REL;
+                break;
+            case HELD:      //
+                tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
+                break;
+            case RESERVED:  // Fall-through cases
+            case IDLE:      // Fall-through cases
+            default:        //
                 data->state = LV_INDEV_STATE_REL;
                 break;
         }
+
+        memcpy(touch_driver.last_touch_data, touch_driver.new_touch_data, sizeof(TsData) * NUM_TOUCH_REGISTERS);
     }
 }
 

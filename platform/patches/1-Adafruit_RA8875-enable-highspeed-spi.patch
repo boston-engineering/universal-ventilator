@@ -1,0 +1,11 @@
+162c162
+< #if defined(ARDUINO_ARCH_ARC32)
+---
+> #if defined(ARDUINO_ARCH_ARC32) || defined(SAM3X8)
+173a174,177
+>   if(Serial) {
+>     Serial.print("SPI speed set to ");
+>     Serial.print(spi_speed);
+>     Serial.println(". This may have been overridden by the TFT Driver Library.");
+>   }
+> 

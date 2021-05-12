@@ -126,14 +126,12 @@
 #define FT_ID_G_GLOVE_MODE_EN       0xc0
 #define FT_ID_G_COVER_MODE_EN       0xc1
 
-#define USE_DEBUG_TS_DATA 1
-
 typedef enum {
-    PRESSSED,
-    RELEASED,
-    HELD,
-    RESERVED,
-    IDLE,
+    PRESSED = 0,                // 0
+    RELEASED,                   // 1
+    HELD,                       // 2
+    RESERVED,                   // 3
+    IDLE,                       // 4
 } TouchState;
 
 struct TsData {
@@ -141,7 +139,7 @@ struct TsData {
     uint16_t y = 0;
     uint8_t event_flag = 0;
     uint8_t weight = 0;
-    TouchState cur_state = IDLE;
+    TouchState state = IDLE;
     uint8_t num_points = 0;
     uint8_t raw[5] = {0, 0, 0, 0, 0};
     bool operator==(const TsData& other) const
@@ -153,6 +151,7 @@ struct TsData {
 };
 
 void handle_interrupt();
+void print_touch_release(TsData& data);
 
 class TftTouch {
 public:
