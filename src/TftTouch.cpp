@@ -104,10 +104,9 @@ void TftTouch::read_num_touch_points(uint8_t& points)
 
 void TftTouch::read_touch_registers(uint8_t len)
 {
-    int array_length = len*NUM_BYTES_PER_INPUT;
+    int array_length = len * NUM_BYTES_PER_INPUT + 1;
     uint8_t raw_data[array_length];
     memset(raw_data, 0, array_length);
-    memset(new_touch_data, 0, sizeof(TsData)*NUM_TOUCH_REGISTERS);
 
     Wire.beginTransmission(FT_I2C_ADDRESS);
     Wire.write(FT_TOUCH1_BEGIN);
@@ -122,8 +121,8 @@ void TftTouch::read_touch_registers(uint8_t len)
     }
     //Serial.println("]");
 
-    for (idx = 0; idx<len; idx++) {
-        read_touch(new_touch_data+idx, raw_data, idx);
+    for (idx = 0; idx < len; idx++) {
+        read_touch(new_touch_data + idx, raw_data, idx);
     }
 
     print_touch_data(new_touch_data[0]);
@@ -131,12 +130,14 @@ void TftTouch::read_touch_registers(uint8_t len)
 
 void TftTouch::read_touch(TsData* data, const uint8_t* raw_data, uint8_t reg)
 {
+    uint8_t values[USED_BYTES_PER_INPUT];
+    uint8_t event;
 
-    for (int i = 0; i<5; i++) {
-        data->raw[i] = raw_data[(reg*NUM_BYTES_PER_INPUT)+i];
-        //Serial.println(data->raw[i]);
+    for (int i = 0; i < USED_BYTES_PER_INPUT; i++) {
+        values[i] = raw_data[(reg * NUM_BYTES_PER_INPUT) + i];
     }
 
+    memcpy(data->raw, values, USED_BYTES_PER_INPUT);
     data->event_flag = ((data->raw[0] & FT_STATUS_MASK) >> 6);
     data->x = word(data->raw[0] & FT_XH_MASK, data->raw[1]);
     data->y = word(data->raw[2] & FT_XH_MASK, data->raw[3]);

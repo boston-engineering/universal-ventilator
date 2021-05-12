@@ -97,9 +97,8 @@ public:
      *
      * @param lvIndevDrv The LVGL Touchscreen Driver
      * @param data Position data for the touch
-     * @return `true` if there is more data to be read (buffered data), `false` otherwise
      */
-    bool read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data);
+    void read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data);
 
 protected:
     Adafruit_RA8875 tft_display{0, 0};

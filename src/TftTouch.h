@@ -13,6 +13,7 @@
 #define FT_XH_MASK                  0x0F
 #define NUM_TOUCH_REGISTERS         10
 #define NUM_BYTES_PER_INPUT         6
+#define USED_BYTES_PER_INPUT        5
 #define READ_INPUTS_LENGTH          NUM_TOUCH_REGISTERS * NUM_BYTES_PER_INPUT
 
 #define FT_DEVICE_MODE              0x00
@@ -157,6 +158,7 @@ class TftTouch {
 public:
 
     static void print_touch_data(TsData data);
+    static uint8_t get_touch_state(TsData data);
 
     TftTouch(uint8_t int_pin, uint8_t rst_pin);
     ~TftTouch() = default;
@@ -167,9 +169,8 @@ public:
     void print_info();
 
     TsData new_touch_data[NUM_TOUCH_REGISTERS];
-protected:
-
     TsData last_touch_data[NUM_TOUCH_REGISTERS];
+protected:
 
     void reset() const;
     void read_touch(TsData* new_touch, const uint8_t* raw_data, uint8_t reg);

@@ -9,7 +9,8 @@ void wrapped_flush_display(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *ar
 
 bool wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data)
 {
-    return static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
+    static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
+    return false;
 }
 
 TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
@@ -89,20 +90,27 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
     lv_disp_flush_ready(lv_disp_drv);
 }
 
-bool TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
+void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
 {
     // Serial.println("Reading Input");
+    // TODO find out if checking to see if touch1 == old_touch1 is viable without slowing down the entire process.
     bool isPressed = touch_driver.touched();
     if (isPressed) {
         Serial.println("Found Press");
         touch_driver.read_touch_registers(1);
 
-        TsData touch_data = *touch_driver.new_touch_data;
+        TsData touch_data = *(touch_driver.new_touch_data);
+        TsData last_data = *(touch_driver.last_touch_data);
+
+        if (touch_data == last_data) {
+            return;
+        }
+
         tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
 
         data->point.x = touch_data.x;
         data->point.y = touch_data.y;
-        switch (touch_data.event_flag) {
+        switch (touch_data.cur_state) {
             case 0:
                 data->state = LV_INDEV_STATE_PR;
                 break;
@@ -111,8 +119,6 @@ bool TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
                 break;
         }
     }
-
-    return false;
 }
 
 void TftDisplay::update()
