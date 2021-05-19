@@ -12,21 +12,24 @@
 #define CHART_UPDATE_DELAY 1000
 #define TIMER_COUNTS    3
 
+void basic_layout_test();
 void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series);
 void lv_example_style();
 uint8_t next_sin_val(int i);
 bool hasTimeElapsed(uint32_t*, uint32_t);
+void lv_flex_test();
 
 uint32_t timeCounts[TIMER_COUNTS];
 
 uint16_t chart_indexes[] = {(uint16_t) (WAVE_LEN * .25), (uint16_t) (WAVE_LEN * .75)};
 
 lv_obj_t* chart1;
-
 lv_obj_t* chart2;
+lv_obj_t* cont_row;
+lv_obj_t* cont_col;
+lv_obj_t* touch_cont;
 
 lv_chart_series_t* ser1;
-
 lv_chart_series_t* ser2;
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
@@ -66,6 +69,10 @@ void setup()
 {
     Serial.begin(115200);
 
+#if defined(__SAM3X8E__) || defined(__SAM3X8H__)
+    Serial.println("SAM3X8E");
+#endif
+
     if (!tft_display.init()) {
         while (1);
     }
@@ -74,8 +81,22 @@ void setup()
     printMem();
 
     //lv_example_style();
-    create_lv_chart(&chart1, &ser1);
+    //create_lv_chart(&chart1, &ser1);
     //create_lv_chart(&chart2, &ser2);
+    lv_flex_test();
+}
+
+void loop()
+{
+    tft_display.update();
+    delay(5);
+    if(hasTimeElapsed(timeCounts, PRINT_MEM_DELAY)) {
+        printMem();
+    }
+
+    if (hasTimeElapsed(&timeCounts[1], CHART_UPDATE_DELAY)) {
+        lv_chart_set_next_value(chart1, ser1, next_sin_val(0));
+    }
 }
 
 void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series)
@@ -100,6 +121,48 @@ void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series)
     }
 
     lv_chart_refresh(*chart); /*Required after direct set*/
+}
+
+void lv_flex_test()
+{
+    /*Create a container with ROW flex direction*/
+    cont_row = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(cont_row, 600, 75);
+    lv_obj_align(cont_row, LV_ALIGN_TOP_MID, 0, 5);
+    lv_obj_set_flex_flow(cont_row, LV_FLEX_FLOW_ROW);
+
+    /*Create a container with COLUMN flex direction*/
+    cont_col = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(cont_col, 300, 250);
+    lv_obj_align_to(cont_col, cont_row, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+    lv_obj_set_flex_flow(cont_col, LV_FLEX_FLOW_COLUMN);
+
+    uint32_t i;
+    for (i = 0; i < 10; i++) {
+        lv_obj_t* obj;
+        lv_obj_t* label;
+
+        /*Add items to the row*/
+        obj = lv_btn_create(cont_row);
+        lv_obj_set_size(obj, 100, LV_PCT(100));
+
+        label = lv_label_create(obj);
+        lv_label_set_text_fmt(label, "Item: %d", i);
+        lv_obj_center(label);
+
+        /*Add items to the column*/
+        obj = lv_btn_create(cont_col);
+        lv_obj_set_size(obj, LV_PCT(100), LV_SIZE_CONTENT);
+
+        label = lv_label_create(obj);
+        lv_label_set_text_fmt(label, "Item: %d", i);
+        lv_obj_center(label);
+    }
+
+    touch_cont = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(touch_cont, 300, 100);
+    lv_obj_align_to(touch_cont, cont_col, LV_ALIGN_OUT_BOTTOM_MID, 0, 5);
+    lv_obj_set_flex_flow(touch_cont, LV_FLEX_FLOW_COLUMN);
 }
 
 /**
@@ -131,15 +194,12 @@ void lv_example_style(void)
     lv_obj_center(obj);
 }
 
-void loop()
+void basic_layout_test()
 {
-    tft_display.update();
-    delay(5);
-    if(hasTimeElapsed(timeCounts, PRINT_MEM_DELAY)) {
-        printMem();
-    }
-
-    if (hasTimeElapsed(&timeCounts[1], CHART_UPDATE_DELAY)) {
-        lv_chart_set_next_value(chart1, ser1, next_sin_val(0));
-    }
+    /*Create a container with COLUMN flex direction*/
+    lv_obj_t* label_col;
+    label_col = lv_obj_create(lv_scr_act());
+    lv_obj_set_size(label_col, 150, 480);
+    lv_obj_align(label_col, LV_ALIGN_TOP_LEFT, 0, 0);
+    lv_obj_set_flex_flow(label_col, LV_FLEX_FLOW_COLUMN);
 }

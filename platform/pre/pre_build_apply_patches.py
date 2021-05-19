@@ -7,18 +7,14 @@ CONFIG_FILE = 'lv_conf.h'
 
 DIR = getcwd()
 OUTPUT_DIR = env[LIBDEP_DIR_KEY]
+ENV_FOLDER = env['PIOENV']
 
 patches = [
-    {
-        'patch': join(DIR, 'platform', 'patches', '001-Adafruit_RA8875-enable-fast-draw-and-highspeed-spi.patch'),
-        'outfolder': join(OUTPUT_DIR, 'due', 'Adafruit RA8875'),
-        'outfile': 'Adafruit_RA8875.cpp',
-    },
-    {
-        'patch': join(DIR, 'platform', 'patches', '002-Adafruit_RA8875_H-enable-fast-draw.patch'),
-        'outfolder': join(OUTPUT_DIR, 'due', 'Adafruit RA8875'),
-        'outfile': 'Adafruit_RA8875.h',
-    }
+    # {
+    #     'patch': join(DIR, 'platform', 'patches', '001-Adafruit_RA8875-enable-fast-draw-and-highspeed-spi.patch'),
+    #     'outfolder': join(OUTPUT_DIR, ENV_FOLDER, 'Adafruit RA8875'),
+    #     'outfile': 'Adafruit_RA8875.cpp',
+    # },
 ]
 
 

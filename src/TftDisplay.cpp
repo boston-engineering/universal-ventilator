@@ -35,7 +35,6 @@ bool TftDisplay::init()
     tft_display.PWM1out(255);
     tft_display.graphicsMode();
 
-
     Serial.println("Display connected, starting touchscreen setup...");
 
     touch_driver.init();
@@ -79,12 +78,16 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
 
     tft_display.drawPixelsArea((uint16_t*) color_p, width * height, area->x1, area->y1, width);
 
-    lv_disp_flush_ready(lv_disp_drv);
+    flush_display_complete();
+}
+
+void TftDisplay::flush_display_complete()
+{
+    lv_disp_flush_ready(&lv_display_driver);
 }
 
 void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
 {
-    // Serial.println("Reading Input");
     // TODO find out if checking to see if touch1 == old_touch1 is viable without slowing down the entire process.
     bool isPressed = touch_driver.touched();
     if (isPressed) {
@@ -101,16 +104,13 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
         data->point.y = touch_data.y;
         switch (touch_data.state) {
             case PRESSED:
-                tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
+            case HELD:      // Fall-through case
                 data->state = LV_INDEV_STATE_PR;
                 break;
             case RELEASED:
                 data->state = LV_INDEV_STATE_REL;
                 break;
-            case HELD:      //
-                tft_display.fillCircle(touch_data.x, touch_data.y, 4, RA8875_RED);
-                break;
-            case RESERVED:  // Fall-through cases
+            case RESERVED:  //
             case IDLE:      // Fall-through cases
             default:        //
                 data->state = LV_INDEV_STATE_REL;

@@ -38,10 +38,7 @@ void TftTouch::init() {
     Wire.write(FT_DEVICE_MODE);
     Wire.write(0);
     Wire.endTransmission(FT_I2C_ADDRESS);
-
     Serial.println("Touchscreen setup done.");
-    // find_address();
-    // print_info();
 }
 
 bool TftTouch::touched() {
@@ -77,7 +74,6 @@ void TftTouch::print_info() {
     Serial.print(".");
     Serial.print(registers[FT_TOUCH_LIB_VERSION_L]);
     Serial.println(".");
-
 }
 
 void TftTouch::reset() const {
@@ -152,7 +148,6 @@ void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
      * This might not be permanent but it seems to help
      */
     if (last_data.x == data->y && last_data.y == data->x && data->state == PRESSED) {
-        Serial.println("Overriding state on opposite coordinates to released");
         data->state = RELEASED;
     }
 
@@ -162,7 +157,6 @@ void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
      * If we're idle or we released last, and the state now is 'Held', assume we have another touch down event
      */
     if ((last_data.state == RELEASED || last_data.state == IDLE) && data->state == HELD) {
-        Serial.println("Overriding held state to pressed");
         data->state = PRESSED;
     }
 }
