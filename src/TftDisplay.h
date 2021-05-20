@@ -1,7 +1,3 @@
-//
-// Created by Andrew Hoener on 5/10/21.
-//
-
 #ifndef UVENT_TFTDISPLAY_H
 #define UVENT_TFTDISPLAY_H
 

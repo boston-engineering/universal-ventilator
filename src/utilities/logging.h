@@ -1,7 +1,3 @@
-//
-// Created by Andrew Hoener on 5/12/21.
-//
-
 #ifndef UVENT_LOGGING_H
 #define UVENT_LOGGING_H
 

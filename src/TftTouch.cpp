@@ -1,10 +1,5 @@
-//
-// Created by Andrew Hoener on 5/10/21.
-//
-
-#include <functional>
 #include "TftTouch.h"
-#include "logging.h"
+#include "utilities/logging.h"
 
 volatile bool has_new_touch = false;
 

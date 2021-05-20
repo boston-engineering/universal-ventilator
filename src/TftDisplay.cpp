@@ -1,10 +1,8 @@
-//
-// Created by Andrew Hoener on 5/10/21.
-//
 #include "TftDisplay.h"
 
-void wrapped_flush_display(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p) {
-    static_cast<TftDisplay *>(lvDispDrv->user_data)->flush_display(lvDispDrv, area, color_p);
+void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p)
+{
+    static_cast<TftDisplay*>(lv_disp_drv->user_data)->flush_display(lv_disp_drv, area, color_p);
 }
 
 bool wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data)

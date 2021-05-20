@@ -40,7 +40,7 @@
 
 /*1: use custom malloc/free, 0: use the built-in `lv_mem_alloc()` and `lv_mem_free()`*/
 #define LV_MEM_CUSTOM      0
-#if LV_MEM_CUSTOM == 0
+#if LV_MEM_CUSTOM==0
 /*Size of the memory available for `lv_mem_alloc()` in bytes (>= 2kB)*/
 #  define LV_MEM_SIZE    (16U * 1024U)          /*[bytes]*/
 
@@ -89,7 +89,7 @@
 /*Enable complex draw engine.
  *Required to draw shadow, gradient, rounded corners, circles, arc, skew lines, image transformations or any masks*/
 #define LV_DRAW_COMPLEX 1
-#if LV_DRAW_COMPLEX != 0
+#if LV_DRAW_COMPLEX!=0
 
 /*Allow buffering some shadow calculation.
  *LV_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
@@ -210,7 +210,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 /*Garbage Collector settings
  *Used if lvgl is binded to higher level language and the memory is managed by that language*/
 #define LV_ENABLE_GC 0
-#if LV_ENABLE_GC != 0
+#if LV_ENABLE_GC!=0
 #  define LV_GC_INCLUDE "gc.h"                           /*Include Garbage Collector related things*/
 #endif /*LV_ENABLE_GC*/
 
@@ -329,7 +329,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
  */
 #define LV_TXT_ENC LV_TXT_ENC_UTF8
 
- /*Can break (wrap) texts on these chars*/
+/*Can break (wrap) texts on these chars*/
 #define LV_TXT_BREAK_CHARS                  " ,.;:-_"
 
 /*If a word is at least this long, will break wherever "prettiest"
@@ -407,7 +407,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_SWITCH    1
 
 #define LV_USE_TEXTAREA   1     /*Requires: lv_label*/
-#if LV_USE_TEXTAREA != 0
+#if LV_USE_TEXTAREA!=0
 #  define LV_TEXTAREA_DEF_PWD_SHOW_TIME     1500    /*ms*/
 #endif
 
@@ -474,7 +474,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #endif /*LV_USE_THEME_DEFAULT*/
 
 /*An very simple them that is a good starting point for a custom theme*/
- #define LV_USE_THEME_BASIC    1
+#define LV_USE_THEME_BASIC    1
 
 /*-----------
  * Layouts

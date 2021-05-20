@@ -1,7 +1,6 @@
-#include "memtest.h"
-#include "logging.h"
+#include "utilities/memtest.h"
+#include "utilities/logging.h"
 #include "TftDisplay.h"
-#include "../.pio/libdeps/due/lvgl/examples/lv_examples.h"
 #include "waves.h"
 
 #define TOUCH_INT 19

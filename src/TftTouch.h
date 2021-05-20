@@ -1,7 +1,3 @@
-//
-// Created by Andrew Hoener on 5/10/21.
-//
-
 #ifndef UVENT_TFTTOUCH_H
 #define UVENT_TFTTOUCH_H
 
@@ -144,9 +140,9 @@ struct TsData {
     uint8_t raw[5] = {0, 0, 0, 0, 0};
     bool operator==(const TsData& other) const
     {
-        return x==other.x &&
-                y==other.y &&
-                event_flag==other.event_flag;
+        return x == other.x &&
+                y == other.y &&
+                event_flag == other.event_flag;
     }
 };
 

@@ -1,7 +1,3 @@
-//
-// Created by Andrew Hoener on 5/12/21.
-//
-
 #ifndef UVENT_WAVES_H
 #define UVENT_WAVES_H
 

@@ -21,7 +21,7 @@ def copyConfigFile():
         return
 
     # Copy the LVGL config file to its dependency folder for building
-    SOURCE_FILE = os.path.join(DIR, CONFIG_FILE)
+    SOURCE_FILE = os.path.join(DIR, 'config', CONFIG_FILE)
     DEST_FILE = os.path.join(OUTPUT_DIR, CONFIG_FILE)
 
     if not os.path.isfile(SOURCE_FILE):
