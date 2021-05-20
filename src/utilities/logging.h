@@ -6,6 +6,14 @@
 #include <cstdarg>
 #include <variant.h>
 
-void serial_printf(const char* str, ...);
+inline void serial_printf(const char* str, ...)
+{
+    char buf[256];
+    va_list args;
+    va_start(args, str);
+    vsnprintf(buf, 127, str, args);
+    va_end(args);
+    Serial.print(buf);
+}
 
 #endif //UVENT_LOGGING_H

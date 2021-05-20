@@ -11,6 +11,7 @@
 #define NUM_BYTES_PER_INPUT         6
 #define USED_BYTES_PER_INPUT        5
 #define READ_INPUTS_LENGTH          NUM_TOUCH_REGISTERS * NUM_BYTES_PER_INPUT
+#define FT_REG_COUNT                0xFE
 
 #define FT_DEVICE_MODE              0x00
 

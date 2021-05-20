@@ -3,16 +3,19 @@
 
 volatile bool has_new_touch = false;
 
-void handle_interrupt() {
+void handle_interrupt()
+{
     has_new_touch = true;
 }
 
-TftTouch::TftTouch(uint8_t int_pin, uint8_t rst_pin) {
+TftTouch::TftTouch(uint8_t int_pin, uint8_t rst_pin)
+{
     interrupt_pin = int_pin;
     reset_pin = rst_pin;
 }
 
-void TftTouch::init() {
+void TftTouch::init()
+{
 
     Serial.println("Setting touchscreen pin modes & interrupts");
 
@@ -36,7 +39,8 @@ void TftTouch::init() {
     Serial.println("Touchscreen setup done.");
 }
 
-bool TftTouch::touched() {
+bool TftTouch::touched()
+{
     if (has_new_touch) {
         has_new_touch = false;
         return true;
@@ -44,13 +48,14 @@ bool TftTouch::touched() {
     return false;
 }
 
-void TftTouch::print_info() {
-    byte registers[0xfe];
-    memset(registers, 0, 0xfe);
+void TftTouch::print_info()
+{
+    byte registers[FT_REG_COUNT];
+    memset(registers, 0, FT_REG_COUNT);
     Wire.beginTransmission(FT_I2C_ADDRESS);
     Wire.write(0x00);
     Wire.endTransmission(FT_I2C_ADDRESS);
-    Wire.requestFrom(FT_I2C_ADDRESS, 0xfe);
+    Wire.requestFrom(FT_I2C_ADDRESS, FT_REG_COUNT);
     int register_number = 0;
     // get all register bytes when available
     Serial.println("[");
@@ -71,13 +76,15 @@ void TftTouch::print_info() {
     Serial.println(".");
 }
 
-void TftTouch::reset() const {
+void TftTouch::reset() const
+{
     digitalWrite(reset_pin, LOW);
     delay(100);
     digitalWrite(reset_pin, HIGH);
 }
 
-void TftTouch::read_num_touch_points(uint8_t &points) {
+void TftTouch::read_num_touch_points(uint8_t& points)
+{
     Wire.beginTransmission(FT_I2C_ADDRESS);
     Wire.write(FT_TOUCH_POINTS);
     Wire.endTransmission(FT_I2C_ADDRESS);
@@ -87,8 +94,9 @@ void TftTouch::read_num_touch_points(uint8_t &points) {
     }
 }
 
-void TftTouch::read_touch_registers(uint8_t len) {
-    int array_length = len * NUM_BYTES_PER_INPUT + 1;
+void TftTouch::read_touch_registers(uint8_t len)
+{
+    int array_length = len * NUM_BYTES_PER_INPUT+1;
     uint8_t raw_data[array_length];
     memset(raw_data, 0, array_length);
 
@@ -103,18 +111,17 @@ void TftTouch::read_touch_registers(uint8_t len) {
     }
 
     for (idx = 0; idx < len; idx++) {
-        read_touch(new_touch_data + idx, raw_data, idx);
+        read_touch(new_touch_data+idx, raw_data, idx);
     }
-
-    print_touch_release(new_touch_data[0]);
 }
 
-void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
+void TftTouch::read_touch(TsData* data, const uint8_t* raw_data, uint8_t reg)
+{
     uint8_t values[USED_BYTES_PER_INPUT];
     int event_flag;
 
     for (int i = 0; i < USED_BYTES_PER_INPUT; i++) {
-        values[i] = raw_data[(reg * NUM_BYTES_PER_INPUT) + i];
+        values[i] = raw_data[(reg * NUM_BYTES_PER_INPUT)+i];
     }
 
     event_flag = constrain(
@@ -156,7 +163,8 @@ void TftTouch::read_touch(TsData *data, const uint8_t *raw_data, uint8_t reg) {
     }
 }
 
-void TftTouch::print_touch_data(TsData data) {
+void TftTouch::print_touch_data(TsData data)
+{
     Serial.println("[");
     Serial.print("\t0b");
     Serial.print(data.raw[0], BIN);
@@ -171,12 +179,15 @@ void TftTouch::print_touch_data(TsData data) {
     Serial.println("]\n");
 }
 
-void print_touch_release(TsData &data) {
+void print_touch_release(TsData& data)
+{
     if (data.state == PRESSED) {
         serial_printf("Pressed at\t [%d, %d]\n", data.x, data.y);
-    } else if (data.state == RELEASED) {
+    }
+    else if (data.state == RELEASED) {
         Serial.println("Released\n");
-    } else if (data.state == HELD) {
+    }
+    else if (data.state == HELD) {
         serial_printf("Held at\t\t [%d, %d]\n", data.x, data.y);
     }
 }
