@@ -1,17 +1,17 @@
 //
 // Created by Andrew Hoener on 5/10/21.
 //
-#include "TFT_Display.h"
+#include "TftDisplay.h"
 
 void wrappedFlushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p) {
-    static_cast<TFT_Display *>(lvDispDrv->user_data)->flushDisplay(lvDispDrv, area, color_p);
+    static_cast<TftDisplay *>(lvDispDrv->user_data)->flushDisplay(lvDispDrv, area, color_p);
 }
 
-TFT_Display::TFT_Display(uint8_t csPin, uint8_t rstPin) {
+TftDisplay::TftDisplay(uint8_t csPin, uint8_t rstPin) {
     tft_display = Adafruit_RA8875(csPin, rstPin);
 }
 
-bool TFT_Display::init() {
+bool TftDisplay::init() {
 
     Serial.println("Initializing...");
     if (!tft_display.begin(RA8875_800x480)) {
@@ -52,7 +52,7 @@ bool TFT_Display::init() {
     return true;
 }
 
-void TFT_Display::flushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p) {
+void TftDisplay::flushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area, lv_color_t *color_p) {
 
     lv_coord_t width = lv_area_get_width(area);
     lv_coord_t height = lv_area_get_height(area);
@@ -70,7 +70,7 @@ void TFT_Display::flushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t
     lv_disp_flush_ready(lvDispDrv);
 }
 
-void TFT_Display::update() {
+void TftDisplay::update() {
     lv_task_handler();
 }
 

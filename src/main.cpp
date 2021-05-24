@@ -1,5 +1,5 @@
 #include "memtest.h"
-#include "TFT_Display.h"
+#include "TftDisplay.h"
 
 #define TFT_INT 18
 #define TFT_CS 4
@@ -11,7 +11,7 @@ void lv_example_style(void);
 bool hasTimeElapsed(uint32_t);
 uint32_t timeCount = 0;
 
-TFT_Display tft_display = {TFT_CS, TFT_RST};
+TftDisplay tft_display = {TFT_CS, TFT_RST};
 
 bool hasTimeElapsed(uint32_t n) {
     uint32_t ms = millis();

@@ -2,8 +2,8 @@
 // Created by Andrew Hoener on 5/10/21.
 //
 
-#ifndef UVENT_TFT_DISPLAY_H
-#define UVENT_TFT_DISPLAY_H
+#ifndef UVENT_TFTDISPLAY_H
+#define UVENT_TFTDISPLAY_H
 
 #include "SPI.h"
 #include "Wire.h"
@@ -52,11 +52,11 @@ void wrappedFlushDisplay(struct _lv_disp_drv_t *lvDispDrv, const lv_area_t *area
 */
 void lvLogFunction(const char *buf);
 
-class TFT_Display {
+class TftDisplay {
 public:
-    TFT_Display(uint8_t csPin, uint8_t rstPin);
+    TftDisplay(uint8_t csPin, uint8_t rstPin);
 
-    ~TFT_Display() = default;
+    ~TftDisplay() = default;
 
     /**
      * Starts the RA8875 display, then LVGL, then registers handlers.
@@ -95,4 +95,4 @@ private:
     lv_indev_drv_t _inputDriver{};
 };
 
-#endif //UVENT_TFT_DISPLAY_H
+#endif //UVENT_TFTDISPLAY_H
