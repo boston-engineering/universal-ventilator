@@ -58,18 +58,23 @@ def applyPatches():
             print(f"File {outfile_name} is already patched, skipping")
             continue
 
-        outfile_escaped = normpath(outfile.replace(' ', '\\ '))
-        patchfile_escaped = normpath(patch_file.replace(' ', '\\ '))
-
-        # Patch the file
-        env.Execute(f"patch {outfile_escaped} -i {patchfile_escaped}")
-
         def _touch(path):
             with open(path, "w") as fp:
                 fp.write("")
 
-        # Write the file for patch complete
-        env.Execute(lambda *args, **kwargs: _touch(join(output_folder, patchcomplete_file)))
+        try:
+
+            outfile_escaped = normpath(outfile.replace(' ', '\\ '))
+            patchfile_escaped = normpath(patch_file.replace(' ', '\\ '))
+
+            # Patch the file
+            env.Execute(f"patch {normpath(outfile_escaped)} -i {normpath(patchfile_escaped)}")
+
+            # Write the file for patch complete
+            env.Execute(lambda *args, **kwargs: _touch(join(output_folder, patchcomplete_file)))
+        except Error:
+            print("Either failed to patch file {}, or failed to create .patchcomplete file",
+                  outfile.replace(' ', '\\ '))
 
 
 applyPatches()
