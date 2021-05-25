@@ -7,7 +7,7 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_RA8875.h"
 #include "lvgl.h"
-#include "TftTouch.h"
+#include "touch/TftTouch.h"
 
 // This is calibration data for the raw touch data to the screen coordinates
 // In the future, we should calibrate the display rather than hardcode and store the values in eeprom

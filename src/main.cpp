@@ -1,5 +1,5 @@
 #include "display/test_display.h"
-#include "TftDisplay.h"
+#include "display/TftDisplay.h"
 
 #define ENABLE_TEST_DISPLAY 1
 
