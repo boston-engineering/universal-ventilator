@@ -1,18 +1,12 @@
 #include "display/test_display.h"
 #include "display/TftDisplay.h"
-
-#define ENABLE_TEST_DISPLAY 1
-
-#define TOUCH_INT 19
-#define TOUCH_RST 2
-#define TFT_CS 4
-#define TFT_RST 3
+#include "../config/uvent_conf.h"
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(SERIAL_BAUD_RATE);
 
     if (!tft_display.init()) {
         while (1);
