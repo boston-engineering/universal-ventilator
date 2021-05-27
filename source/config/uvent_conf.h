@@ -13,4 +13,7 @@
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
 
+// Control handler  period in microsec.
+#define CONTROL_HANDLER_PERIOD_US 100000
+
 #endif

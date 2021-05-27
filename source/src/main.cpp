@@ -1,3 +1,4 @@
+#include <DueTimer.h>
 #include "display/test_display.h"
 #include "display/TftDisplay.h"
 #include "utilities/parser.h"
@@ -7,9 +8,20 @@
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 Parser parser;
 
+void control_handler()
+{
+
+}
+
 void setup()
 {
     Serial.begin(SERIAL_BAUD_RATE);
+
+    /* Setup a timer and a function handler to run
+     * the timer is triggered.
+     */
+    Timer0.attachInterrupt(control_handler);
+    Timer0.start(CONTROL_HANDLER_PERIOD_US);
 
     if (!tft_display.init()) {
         while (1);
