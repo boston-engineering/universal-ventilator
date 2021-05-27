@@ -24,6 +24,11 @@ CMakeListsPrivate.txt
 # VSCode auto-generated files
 .vscode/c_cpp_properties.json
 .vscode/launch.json
+.vscode/extensions.json
+
+# Formatting
+.clang-format
+
 
 # Manually Excluded Files
 exclude/
