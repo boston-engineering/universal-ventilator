@@ -30,6 +30,12 @@ class Machine
         // Condition to evaluate code on first entry into a state
         bool state_first_entry = false;
 
+        /* An internal timer to take care of any internal state timings.
+         * Increments everytime the run function is run to keep time.
+         * and resets before change of state.
+         */
+        uint32_t machine_timer;
+
         // Set the current state in the state machine
         void set_state(States);
 

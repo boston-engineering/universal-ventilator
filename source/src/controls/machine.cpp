@@ -7,12 +7,19 @@ void Machine::set_state(States new_state)
 {
     state_first_entry = true;
     state = new_state;
+
+    // Reset the timer before each state starts.
+    machine_timer = 0;
 }
 
 // State functions
 void Machine::state_startup()
 {
-
+    // For testing. Each tick is 100ms(CONTROL_HANDLER_PERIOD_US)
+    if (machine_timer > 10)
+    {
+        set_state(States::ST_INSPR);
+    }
 }
 
 void Machine::state_inspiration()
