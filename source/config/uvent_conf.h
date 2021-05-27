@@ -1,6 +1,9 @@
 #ifndef UVENT_CONF_H
 #define UVENT_CONF_H
 
+// Debug LED
+#define DEBUG_LED   13
+
 // Display and touch pins
 #define TOUCH_INT   19
 #define TOUCH_RST   2

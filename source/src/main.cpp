@@ -10,12 +10,21 @@ Parser parser;
 
 void control_handler()
 {
+    static bool ledOn = false;
 
+    // LED to visually show state machine is running.
+    digitalWrite(DEBUG_LED, ledOn);
+
+    // Toggle the LED.
+    ledOn = !ledOn;
 }
 
 void setup()
 {
     Serial.begin(SERIAL_BAUD_RATE);
+
+    // Debug led setup
+    pinMode(DEBUG_LED, OUTPUT);
 
     /* Setup a timer and a function handler to run
      * the timer is triggered.
