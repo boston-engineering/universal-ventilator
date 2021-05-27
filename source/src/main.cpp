@@ -3,10 +3,12 @@
 #include "display/TftDisplay.h"
 #include "utilities/parser.h"
 #include "utilities/command.h"
+#include "controls/machine.h"
 #include "../config/uvent_conf.h"
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 Parser parser;
+Machine machine;
 
 void control_handler()
 {
@@ -39,6 +41,9 @@ void setup()
 #if ENABLE_TEST_DISPLAY
     setup_test_display();
 #endif
+
+    // Initialize the state machine
+    machine.setup();
 
     // Initialize the parser, with the command array and command array size
     parser.init(command_get_array(), command_get_array_size());
