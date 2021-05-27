@@ -5,10 +5,9 @@ void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* 
     static_cast<TftDisplay*>(lv_disp_drv->user_data)->flush_display(lv_disp_drv, area, color_p);
 }
 
-bool wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data)
+void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data)
 {
     static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
-    return false;
 }
 
 TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
