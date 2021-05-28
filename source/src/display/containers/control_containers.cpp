@@ -1,0 +1,16 @@
+#include "../main_display.h"
+
+CONTAINER_INIT_FUNC(CONTROL_MAIN)
+{
+
+}
+
+CONTAINER_INIT_FUNC(CONTROL_AREA_1)
+{
+
+}
+
+CONTAINER_INIT_FUNC(CONTROL_AREA_2)
+{
+
+}

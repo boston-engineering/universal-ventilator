@@ -8,7 +8,7 @@
 #define TFT_RST     3
 
 // Display testing
-#define ENABLE_TEST_DISPLAY 1
+#define ENABLE_TEST_DISPLAY 0
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
