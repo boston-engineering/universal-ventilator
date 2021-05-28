@@ -3,6 +3,12 @@
 
 #include <lvgl.h>
 
+// LVGL Style Macros
+#define SIZEANDALIGN(x, y, w, h, align) \
+    lv_obj_set_pos(container, x, y); \
+    lv_obj_set_size(container, w, h); \
+    lv_obj_set_align(container, align);
+
 // Style, Component, Container, etc. retrieval Macros
 /**
  * Gets a container on the screen.
@@ -36,11 +42,11 @@ typedef enum DisplayContainer {
     VISUAL_MAIN = 0,    /**< Left 600x480. Contains VISUAL_AREA_1 and VISUAL_G_C*/
     VISUAL_AREA_1,      /**< Left 200x480. Responsible for data readout boxes.*/
     VISUAL_G_C,         /**< 400x480 @ (200, 0). Contains VISUAL_AREA_2-3.*/
-    VISUAL_AREA_2,      /**< 400x400 @ (200, 0). Holds graphs and other data.*/
-    VISUAL_AREA_3,      /**< 400x80 @ (200, 400). Holds Start/Stop buttons and Alarm Mute.*/
+    VISUAL_AREA_2,      /**< 400x400 @ relative (0, 0) [static (200, 0)]. Holds graphs and other data.*/
+    VISUAL_AREA_3,      /**< 400x80 @ relative (0, 400) [static (200, 400)]. Holds Start/Stop buttons and Alarm Mute.*/
     CONTROL_MAIN,       /**< 200x480 @ (600, 0). Contains CONTROL_AREA_1-2.*/
-    CONTROL_AREA_1,     /**< 200x340 @ (600, 0). Holds data control +/- buttons.*/
-    CONTROL_AREA_2,     /**< 200x140 @ (600, 340). Holds Settings/Configuration option buttons.*/
+    CONTROL_AREA_1,     /**< 200x340 @ relative (0, 0) [static (600, 0)]. Holds data control +/- buttons.*/
+    CONTROL_AREA_2,     /**< 200x140 @ relative (0, 340) [static (600, 340)]. Holds Settings/Configuration option buttons.*/
     CONTAINER_COUNT,
 } DisplayContainer;
 
