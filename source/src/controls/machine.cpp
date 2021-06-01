@@ -58,6 +58,9 @@ void Machine::state_off()
 
 void Machine::run()
 {
+    // Increment the soft timer.
+    machine_timer++;
+
     // State Machine
     switch (state)
     {

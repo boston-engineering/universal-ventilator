@@ -19,6 +19,9 @@ void control_handler()
 
     // Toggle the LED.
     ledOn = !ledOn;
+
+    // Run the state machine
+    machine.run();
 }
 
 void setup()
