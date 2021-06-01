@@ -1,6 +1,9 @@
 #ifndef UVENT_CONF_H
 #define UVENT_CONF_H
 
+// Debug LED
+#define DEBUG_LED   13
+
 // Display and touch pins
 #define TOUCH_INT   19
 #define TOUCH_RST   2
@@ -12,5 +15,8 @@
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
+
+// Control handler  period in microsec.
+#define CONTROL_HANDLER_PERIOD_US 100000
 
 #endif
