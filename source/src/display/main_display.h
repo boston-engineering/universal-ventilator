@@ -7,7 +7,7 @@
 #define SIZEANDALIGN(x, y, w, h, align) \
     lv_obj_set_pos(container, x, y); \
     lv_obj_set_size(container, w, h); \
-    lv_obj_set_align(container, align);
+    lv_obj_set_align(container, align)
 
 // Style, Component, Container, etc. retrieval Macros
 /**
@@ -38,6 +38,25 @@
     SCR_C(name) = lv_obj_create(SCR_C(parent)); \
     CONTAINER_INIT(name)
 
+/**
+ * Gets a style pointer for a container
+ */
+#define STYLE_PTR_CT(idx) \
+    &container_styles[DisplayContainer::idx]
+
+/**
+ * Gets a style pointer for a component.
+ */
+#define STYLE_PTR_CM(idx) \
+    &component_styles[ComponentType::idx]
+
+/**
+ * Visual Marker for pixel values.
+ * Blank, adds no code.
+ */
+#define px
+#define FLEX_GROW 1
+
 typedef enum DisplayContainer {
     VISUAL_MAIN = 0,    /**< Left 600x480. Contains VISUAL_AREA_1 and VISUAL_G_C*/
     VISUAL_AREA_1,      /**< Left 200x480. Responsible for data readout boxes.*/
@@ -50,7 +69,32 @@ typedef enum DisplayContainer {
     CONTAINER_COUNT,
 } DisplayContainer;
 
+typedef enum ComponentType {
+    READOUT_STATIC = 0,         /**< Readout container for for a ventilator value*/
+    READOUT_ALARM,              /**< Readout container for a ventilator alarm value*/
+    READOUT_CONFIGURABLE,       /**< Readout container for any extra HW values*/
+    READOUT_NAME_CONTAINER,     /**< Container for the name of a readout*/
+    READOUT_NAME_TEXT,          /**< Text for the name of a readout*/
+    READOUT_VALUE_CONTAINER,    /**< Container for the value/unit of a readout*/
+    READOUT_VALUE_UNIT_TEXT,    /**< Unit text of a readout*/
+    READOUT_VALUE_AMOUNT_TEXT,  /**< Quantity text of a readout*/
+    COMPONENT_COUNT,
+} ComponentType;
+
+static lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
+static lv_color_t color_black = LV_COLOR_MAKE(0, 0, 0);
+static lv_color_t color_gray = LV_COLOR_MAKE(248, 248, 248);
+
 extern lv_obj_t* containers[];
+extern lv_style_t container_styles[];
+extern lv_style_t component_styles[];
+
+void init_styles();
+/**
+ * Main function to add items to the containers.
+ */
+void populate_items();
+void add_readout_item();
 
 /**
  * Sets up all containers for the main display
@@ -61,6 +105,9 @@ extern lv_obj_t* containers[];
  * */
 inline void init_main_display()
 {
+    // Setup styles before we define the containers
+    init_styles();
+
     // Setup master containers
     CONTAINER_DECL_BASE(VISUAL_MAIN);
     CONTAINER_DECL_BASE(CONTROL_MAIN);
@@ -73,6 +120,8 @@ inline void init_main_display()
     // Control Main Subcontainers
     CONTAINER_DECL(CONTROL_AREA_1, CONTROL_MAIN);
     CONTAINER_DECL(CONTROL_AREA_2, CONTROL_MAIN);
+
+    populate_items();
 }
 
 #endif //UVENT_MAIN_DISPLAY_H
