@@ -14,6 +14,18 @@
  */
 #define SCR_C(idx) containers[DisplayContainer::idx]
 
+/**
+ * Gets a style pointer for a container
+ */
+#define STYLE_PTR_CT(idx) \
+    &container_styles[DisplayContainer::idx]
+
+/**
+ * Gets a style pointer for a component.
+ */
+#define STYLE_PTR_CM(idx) \
+    &component_styles[ComponentType::idx]
+
 // Container Init Macros
 #define CONTAINER_INIT_FUNC_NAME(name) name##_init()
 
@@ -21,7 +33,7 @@
 
 #define CONTAINER_INIT(name) \
     extern CONTAINER_INIT_FUNC(name); \
-    CONTAINER_INIT_FUNC_NAME(name);
+    CONTAINER_INIT_FUNC_NAME(name)
 
 /**
  * Macro to init a container that sits on the actual screen.
@@ -37,17 +49,17 @@
     SCR_C(name) = lv_obj_create(SCR_C(parent)); \
     CONTAINER_INIT(name)
 
-/**
- * Gets a style pointer for a container
- */
-#define STYLE_PTR_CT(idx) \
-    &container_styles[DisplayContainer::idx]
+// Style Init Macros
+#define STYLE_INIT_FUNC_NAME(name) style_##name##_init()
+
+#define STYLE_INIT_FUNC(name) void STYLE_INIT_FUNC_NAME(name)
 
 /**
- * Gets a style pointer for a component.
+ * Declares / Inits a style
  */
-#define STYLE_PTR_CM(idx) \
-    &component_styles[ComponentType::idx]
+#define STYLE_DECL(name) \
+    extern STYLE_INIT_FUNC(name); \
+    STYLE_INIT_FUNC_NAME(name)
 
 /**
  * Visual Marker for pixel values.
@@ -93,6 +105,8 @@ extern lv_point_t divider_2_points[];
 
 void init_styles();
 
+static void setup_styles();
+
 /**
  * Main function to add items to the containers.
  */
@@ -124,11 +138,14 @@ void add_readout_item(const char* title, const char* qty, const char* unit, lv_c
  * The definitions of these prototypes are in `control_containers.cpp` and `visual_containers.cpp`
  *
  * This function should only be called once at startup
- * */
+ */
 inline void init_main_display()
 {
     // Setup styles before we define the containers
     init_styles();
+
+    // Run style setup functions once base settings are done
+    setup_styles();
 
     // Setup master containers
     CONTAINER_DECL_BASE(VISUAL_MAIN);
@@ -144,6 +161,24 @@ inline void init_main_display()
     CONTAINER_DECL(CONTROL_AREA_2, CONTROL_MAIN);
 
     populate_items();
+}
+
+/**
+ * Declares and runs macro functions for each defined style to setup individual properties.<br>
+ * The STYLE_DECL macro writes both the prototype of the function, and then executes it.<br>
+ * The definitions of these prototypes are in `component_styles.cpp`.<br>
+ * <br>
+ * This function should only be called by the `init_main_display` function
+ */
+static inline void setup_styles() {
+
+    STYLE_DECL(READOUT);
+    STYLE_DECL(READOUT_NAME_CONTAINER);
+    STYLE_DECL(READOUT_NAME_TEXT);
+    STYLE_DECL(READOUT_VALUE_CONTAINER);
+    STYLE_DECL(READOUT_VALUE_UNIT_TEXT);
+    STYLE_DECL(READOUT_VALUE_AMOUNT_TEXT);
+    STYLE_DECL(DIVIDER);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H
