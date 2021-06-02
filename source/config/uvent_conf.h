@@ -13,6 +13,9 @@
 // Display testing
 #define ENABLE_TEST_DISPLAY 0
 
+// Draw borders around flexbox components for debugging
+#define DEBUG_BORDER_READOUTS 0
+
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
 

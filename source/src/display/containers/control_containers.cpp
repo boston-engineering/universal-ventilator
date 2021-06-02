@@ -7,7 +7,6 @@ CONTAINER_INIT_FUNC(CONTROL_MAIN)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(CONTROL_MAIN);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
@@ -19,7 +18,6 @@ CONTAINER_INIT_FUNC(CONTROL_AREA_1)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(CONTROL_AREA_1);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
@@ -31,7 +29,6 @@ CONTAINER_INIT_FUNC(CONTROL_AREA_2)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(CONTROL_AREA_2);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }

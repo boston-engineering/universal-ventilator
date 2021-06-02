@@ -7,7 +7,6 @@ CONTAINER_INIT_FUNC(VISUAL_MAIN)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_MAIN);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
@@ -17,7 +16,6 @@ CONTAINER_INIT_FUNC(VISUAL_AREA_1)
     // Container Properties
     lv_obj_t* container = SCR_C(VISUAL_AREA_1);
     SIZEANDALIGN(0, 0, 200, 480, LV_ALIGN_TOP_LEFT);
-    lv_obj_set_flex_flow(container, LV_FLEX_FLOW_COLUMN);
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_AREA_1);
@@ -40,7 +38,6 @@ CONTAINER_INIT_FUNC(VISUAL_G_C)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_G_C);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
@@ -52,7 +49,6 @@ CONTAINER_INIT_FUNC(VISUAL_AREA_2)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_AREA_2);
-    lv_style_set_border_width(style_ptr, 1 px);
     lv_style_set_border_color(style_ptr, color_black);
     lv_style_set_bg_color(style_ptr, color_gray);
     lv_obj_add_style(container, STYLE_PTR_CT(VISUAL_AREA_2), LV_PART_MAIN);

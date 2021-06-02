@@ -5,9 +5,8 @@
 
 // LVGL Style Macros
 #define SIZEANDALIGN(x, y, w, h, align) \
-    lv_obj_set_pos(container, x, y); \
     lv_obj_set_size(container, w, h); \
-    lv_obj_set_align(container, align)
+    lv_obj_align(container, align, x, y)
 
 // Style, Component, Container, etc. retrieval Macros
 /**
@@ -70,18 +69,18 @@ typedef enum DisplayContainer {
 } DisplayContainer;
 
 typedef enum ComponentType {
-    READOUT_STATIC = 0,         /**< Readout container for for a ventilator value*/
-    READOUT_ALARM,              /**< Readout container for a ventilator alarm value*/
-    READOUT_CONFIGURABLE,       /**< Readout container for any extra HW values*/
+    READOUT = 0,                /**< Readout container for for a ventilator value*/
     READOUT_NAME_CONTAINER,     /**< Container for the name of a readout*/
     READOUT_NAME_TEXT,          /**< Text for the name of a readout*/
     READOUT_VALUE_CONTAINER,    /**< Container for the value/unit of a readout*/
     READOUT_VALUE_UNIT_TEXT,    /**< Unit text of a readout*/
     READOUT_VALUE_AMOUNT_TEXT,  /**< Quantity text of a readout*/
+    DIVIDER,                    /**< Divider*/
     COMPONENT_COUNT,
 } ComponentType;
 
 static lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
+static lv_color_t palette_color_2 = LV_COLOR_MAKE(59, 125, 185);
 static lv_color_t color_black = LV_COLOR_MAKE(0, 0, 0);
 static lv_color_t color_gray = LV_COLOR_MAKE(248, 248, 248);
 
@@ -89,12 +88,35 @@ extern lv_obj_t* containers[];
 extern lv_style_t container_styles[];
 extern lv_style_t component_styles[];
 
+extern lv_point_t divider_1_points[];
+extern lv_point_t divider_2_points[];
+
 void init_styles();
+
 /**
  * Main function to add items to the containers.
  */
 void populate_items();
-void add_readout_item();
+
+/**
+ * Adds the two main dividers to the screen.
+ * Positioned floating so they don't get in the way of the main layout.
+ */
+void add_dividers();
+
+void add_dummy_items();
+
+/**
+ * Adds an item that displays a value on the left side of the screen. (vT, RR, etc)
+ *
+ * @param title The name of the readout
+ * @param qty The amount measured
+ * @param unit The unit being measured (Nullable)
+ * @param bg_color The background color of the box
+ * @param parent_cont The parent screen of the container
+ */
+void add_readout_item(const char* title, const char* qty, const char* unit, lv_color_t bg_color = palette_color_1,
+        lv_obj_t* parent_cont = SCR_C(VISUAL_AREA_1));
 
 /**
  * Sets up all containers for the main display
