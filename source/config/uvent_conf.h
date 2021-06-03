@@ -1,6 +1,10 @@
 #ifndef UVENT_CONF_H
 #define UVENT_CONF_H
 
+// Screen Dimensions
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 480
+
 // Debug LED
 #define DEBUG_LED   13
 

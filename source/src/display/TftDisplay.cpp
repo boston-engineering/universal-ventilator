@@ -87,17 +87,11 @@ void TftDisplay::flush_display_complete()
 
 void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
 {
-    // TODO find out if checking to see if touch1 == old_touch1 is viable without slowing down the entire process.
-    bool isPressed = touch_driver.touched();
-    if (isPressed) {
+    bool is_pressed = touch_driver.touched();
+    if (is_pressed) {
         touch_driver.read_touch_registers(1);
 
         TsData touch_data = *(touch_driver.new_touch_data);
-        TsData last_data = *(touch_driver.last_touch_data);
-
-        if (touch_data == last_data) {
-            return;
-        }
 
         data->point.x = touch_data.x;
         data->point.y = touch_data.y;
@@ -106,9 +100,7 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
             case HELD:      // Fall-through case
                 data->state = LV_INDEV_STATE_PR;
                 break;
-            case RELEASED:
-                data->state = LV_INDEV_STATE_REL;
-                break;
+            case RELEASED:  //
             case RESERVED:  //
             case IDLE:      // Fall-through cases
             default:        //

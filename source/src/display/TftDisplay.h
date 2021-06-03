@@ -8,6 +8,7 @@
 #include "Adafruit_RA8875.h"
 #include "lvgl.h"
 #include "touch/TftTouch.h"
+#include "../../config/uvent_conf.h"
 
 // This is calibration data for the raw touch data to the screen coordinates
 // In the future, we should calibrate the display rather than hardcode and store the values in eeprom
@@ -37,8 +38,6 @@
 #define MINPRESSURE 40
 #define MAXPRESSURE 1000
 
-#define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 480
 #define BUFFER_SIZE (SCREEN_WIDTH * 18)
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p);
