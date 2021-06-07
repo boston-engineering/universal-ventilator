@@ -38,7 +38,7 @@
 #define MINPRESSURE 40
 #define MAXPRESSURE 1000
 
-#define BUFFER_SIZE (SCREEN_WIDTH * 18)
+#define BUFFER_SIZE (SCREEN_WIDTH * 10)
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p);
 void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data);

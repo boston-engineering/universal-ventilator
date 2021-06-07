@@ -19,6 +19,7 @@
 
 // Draw borders around flexbox components for debugging
 #define DEBUG_BORDER_READOUTS 0
+#define DEBUG_BORDER_CONTROLS 0
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200

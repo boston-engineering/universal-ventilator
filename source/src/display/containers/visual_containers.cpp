@@ -49,9 +49,15 @@ CONTAINER_INIT_FUNC(VISUAL_AREA_2)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_AREA_2);
-    lv_style_set_border_color(style_ptr, color_black);
+    // Colors & Borders
     lv_style_set_bg_color(style_ptr, color_gray);
-    lv_obj_add_style(container, STYLE_PTR_CT(VISUAL_AREA_2), LV_PART_MAIN);
+    lv_style_set_pad_all(style_ptr, 10 px);
+    // Flexbox
+    lv_style_set_flex_flow(style_ptr, LV_FLEX_FLOW_ROW);
+    lv_style_set_flex_cross_place(style_ptr, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_layout(style_ptr, LV_LAYOUT_FLEX);
+
+    lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
 
 CONTAINER_INIT_FUNC(VISUAL_AREA_3)
@@ -61,6 +67,13 @@ CONTAINER_INIT_FUNC(VISUAL_AREA_3)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_AREA_3);
+    // Colors & Borders
     lv_style_set_bg_color(style_ptr, color_gray);
+    lv_style_set_pad_all(style_ptr, 10 px);
+    // Flexbox
+    lv_style_set_flex_flow(style_ptr, LV_FLEX_FLOW_ROW);
+    lv_style_set_flex_cross_place(style_ptr, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_layout(style_ptr, LV_LAYOUT_FLEX);
+
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }

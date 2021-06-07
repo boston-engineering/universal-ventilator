@@ -81,13 +81,27 @@ typedef enum DisplayContainer {
 } DisplayContainer;
 
 typedef enum ComponentType {
+    // Readouts and Displayed Values
     READOUT = 0,                /**< Readout container for for a ventilator value*/
     READOUT_NAME_CONTAINER,     /**< Container for the name of a readout*/
     READOUT_NAME_TEXT,          /**< Text for the name of a readout*/
     READOUT_VALUE_CONTAINER,    /**< Container for the value/unit of a readout*/
     READOUT_VALUE_UNIT_TEXT,    /**< Unit text of a readout*/
     READOUT_VALUE_AMOUNT_TEXT,  /**< Quantity text of a readout*/
+    // Start/Stop Buttons, Mute Button, Settings, Configuration
+    OPTION_BUTTON,              /**< Action Button*/
+    OPTION_BUTTON_TEXT,         /**< Action Button Text*/
+    // Value Adjustment Controls
+    CONTROL,
+    CONTROL_TEXT_CONTAINER,     /**< Holder for configuration readout*/
+    CONTROL_TEXT_CONTAINER_TOP, /**< Holder for value & quantity texts*/
+    CONTROL_TEXT_VALUE,         /**< Value text*/
+    CONTROL_TEXT_NAME,          /**< Name text*/
+    CONTROL_BUTTON,             /**< Value Adjuster Button*/
+    CONTROL_BUTTON_TEXT,        /**< Value Adjuster Button Text*/
+    // Purely Visual Elements
     DIVIDER,                    /**< Divider*/
+    BLANK,
     COMPONENT_COUNT,
 } ComponentType;
 
@@ -129,8 +143,40 @@ void add_dummy_items();
  * @param bg_color The background color of the box
  * @param parent_cont The parent screen of the container
  */
-void add_readout_item(const char* title, const char* qty, const char* unit, lv_color_t bg_color = palette_color_1,
+void add_readout_item(const char*, const char*, const char*, lv_color_t bg_color = palette_color_1,
         lv_obj_t* parent_cont = SCR_C(VISUAL_AREA_1));
+
+/**
+ * Adds a simple chart to the screen.
+ * Currently a dummy function
+ */
+void add_chart();
+
+/**
+ * Adds a control unit to the right side of the screen.
+ * Includes +/- buttons, nametags, unit, etc.
+ * @param unit The unit of the readout
+ * @param button_color The color the button's background should be
+ * @param parent_cont The parent of the control unit
+ */
+void add_control_item(const char*, const char*, const char* unit, lv_color_t button_color = palette_color_1,
+        lv_obj_t* parent_cont = SCR_C(CONTROL_AREA_1));
+
+/**
+ * Adds the start button
+ */
+void add_start_button();
+
+/**
+ * Adds the mute button
+ */
+void add_mute_button();
+
+/**
+ * Adds the settings/config button
+ * @param title Name of the container for easy changing
+ */
+void add_settings_button(const char* title);
 
 /**
  * Sets up all containers for the main display
@@ -170,7 +216,8 @@ inline void init_main_display()
  * <br>
  * This function should only be called by the `init_main_display` function
  */
-static inline void setup_styles() {
+static inline void setup_styles()
+{
 
     STYLE_DECL(READOUT);
     STYLE_DECL(READOUT_NAME_CONTAINER);
@@ -178,6 +225,15 @@ static inline void setup_styles() {
     STYLE_DECL(READOUT_VALUE_CONTAINER);
     STYLE_DECL(READOUT_VALUE_UNIT_TEXT);
     STYLE_DECL(READOUT_VALUE_AMOUNT_TEXT);
+    STYLE_DECL(OPTION_BUTTON);
+    STYLE_DECL(OPTION_BUTTON_TEXT);
+    STYLE_DECL(CONTROL);
+    STYLE_DECL(CONTROL_TEXT_CONTAINER);
+    STYLE_DECL(CONTROL_TEXT_CONTAINER_TOP);
+    STYLE_DECL(CONTROL_TEXT_VALUE);
+    STYLE_DECL(CONTROL_TEXT_NAME);
+    STYLE_DECL(CONTROL_BUTTON);
+    STYLE_DECL(CONTROL_BUTTON_TEXT);
     STYLE_DECL(DIVIDER);
 }
 
