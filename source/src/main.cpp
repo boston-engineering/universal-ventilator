@@ -1,4 +1,5 @@
 #include <DueTimer.h>
+#include <utilities/logging.h>
 #include "display/test_display.h"
 #include "display/TftDisplay.h"
 #include "utilities/parser.h"
@@ -31,6 +32,7 @@ void setup()
 
     // Debug led setup
     pinMode(DEBUG_LED, OUTPUT);
+    NVIC_EnableIRQ(DMAC_IRQn);
 
     /* Setup a timer and a function handler to run
      * the timer is triggered.
@@ -66,4 +68,9 @@ void loop()
 
     // Service the command parser
     parser.service();
+}
+
+ISR(DMAC_Handler)
+{
+    tft_display.onDMAInterrupt();
 }

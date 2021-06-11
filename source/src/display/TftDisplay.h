@@ -38,9 +38,10 @@
 #define MINPRESSURE 40
 #define MAXPRESSURE 1000
 
-#define BUFFER_SIZE (SCREEN_WIDTH * 10)
+#define BUFFER_SIZE (SCREEN_WIDTH * 13)
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p);
+
 void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* data);
 
 /**
@@ -96,6 +97,9 @@ public:
     void read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data);
 
     void flush_display_complete();
+
+    void onDMAInterrupt();
+
 protected:
     Adafruit_RA8875 tft_display{0, 0};
     TftTouch touch_driver{0, 0};
@@ -103,7 +107,8 @@ protected:
 private:
     lv_disp_drv_t lv_display_driver{};
     lv_disp_draw_buf_t lv_screen_buffer{};
-    lv_color_t pixel_buffer[BUFFER_SIZE]{};
+    lv_color_t pixel_buffer_1[BUFFER_SIZE]{};
+    lv_color_t pixel_buffer_2[BUFFER_SIZE]{};
     lv_indev_drv_t lv_input_driver{};
 };
 

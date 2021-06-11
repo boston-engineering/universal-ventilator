@@ -14,7 +14,7 @@ void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* 
 TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
 {
 
-    tft_display = Adafruit_RA8875(cs_pin, rst_pin);
+    tft_display = Adafruit_RA8875(cs_pin, rst_pin, true);
     touch_driver = TftTouch(touch_int_pin, touch_rst_pin);
 }
 
@@ -41,9 +41,9 @@ bool TftDisplay::init()
     Serial.println("Touchscreen init finished, starting LVGL...");
     lv_init();
 
-    lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer, NULL, BUFFER_SIZE);
-    lv_screen_buffer.buf1 = pixel_buffer;
-    lv_screen_buffer.buf2 = nullptr;
+    lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer_1, pixel_buffer_2, BUFFER_SIZE);
+    lv_screen_buffer.buf1 = pixel_buffer_1;
+    lv_screen_buffer.buf2 = pixel_buffer_2;
     lv_screen_buffer.buf_act = lv_screen_buffer.buf1;
     lv_screen_buffer.size = BUFFER_SIZE;
 
@@ -75,14 +75,22 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
     lv_coord_t width = lv_area_get_width(area);
     lv_coord_t height = lv_area_get_height(area);
 
-    tft_display.drawPixelsArea((uint16_t*) color_p, width * height, area->x1, area->y1, width);
+    tft_display.drawPixelsAreaDMA((uint16_t*) color_p, width * height, area->x1, area->y1, width,
+            &lv_display_driver,
+            [](void* cb_data) {
+                lv_disp_flush_ready((lv_disp_drv_t*) cb_data);
+            });
 
-    flush_display_complete();
 }
 
 void TftDisplay::flush_display_complete()
 {
     lv_disp_flush_ready(&lv_display_driver);
+}
+
+void TftDisplay::onDMAInterrupt()
+{
+    tft_display.onDMAInterrupt();
 }
 
 void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
