@@ -49,7 +49,36 @@ Select this if using a JLink device. Provides faster upload through the JTag por
 Click the plug icon in the bottom toolbar to open a serial monitor window.
 
 ### Building the Project
+
 Click the checkmark(✓) on the bottom toolbar to start a build
 
 ### Uploading the Project
+
 Select the right arrow(→) to upload code to the Arduino.
+
+### Pressure Sensor Equations
+
+- Equation taken from data
+  sheet https://sensing.honeywell.com/honeywell-sensing-trustability-ssc-series-standard-accuracy-board-mount-pressure-sensors-50099533-a-en.pdf
+
+##### Output
+
+> ![Output_V](docs/images/equation_output_v.png)
+
+##### Solve for Pressure, multiply through and sub in constants:
+
+> ![Equation_Pressure](docs/images/equation_pressure.png)
+
+##### Final equation used to get the pressure:
+
+> ![Equation_Final_Pressure](docs/images/equation_pressure_final.png)
+
+##### Voltage Step Equations:
+
+> ![Equations_Voltage_Step](docs/images/equation_voltage_step.png)
+
+##### Constants:
+
+> ![Equation_Constants](docs/images/equation_constants.png)
+
+The images for the equations were created with https://www.codecogs.com/latex/eqneditor.php.
