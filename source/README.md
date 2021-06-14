@@ -53,3 +53,40 @@ Click the checkmark(✓) on the bottom toolbar to start a build
 
 ### Uploading the Project
 Select the right arrow(→) to upload code to the Arduino.
+
+### Pressure Sensor Equations
+- Equation taken from data sheet https://sensing.honeywell.com/honeywell-sensing-trustability-ssc-series-standard-accuracy-board-mount-pressure-sensors-50099533-a-en.pdf
+
+######Output(V) = (0.8 * Vsupply)/(Pmax - Pmin) * (Pressure - Pmin) + (0.10 * Vsupply)
+
+- Solve for Pressure:
+
+######Pressure = (Output(V)) - 0.10 * Vsupply * (Pmax - Pmin)/(0.8 * Vsupply) + Pmin
+
+- Multiply through and sub in constants:
+
+######Pressure = Output(V) * constant_C - 0.10 * Vsupply * constant_C + Pmin
+
+######Pressure = analog_value * constant_C * voltage_step - 0.10 * Vsupply * constant_C + Pmin
+
+- Final equation used to get the pressure:
+
+######Pressure = analog_value * constant_A - constant_B
+
+#####Voltage Step Equations:
+
+######stage_1 = voltage_adc_ref / max_resolution_units
+
+######stage_2 = (resistance_ohms_1 + resistance_ohms_2) / resistance_ohms_2
+
+######voltage_step = stage_1 * stage_2
+
+######Output(V) = analog_value * voltage_step
+
+#####Constants:
+
+######constant_C = (Pmax - Pmin) / (0.8 * Vsupply)
+
+######constant_A = constant_C * voltage_step;
+
+######constant_B = 0.10 * Vsupply * constant_C - Pmin
