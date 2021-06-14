@@ -4,7 +4,10 @@
 #include "utilities/parser.h"
 #include "utilities/command.h"
 #include "controls/machine.h"
+#include "sensors/pressure_sensor.h"
+#include "sensors/test_pressure_sensors.h"
 #include "../config/uvent_conf.h"
+
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 Parser parser;
@@ -63,4 +66,8 @@ void loop()
 
     // Service the command parser
     parser.service();
+
+#if ENABLE_TEST_PRESSURE_SENSORS
+    output_pressure_test();
+#endif
 }
