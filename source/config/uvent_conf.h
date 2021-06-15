@@ -21,7 +21,7 @@
 #define DEBUG_BORDER_READOUTS 0
 #define DEBUG_BORDER_CONTROLS 0
 
-// Eeprom testing
+// Pressure sensor testing
 #define ENABLE_TEST_PRESSURE_SENSORS 0
 
 // Test eeprom
@@ -32,6 +32,9 @@
 #define EEPROM_TEST_1_MEM_4 63040
 #define EEPROM_TEST_1_MEM_5 63050
 #define EEPROM_TEST_2_MEM_1 63100
+
+// Eeprom testing
+#define ENABLE_TEST_EEPROM 0
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
@@ -104,5 +107,8 @@
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
+
+// EEPROM address
+#define EEPROM_ADDRESS 0x50
 
 #endif

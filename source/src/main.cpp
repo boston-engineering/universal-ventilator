@@ -9,11 +9,13 @@
 #include "sensors/test_pressure_sensors.h"
 #include "display/main_display.h"
 #include "utilities/parser.h"
+#include "eeprom/test_eeprom.h"
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 
 // Parser instance to parse commands on the serial line
 Parser parser;
+test_eeprom eeprom_test;
 
 void setup()
 {
@@ -51,6 +53,11 @@ void loop()
 
 #if ENABLE_TEST_PRESSURE_SENSORS
     output_pressure_test();
+#endif
+
+#if ENABLE_TEST_EEPROM
+    eeprom_test.select_test();
+    delay(1000);
 #endif
 
     control_service();
