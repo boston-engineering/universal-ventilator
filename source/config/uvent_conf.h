@@ -14,7 +14,7 @@
 #define ENABLE_TEST_DISPLAY 1
 
 // Eeprom testing
-#define ENABLE_TEST_PRESSURE_SENSORS 1
+#define ENABLE_TEST_PRESSURE_SENSORS 0
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
