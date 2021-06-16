@@ -43,7 +43,8 @@ void setup()
     Timer0.start(CONTROL_HANDLER_PERIOD_US);
 
     if (!tft_display.init()) {
-        while (1);
+        while (1)
+            ;
     }
 
 #if ENABLE_TEST_DISPLAY
