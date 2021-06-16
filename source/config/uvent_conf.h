@@ -30,7 +30,7 @@
 #define SPI_CLK_SPEED 41000000L
 
 // Control handler  period in microsec.
-#define CONTROL_HANDLER_PERIOD_US 10000
+#define CONTROL_HANDLER_PERIOD_US 20000
 
 // Actuator handler period in microsec.
 #define ACTUATOR_HANDLER_PERIOD_US 50
