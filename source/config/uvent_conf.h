@@ -13,4 +13,6 @@
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
 
+#define SPI_CLK_SPEED 41000000L
+
 #endif

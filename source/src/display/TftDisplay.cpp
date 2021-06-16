@@ -1,4 +1,5 @@
 #include "TftDisplay.h"
+#include "../../config/uvent_conf.h"
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
@@ -27,6 +28,7 @@ bool TftDisplay::init()
         return false;
     }
 
+    tft_display.setClockSpeed(SPI_CLK_SPEED);                   // Manually set clock speed to something faster
     tft_display.displayOn(true);
     tft_display.GPIOX(true);                                // Enable TFT - display enable tied to GPIOX
     tft_display.PWM1config(true, RA8875_PWM_CLK_DIV1024);   // PWM output for backlight
