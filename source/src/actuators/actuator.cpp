@@ -82,12 +82,7 @@ bool Actuator::is_home()
      * = 0.419~0.42 degrees on the wobbler shaft.
      * Check within a degree while homing.
      */
-    if ((current_position >= 0.0) && (current_position <= 1.0)) {
-        return true;
-    }
-    else {
-        return false;
-    }
+    return (((current_position >= 0.0) && (current_position <= 1.0)));
 }
 
 bool Actuator::is_running()
@@ -136,18 +131,20 @@ double Actuator::get_position()
     return stepper_fb.angleR(U_DEG, true);
 }
 
+double Actuator::get_position_raw()
+{
+    return stepper_fb.angleR(U_RAW, true);
+}
+
 void Actuator::zero_position()
 {
-    // uint16_t val = stepper_fb.angleRegR();
-    // Serial.println(val);
-    // stepper_fb.setZeroReg();
-
     // Read the current raw value from the fb sensor
     uint16_t newZero = stepper_fb.angleRegR();
 
-    // TO-DO
-    // Save this newZero in the EEPROM stub. Since EEPROM is not ready yet
-    // store in private.
+    /* TO-DO
+     * Save this newZero in the EEPROM stub. Since EEPROM is not ready yet
+     * store in private for now.
+     */
     fb_zero_reg_value = newZero;
 
     stepper_fb.zeroRegW(newZero);
