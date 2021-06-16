@@ -1,6 +1,8 @@
 #ifndef UVENT_MACHINE_H
 #define UVENT_MACHINE_H
 
+#include "actuators/actuator.h"
+
 void machine_run();
 void machine_setup();
 
@@ -17,6 +19,9 @@ enum class States {
 
 class Machine {
 public:
+    // Constructor
+    Machine(States, Actuator*);
+
     void setup();
     void run();
     const char* get_current_state_string();
@@ -30,10 +35,12 @@ private:
     bool state_first_entry = false;
 
     /* An internal timer to take care of any internal state timings.
-         * Increments everytime the run function is run to keep time.
-         * and resets before change of state.
-         */
+     * Increments everytime the run function is run to keep time.
+     * and resets before change of state.
+     */
     uint32_t machine_timer;
+
+    Actuator* p_actuator;
 
     // Set the current state in the state machine
     void set_state(States);

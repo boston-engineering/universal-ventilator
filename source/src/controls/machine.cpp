@@ -2,6 +2,12 @@
 #include <Arduino.h>
 #include "machine.h"
 
+Machine::Machine(States st, Actuator* act)
+{
+    p_actuator = act;
+    state = st;
+}
+
 // Set the current state in the state machine
 void Machine::set_state(States new_state)
 {
