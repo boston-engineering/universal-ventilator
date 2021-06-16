@@ -51,6 +51,9 @@ private:
     const uint32_t start_home_in_ms = 2000;// Start to home after startup
     const uint32_t start_home_in_ticks = (start_home_in_ms * 1000) / CONTROL_HANDLER_PERIOD_US;
 
+    const uint32_t check_actuator_move_in_ms = 400;// Wait time before checking for actuator movement.
+    const uint32_t check_actuator_move_in_ticks = (check_actuator_move_in_ms * 1000) / CONTROL_HANDLER_PERIOD_US;
+
     // Fault code
     Fault fault_id;
 

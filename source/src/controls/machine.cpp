@@ -92,13 +92,57 @@ void Machine::state_peep_pause()
 
 void Machine::state_actuator_home()
 {
+    // Store the is_home status temporarily.
+    bool is_home = p_actuator->is_home();
+
+    if (state_first_entry) {
+        state_first_entry = false;
+
+        // Check if the paddle is at home position
+        // If not move the paddle to home.
+        if (is_home) {
+            // Let the motor driver know that this is 0 position
+            p_actuator->set_position_as_home();
+
+            set_state(States::ST_OFF);
+        }
+        else {
+            // Start the home sequence
+            p_actuator->home();
+        }
+    }
+
+    // Has the paddle reached home? If no, keep moving.
+    if (is_home) {
+        // Actuator is home. Stop the actuator.
+        p_actuator->set_speed(Tick_Type::TT_DEGREES, 0);
+        // Let the motor driver know that this is 0 position
+        p_actuator->set_position_as_home();
+
+        set_state(States::ST_OFF);
+    }
+    else {
+        // Homing in progress.
+
+        /* Check if the actuator is moving, by checking feedback
+        * only if home is not reached.
+        * Also do the check after a time delay as it takes time for
+        * the drive to respond.
+        */
+        if (machine_timer > check_actuator_move_in_ticks) {
+            if ((is_home == false) && (p_actuator->is_moving() == false)) {
+                // Set the fault ID:
+                fault_id = Fault::FT_ACTUATOR_FAULT;
+                // Actuator is not moving. Switch to error state
+                set_state(States::ST_FAULT);
+            }
+        }
+    }
 }
 
 void Machine::state_actuator_jog()
 {
-    if (state_first_entry) {
-        state_first_entry = false;
-    }
+    // Stub for jogging the actuator during debug.
 }
 
 void Machine::state_fault()
