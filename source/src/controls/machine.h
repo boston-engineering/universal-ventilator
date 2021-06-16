@@ -2,19 +2,24 @@
 #define UVENT_MACHINE_H
 
 #include "actuators/actuator.h"
+#include "controls/fault.h"
+#include "../config/uvent_conf.h"
 
-void machine_run();
-void machine_setup();
+#define stringify(name) #name
 
 enum class States {
-    ST_STARTUP,
+    ST_STARTUP = 0,
     ST_INSPR,
     ST_INSPR_HOLD,
     ST_EXPR,
     ST_PEEP_PAUSE,
     ST_EXPR_HOLD,
-    ST_PADLE_HOME,
-    ST_OFF
+    ST_ACTUATOR_HOME,
+    ST_ACTUATOR_JOG,
+    ST_FAULT,
+    ST_DEBUG,
+    ST_OFF,
+    ST_COUNT// Add above. This needs to be the last item
 };
 
 class Machine {
@@ -25,10 +30,12 @@ public:
     void setup();
     void run();
     const char* get_current_state_string();
+    const char** get_state_list(uint8_t* size);
     States get_current_state();
+    void change_state(States);
 
 private:
-    // Default startup state
+    // Current state of the state machine.
     States state;
 
     // Condition to evaluate code on first entry into a state
@@ -39,6 +46,13 @@ private:
      * and resets before change of state.
      */
     uint32_t machine_timer;
+
+    //State transistion times
+    const uint32_t start_home_in_ms = 2000;// Start to home after startup
+    const uint32_t start_home_in_ticks = (start_home_in_ms * 1000) / CONTROL_HANDLER_PERIOD_US;
+
+    // Fault code
+    Fault fault_id;
 
     Actuator* p_actuator;
 
@@ -52,7 +66,10 @@ private:
     void state_expiration();
     void state_peep_pause();
     void state_expiration_hold();
-    void state_paddle_home();
+    void state_actuator_home();
+    void state_actuator_jog();
+    void state_fault();
+    void state_debug();
     void state_off();
 };
 #endif
