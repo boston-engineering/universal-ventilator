@@ -52,4 +52,45 @@
 #define MAX_DIFF_PRESSURE 1
 #define MIN_DIFF_PRESSURE -1
 
+// Stepper: Direction pin
+#define STEPPER_DIRECTION_PIN 32
+
+// Stepper: Step pin
+#define STEPPER_STEP_PIN 9
+
+// Stepper: Maximum steps per second
+#define STEPPER_MAX_STEPS_PER_SECOND 400
+
+// Stepper: Homing speed steps/sec
+#define STEPPER_HOMING_SPEED_IN_STEPS_SEC 100
+
+// Stepper: Angle per step in degrees
+#define STEPPER_ANGLE_DEG_PER_STEP 1.8
+
+/* Stepper step configuration
+ * 1 = FULL_STEP, 200 PPR, pulses per revolution
+ * 2 = HALF_STEP, 400 PPR, pulses per revolution
+ * 5 = 5_MICRO_STEP, 1000 PPR, pulses per revolution
+ * 10 = 10_MICRO_STEP, 2000 PPR, pulses per revolution
+ */
+#define STEPPER_MULTIPLIER_MODE 1
+
+// Stepper: No. of steps in one revolution
+#define STEPPER_STEPS_PER_REV 360 / (STEPPER_ANGLE_DEG_PER_STEP / STEPPER_MULTIPLIER_MODE)
+
+// Stepper
+// Gear Ratio
+#define TEETH_ON_PINION 14.0
+#define TEETH_ON_TIMING_PULLEY 60.0
+#define GEAR_RATIO TEETH_ON_TIMING_PULLEY / TEETH_ON_PINION
+
+// One revolution of Timing pulley in steps
+#define TIMING_PULLEY_STEPS_PER_REV GEAR_RATIO* STEPPER_STEPS_PER_REV
+
+// Convert from degrees to steps
+#define TIMING_PULLEY_DEGREES_TO_STEPS TIMING_PULLEY_STEPS_PER_REV / 360.0
+
+// DEBUG FLAGS
+#define DEBUG_STEPPER 0
+
 #endif
