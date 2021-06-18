@@ -154,12 +154,32 @@ void TftTouch::read_touch(TsData* data, const uint8_t* raw_data, uint8_t reg)
     }
 
     /**
+     * Same thing as above, just if the event happens to be released we still need to reverse the coordinates.
+     * LVGL gets very upset if you don't
+     */
+    if (last_data.x == data->y && last_data.y == data->x && data->state == RELEASED) {
+        uint16_t temp_y = data->y;
+        data->y = data->x;
+        data->x = temp_y;
+    }
+
+    /**
      * Depending on the pressure & movement, sometimes a 'Touch Down' event is never fired, and the first event received
      * is TouchState::HELD (0x02)
      * If we're idle or we released last, and the state now is 'Held', assume we have another touch down event
      */
     if ((last_data.state == RELEASED || last_data.state == IDLE) && data->state == HELD) {
         data->state = PRESSED;
+    }
+
+    /**
+     * Another fix for a small regression.
+     * Some swipe gestures are faster than the polling speed, so the final coordinates might not be an exact mirror of the last coordinates.
+     */
+    if (data->state == RELEASED && data->y > SCREEN_HEIGHT) {
+        uint16_t temp_y = data->y;
+        data->y = data->x;
+        data->x = temp_y;
     }
 }
 
@@ -185,7 +205,7 @@ void print_touch_release(TsData& data)
         serial_printf("Pressed at\t [%d, %d]\n", data.x, data.y);
     }
     else if (data.state == RELEASED) {
-        Serial.println("Released\n");
+        serial_printf("Released at\t [%d, %d]\n\n", data.x, data.y);
     }
     else if (data.state == HELD) {
         serial_printf("Held at\t\t [%d, %d]\n", data.x, data.y);

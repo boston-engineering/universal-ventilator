@@ -12,6 +12,8 @@ void setup_test_display();
 
 void update_test_display();
 
+void setPinState(uint32_t pin, uint32_t val);
+
 void lv_flex_test();
 
 void basic_layout_test();
@@ -21,8 +23,6 @@ void add_observed_expected_reading();
 void create_lv_chart(lv_obj_t** chart, lv_chart_series_t** series);
 
 void lv_example_style();
-
-bool has_time_elapsed(uint32_t* ptr, uint32_t n);
 
 uint8_t next_sin_val(int i);
 

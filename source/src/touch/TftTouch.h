@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include "Wire.h"
+#include "../../config/uvent_conf.h"
 
 #define FT_I2C_ADDRESS              0x38
 #define FT_STATUS_MASK              0b11000000
@@ -139,6 +140,7 @@ struct TsData {
     TouchState state = IDLE;
     uint8_t num_points = 0;
     uint8_t raw[5] = {0, 0, 0, 0, 0};
+
     bool operator==(const TsData& other) const
     {
         return x == other.x &&

@@ -1,4 +1,5 @@
 #include <DueTimer.h>
+#include <utilities/logging.h>
 #include "display/test_display.h"
 #include "display/TftDisplay.h"
 #include "utilities/parser.h"
@@ -7,7 +8,7 @@
 #include "sensors/pressure_sensor.h"
 #include "sensors/test_pressure_sensors.h"
 #include "../config/uvent_conf.h"
-
+#include "display/main_display.h"
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
 Parser parser;
@@ -33,6 +34,7 @@ void setup()
 
     // Debug led setup
     pinMode(DEBUG_LED, OUTPUT);
+    NVIC_EnableIRQ(DMAC_IRQn);
 
     /* Setup a timer and a function handler to run
      * the timer is triggered.
@@ -46,6 +48,8 @@ void setup()
 
 #if ENABLE_TEST_DISPLAY
     setup_test_display();
+#else
+    init_main_display();
 #endif
 
     // Initialize the state machine
@@ -70,4 +74,9 @@ void loop()
 #if ENABLE_TEST_PRESSURE_SENSORS
     output_pressure_test();
 #endif
+}
+
+ISR(DMAC_Handler)
+{
+    tft_display.onDMAInterrupt();
 }

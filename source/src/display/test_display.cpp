@@ -1,8 +1,9 @@
 #include <utilities/memtest.h>
+#include <utilities/util.h>
 #include "test_display.h"
 
-uint16_t chart_indexes[] = {(uint16_t)(WAVE_LEN * .25), (uint16_t)(WAVE_LEN * .75)};
-uint32_t time_counts[] = {0, 0};
+uint16_t chart_indexes[] = {(uint16_t) (WAVE_LEN * .25), (uint16_t) (WAVE_LEN * .75)};
+uint32_t time_counts[] = {0, 0, 0};
 
 lv_obj_t* chart1 = nullptr;
 lv_obj_t* chart2 = nullptr;
@@ -15,7 +16,7 @@ lv_chart_series_t* ser2 = nullptr;
 
 void setup_test_display()
 {
-
+    pinMode(LED_BUILTIN, OUTPUT);
     memset(time_counts, 0, sizeof(uint32_t) * 2);
 
     printMem();
@@ -28,6 +29,7 @@ void setup_test_display()
 
 void update_test_display()
 {
+    static bool state = false;
     if (has_time_elapsed(time_counts, PRINT_MEM_DELAY)) {
         printMem();
     }
@@ -36,19 +38,27 @@ void update_test_display()
         if (chart1 && ser1)
             lv_chart_set_next_value(chart1, ser1, next_sin_val(0));
     }
+
+    if (has_time_elapsed(&time_counts[2], 1500)) {
+        state = !state;
+        setPinState(LED_BUILTIN, state);
+    }
 }
 
-bool has_time_elapsed(uint32_t* timer_ptr, uint32_t n)
+void setPinState(uint32_t ulPin, uint32_t val)
 {
-    uint32_t ms = millis();
-    bool result = ms-*timer_ptr >= n;
 
-    if (ms < *timer_ptr || result) {
-        *timer_ptr = ms;
-        return true;
+    if (PIO_GetOutputDataStatus(g_APinDescription[ulPin].pPort, g_APinDescription[ulPin].ulPin) == 0) {
+        PIO_PullUp(g_APinDescription[ulPin].pPort, g_APinDescription[ulPin].ulPin, val);
     }
-
-    return false;
+    else {
+        if (val) {
+            digitalPinToPort(ulPin)->PIO_SODR = digitalPinToBitMask(ulPin);
+        }
+        else {
+            digitalPinToPort(ulPin)->PIO_CODR = digitalPinToBitMask(ulPin);
+        }
+    }
 }
 
 uint8_t next_sin_val(int i)
