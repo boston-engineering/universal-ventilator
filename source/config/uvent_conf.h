@@ -9,10 +9,10 @@
 #define DEBUG_LED 13
 
 // Display and touch pins
-#define TOUCH_INT 23
-#define TOUCH_RST 22
-#define TFT_CS 10
-#define TFT_RST 26
+#define TOUCH_INT 23 // 19
+#define TOUCH_RST 22 // 2
+#define TFT_CS 10 // 4
+#define TFT_RST 26 // 3
 
 // Display testing
 #define ENABLE_TEST_DISPLAY 0
@@ -42,7 +42,7 @@
 #define EEPROM_TEST_2_MEM_1 63100
 
 // Serial baud rate
-#define SERIAL_BAUD_RATE 115200
+#define SERIAL_BAUD_RATE 250000
 
 #define SPI_CLK_SPEED 22000000L
 

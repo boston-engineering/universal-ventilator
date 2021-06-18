@@ -1,5 +1,6 @@
 #include <DueTimer.h>
 #include <utilities/logging.h>
+#include <function_timings.h>
 #include "display/test_display.h"
 #include "../config/uvent_conf.h"
 #include "controls/control.h"
@@ -68,7 +69,14 @@ void loop()
     control_service();
 }
 
+#if USE_DMA_INTERRUPT
+
 ISR(DMAC_Handler)
 {
+    RA_DEBUG_STOP(SPI_TIMING);
+    RA_DEBUG_START(INTERRUPT);
     tft_display.onDMAInterrupt();
+    RA_DEBUG_STOP(INTERRUPT);
 }
+
+#endif

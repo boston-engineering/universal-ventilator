@@ -1,10 +1,12 @@
 #include <utilities/waves.h>
 #include "main_display.h"
+#include "global_components.h"
 #include "../../config/uvent_conf.h"
 
 lv_obj_t* containers[DisplayContainer::CONTAINER_COUNT];
 lv_style_t container_styles[DisplayContainer::CONTAINER_COUNT];
 lv_style_t component_styles[ComponentType::COMPONENT_COUNT];
+lv_obj_t* chart;
 
 lv_point_t divider_1_points[] = {
         {200, 15},
@@ -156,7 +158,7 @@ add_readout_item(const char* title, const char* qty, const char* unit, lv_color_
 void add_chart()
 {
     /*Create a chart*/
-    lv_obj_t* chart = lv_chart_create(SCR_C(VISUAL_AREA_2));
+    chart = lv_chart_create(SCR_C(VISUAL_AREA_2));
     lv_obj_set_width(chart, LV_PCT(100));
 
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
@@ -170,11 +172,18 @@ void add_chart()
     lv_chart_set_point_count(chart, WAVE_LEN * .75);
     lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
 
-    for (unsigned char i : sin_wave_static) {
-        lv_chart_set_next_value(chart, series1, i);
-    }
-
     lv_chart_refresh(chart); /*Required after direct set*/
+}
+
+void update_chart()
+{
+    static int pos = WAVE_LEN * .75;
+    lv_chart_series_t* series = lv_chart_get_series_next(chart, nullptr);
+    if (++pos >= WAVE_LEN) {
+        pos = 0;
+    }
+    lv_chart_set_next_value(chart, series, sin_wave_static[pos]);
+    lv_chart_refresh(chart);
 }
 
 void add_control_item(const char* title, const char* qty, const char* unit, lv_color_t button_color,

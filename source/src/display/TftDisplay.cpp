@@ -1,5 +1,11 @@
+#include <utilities/util.h>
+#include <function_timings.h>
 #include "TftDisplay.h"
 #include "../../config/uvent_conf.h"
+#include "global_components.h"
+
+uint32_t chart_update_timer = 0;
+uint32_t debug_toggle_timer = 0;
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
@@ -11,7 +17,8 @@ void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* 
     static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
 }
 
-TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin) : tft_display (cs_pin, rst_pin, true)
+TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
+        : tft_display(cs_pin, rst_pin, true)
 {
     touch_driver = TftTouch(touch_int_pin, touch_rst_pin);
 }
@@ -121,5 +128,11 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
 void TftDisplay::update()
 {
     //TODO add sleep handler code
+    if (has_time_elapsed(&chart_update_timer, 750)) {
+        update_chart();
+    }
+    if (!RA_GET_DEBUG_STATE() && has_time_elapsed(&debug_toggle_timer, 10000)) {
+        RA_SET_DEBUG(true);
+    }
     lv_task_handler();
 }
