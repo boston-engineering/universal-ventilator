@@ -9,10 +9,10 @@
 #define DEBUG_LED 13
 
 // Display and touch pins
-#define TOUCH_INT 19
-#define TOUCH_RST 2
-#define TFT_CS 4
-#define TFT_RST 3
+#define TOUCH_INT 23
+#define TOUCH_RST 22
+#define TFT_CS 10
+#define TFT_RST 26
 
 // Display testing
 #define ENABLE_TEST_DISPLAY 0
