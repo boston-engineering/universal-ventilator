@@ -3,8 +3,8 @@
 
 #include "command.h"
 
-const String PARSER_PROMPT_STRING  = ">";
-const String PARSER_NEXT_LINE      = "\r\n";
+const String PARSER_PROMPT_STRING = ">";
+const String PARSER_NEXT_LINE = "\r\n";
 
 // The macimum number of characters in a command.
 const uint16_t PARSER_CMD_BUFFER_LEN = 50;
@@ -13,36 +13,35 @@ const uint16_t PARSER_CMD_BUFFER_LEN = 50;
 // The below metric is the max argc, or max parameters in a command.
 const uint16_t PARSER_MAX_ARGUMENTS = 16;
 
-class Parser
-{
-    public:
-        void init(command_type* pCommandArray, uint16_t commandArraySize);
-        void service();
+class Parser {
+public:
+    void init(command_type* pCommandArray, uint16_t commandArraySize);
+    void service();
 
-    private:
-        // Display the prompt
-        void prompt(){ Serial.print(PARSER_PROMPT_STRING); }
-        
-        // Accept characters from the serial port and form a payload.
-        void handle_input(char c);
+private:
+    // Display the prompt
+    void prompt() { Serial.print(PARSER_PROMPT_STRING); }
 
-        // Split the incoming command into argc, argv format
-        void argument_parse();
+    // Accept characters from the serial port and form a payload.
+    void handle_input(char c);
 
-        // Look up the command from the command array
-        void process_command(uint16_t argc, char **argv);
+    // Split the incoming command into argc, argv format
+    void argument_parse();
 
-    private:
-        // As characters get typed in, it forms the payload.
-        struct
-        {
-            char buf[PARSER_CMD_BUFFER_LEN];
-            uint8_t index;
-        } payload;
+    // Look up the command from the command array
+    void process_command(uint16_t argc, char** argv);
 
-        command_type* p_command_array;
+private:
+    // As characters get typed in, it forms the payload.
+    struct
+    {
+        char buf[PARSER_CMD_BUFFER_LEN];
+        uint8_t index;
+    } payload;
 
-        uint16_t command_array_size;
+    command_type* p_command_array;
+
+    uint16_t command_array_size;
 };
 
 #endif /* UVENT_PARSER_H */
