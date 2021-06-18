@@ -5,6 +5,8 @@
 #include "utilities/parser.h"
 #include "utilities/command.h"
 #include "controls/machine.h"
+#include "sensors/pressure_sensor.h"
+#include "sensors/test_pressure_sensors.h"
 #include "../config/uvent_conf.h"
 #include "display/main_display.h"
 
@@ -68,6 +70,10 @@ void loop()
 
     // Service the command parser
     parser.service();
+
+#if ENABLE_TEST_PRESSURE_SENSORS
+    output_pressure_test();
+#endif
 }
 
 ISR(DMAC_Handler)
