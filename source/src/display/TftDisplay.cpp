@@ -11,10 +11,8 @@ void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* 
     static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
 }
 
-TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
+TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin) : tft_display (cs_pin, rst_pin, true)
 {
-
-    tft_display = Adafruit_RA8875(cs_pin, rst_pin, true);
     touch_driver = TftTouch(touch_int_pin, touch_rst_pin);
 }
 
