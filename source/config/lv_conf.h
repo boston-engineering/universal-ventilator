@@ -1,6 +1,6 @@
 /**
  * @file lv_conf.h
- * Configuration file for v8.0.0-dev
+ * Configuration file for v8.0.1
  */
 
 /*
@@ -27,7 +27,7 @@
 #define LV_COLOR_16_SWAP   1
 
 /*Enable more complex drawing routines to manage screens transparency.
- *Can be used if the UI is above an other layer, e.g. an OSD menu or video player.
+ *Can be used if the UI is above another layer, e.g. an OSD menu or video player.
  *Requires `LV_COLOR_DEPTH = 32` colors and the screen's `bg_opa` should be set to non LV_OPA_COVER value*/
 #define LV_COLOR_SCREEN_TRANSP    0
 
@@ -40,7 +40,7 @@
 
 /*1: use custom malloc/free, 0: use the built-in `lv_mem_alloc()` and `lv_mem_free()`*/
 #define LV_MEM_CUSTOM      0
-#if LV_MEM_CUSTOM==0
+#if LV_MEM_CUSTOM == 0
 /*Size of the memory available for `lv_mem_alloc()` in bytes (>= 2kB)*/
 #  define LV_MEM_SIZE    (32U * 1024U)          /*[bytes]*/
 
@@ -89,7 +89,7 @@
 /*Enable complex draw engine.
  *Required to draw shadow, gradient, rounded corners, circles, arc, skew lines, image transformations or any masks*/
 #define LV_DRAW_COMPLEX 1
-#if LV_DRAW_COMPLEX!=0
+#if LV_DRAW_COMPLEX != 0
 
 /*Allow buffering some shadow calculation.
  *LV_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
@@ -202,7 +202,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #  define lv_snprintf     snprintf
 #  define lv_vsnprintf    vsnprintf
 #else   /*LV_SPRINTF_CUSTOM*/
-#  define LV_SPRINTF_USE_FLOAT 0
+#  define LV_SPRINTF_USE_FLOAT 1
 #endif  /*LV_SPRINTF_CUSTOM*/
 
 #define LV_USE_USER_DATA      1
@@ -210,7 +210,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 /*Garbage Collector settings
  *Used if lvgl is binded to higher level language and the memory is managed by that language*/
 #define LV_ENABLE_GC 0
-#if LV_ENABLE_GC!=0
+#if LV_ENABLE_GC != 0
 #  define LV_GC_INCLUDE "gc.h"                           /*Include Garbage Collector related things*/
 #endif /*LV_ENABLE_GC*/
 
@@ -353,10 +353,10 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_BIDI         0
 #if LV_USE_BIDI
 /*Set the default direction. Supported values:
- *`LV_BIDI_DIR_LTR` Left-to-Right
- *`LV_BIDI_DIR_RTL` Right-to-Left
- *`LV_BIDI_DIR_AUTO` detect texts base direction*/
-#define LV_BIDI_BASE_DIR_DEF  LV_BIDI_DIR_AUTO
+ *`LV_BASE_DIR_LTR` Left-to-Right
+ *`LV_BASE_DIR_RTL` Right-to-Left
+ *`LV_BASE_DIR_AUTO` detect texts base direction*/
+#define LV_BIDI_BASE_DIR_DEF  LV_BASE_DIR_AUTO
 #endif
 
 /*Enable Arabic/Persian processing
@@ -371,6 +371,8 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_ARC          1
 
+#define LV_USE_ANIMIMG        1
+
 #define LV_USE_BAR          1
 
 #define LV_USE_BTN          1
@@ -381,7 +383,6 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_CHECKBOX     1
 
-#define LV_USE_CHART        1
 
 #define LV_USE_DROPDOWN     1   /*Requires: lv_label*/
 
@@ -389,13 +390,11 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_LABEL        1
 #if LV_USE_LABEL
-#  define LV_LABEL_TEXT_SEL         0   /*Enable selecting text of the label*/
+#  define LV_LABEL_TEXT_SELECTION         0   /*Enable selecting text of the label*/
 #  define LV_LABEL_LONG_TXT_HINT    1   /*Store some extra info in labels to speed up drawing of very long texts*/
 #endif
 
 #define LV_USE_LINE         1
-
-#define LV_USE_METER        1
 
 #define LV_USE_ROLLER       0   /*Requires: lv_label*/
 #if LV_USE_ROLLER
@@ -407,7 +406,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_SWITCH    1
 
 #define LV_USE_TEXTAREA   0     /*Requires: lv_label*/
-#if LV_USE_TEXTAREA!=0
+#if LV_USE_TEXTAREA != 0
 #  define LV_TEXTAREA_DEF_PWD_SHOW_TIME     1500    /*ms*/
 #endif
 
@@ -434,6 +433,8 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 # define LV_USE_CALENDAR_HEADER_DROPDOWN    1
 #endif  /*LV_USE_CALENDAR*/
 
+#define LV_USE_CHART        1
+
 #define LV_USE_COLORWHEEL   0
 
 #define LV_USE_IMGBTN       0
@@ -443,6 +444,8 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_LED          0
 
 #define LV_USE_LIST         1
+
+#define LV_USE_METER        1
 
 #define LV_USE_MSGBOX       0
 
@@ -455,6 +458,12 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_TILEVIEW     0
 
 #define LV_USE_WIN          0
+
+#define LV_USE_SPAN         1
+#if LV_USE_SPAN
+/*A line text can contain maximum num of span descriptor */
+#  define LV_SPAN_SNIPPET_STACK_SIZE   64
+#endif
 
 /*-----------
  * Themes
@@ -475,6 +484,9 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 /*An very simple them that is a good starting point for a custom theme*/
 #define LV_USE_THEME_BASIC    1
+
+/*A theme designed for monochrome displays*/
+#define LV_USE_THEME_MONO       1
 
 /*-----------
  * Layouts
