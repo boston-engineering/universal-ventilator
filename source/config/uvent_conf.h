@@ -56,7 +56,7 @@
 #define MIN_DIFF_PRESSURE -1
 
 // Stepper: Direction pin
-#define STEPPER_DIRECTION_PIN 32
+#define STEPPER_DIRECTION_PIN 8
 
 // Stepper: Step pin
 #define STEPPER_STEP_PIN 9
