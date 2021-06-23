@@ -25,8 +25,7 @@ void setup()
     NVIC_EnableIRQ(DMAC_IRQn);
 
     if (!tft_display.init()) {
-        while (1)
-            ;
+        while (1);
     }
 
     control_init();
@@ -36,6 +35,8 @@ void setup()
 #else
     init_main_display();
 #endif
+
+    init_adjustable_values();
 
     // Initialize the parser, with the command array and command array size
     parser.init(command_get_array(), command_get_array_size());

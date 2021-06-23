@@ -17,6 +17,8 @@ lv_point_t divider_2_points[] = {
         {600, 480}
 };
 
+ButtonData button_type_data[ButtonType::BUTTON_TYPE_COUNT];
+
 static void on_enable_disable_press(lv_event_t*);
 
 void init_styles()
@@ -53,12 +55,8 @@ void populate_items()
     add_dividers();
 
     // VISUAL_AREA_1
-    add_readout_item("Tidal Volume", "350", "mL");
-    add_readout_item("Respiration Rate", "30", "/min");
+    //TODO remove me when I:E adjustable component is complete
     add_readout_item("I:E Ratio", "1:2", nullptr);
-    add_readout_item("PEEP Limit (Floor)", "5", "cmH2O");
-    add_readout_item("PIP Limit (Ceiling)", "33", "cmH2O");
-    add_readout_item("Current Pressure", "28", "cmH2O", palette_color_2);
 
     // VISUAL_AREA_2
     add_chart();
@@ -68,18 +66,12 @@ void populate_items()
     add_mute_button();
 
     // CONTROL_AREA_1
-    add_control_item("vT", "350", "mL");
-    add_control_item("Resp. Rate", "30", "/min");
+    //TODO remove me when I:E adjustable component is complete
     add_control_item("I:E Ratio", "1:2", nullptr);
-    add_control_item("PEEP", "5", "cmH2O");
-    add_control_item("PIP", "33", "cmH2O");
-    add_control_item("Plateau", "2", "sec");
 
     // CONTROL_AREA_2
-    //add_settings_button("Configuration");
     add_settings_button("Settings &\nConfig");
 
-//  add_dummy_items();
 }
 
 void add_dividers()

@@ -2,7 +2,9 @@
 #define UVENT_CONTROL_H
 
 #include "controls/machine.h"
+#include "interface/interface.h"
 
+void init_adjustable_values();
 void control_init();
 void control_service();
 double control_get_actuator_position();

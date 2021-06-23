@@ -105,6 +105,19 @@ typedef enum ComponentType {
     COMPONENT_COUNT,
 } ComponentType;
 
+typedef enum ButtonType {
+    DECREMENT = 0,
+    INCREMENT,
+    START,
+    MUTE,
+    SETTINGS,
+    BUTTON_TYPE_COUNT
+} ButtonType;
+
+typedef struct ButtonData {
+    ButtonType type;
+} ButtonData;
+
 static lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
 static lv_color_t palette_color_2 = LV_COLOR_MAKE(59, 125, 185);
 static lv_color_t color_black = LV_COLOR_MAKE(0, 0, 0);
@@ -116,6 +129,8 @@ extern lv_style_t component_styles[];
 
 extern lv_point_t divider_1_points[];
 extern lv_point_t divider_2_points[];
+
+extern ButtonData button_type_data[ButtonType::BUTTON_TYPE_COUNT];
 
 void init_styles();
 
@@ -206,6 +221,14 @@ inline void init_main_display()
     CONTAINER_DECL(CONTROL_AREA_1, CONTROL_MAIN);
     CONTAINER_DECL(CONTROL_AREA_2, CONTROL_MAIN);
 
+    /**
+     * Set up button data to attach to components
+     */
+    for (uint8_t i = 0; i < ButtonType::BUTTON_TYPE_COUNT; i++) {
+        button_type_data[i].type = (ButtonType) i;
+    }
+
+    // Populate base items
     populate_items();
 }
 
