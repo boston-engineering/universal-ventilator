@@ -24,7 +24,13 @@
 // Pressure sensor testing
 #define ENABLE_TEST_PRESSURE_SENSORS 0
 
-// Test eeprom
+// Settings address on external eeprom
+#define EXT_EEPROM_SETTINGS_LOC 100
+
+// CRC address on external eeprom
+#define EXT_EEPROM_CRC_LOC 0
+
+// Test EEPROM
 #define ENABLE_TEST_EEPROM 0
 #define EEPROM_TEST_1_MEM_1 63000
 #define EEPROM_TEST_1_MEM_2 63010
@@ -107,6 +113,7 @@
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
+#define DEBUG_EEPROM 0
 
 // EEPROM address
 #define EEPROM_ADDRESS 0x50
