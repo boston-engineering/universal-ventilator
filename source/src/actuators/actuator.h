@@ -36,7 +36,8 @@ public:
     bool is_moving();
     double get_position();
     double get_position_raw();
-    void zero_position();
+    uint16_t set_current_position_as_zero();
+    void set_zero_position(uint16_t new_zero);
     void set_position(Tick_Type tt, double value);
     bool is_running();
     void set_position_as_home();
@@ -51,9 +52,6 @@ private:
     // Prev. value of angle sensor.
     // Used to detect movement.
     double prev_position;
-
-    // Zero position register val
-    uint16_t fb_zero_reg_value = 5745;
 };
 
 #endif

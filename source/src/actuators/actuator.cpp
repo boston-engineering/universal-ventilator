@@ -6,10 +6,6 @@ void Actuator::init()
     stepper_fb.begin();
     stepper.init();
 
-    // Adjust the feedback zero.
-    // TO-DO Read this value from the EEPROM
-    stepper_fb.zeroRegW(fb_zero_reg_value);
-
     // Set the current position as home.
     stepper.set_position_as_home(0);
 }
@@ -136,16 +132,25 @@ double Actuator::get_position_raw()
     return stepper_fb.angleR(U_RAW, true);
 }
 
-void Actuator::zero_position()
+/* Set the current reading of the angle sensor as zero.
+ * and return the zero value.
+ */
+uint16_t Actuator::set_current_position_as_zero()
 {
-    // Read the current raw value from the fb sensor
-    uint16_t newZero = stepper_fb.angleRegR();
+    // Zero the zero register first, then write the actual value.
+    stepper_fb.zeroRegW(0);
+    uint16_t new_zero = stepper_fb.angleRegR();
+    stepper_fb.zeroRegW(new_zero);
 
-    /* TO-DO
-     * Save this newZero in the EEPROM stub. Since EEPROM is not ready yet
-     * store in private for now.
-     */
-    fb_zero_reg_value = newZero;
+    return new_zero;
+}
 
-    stepper_fb.zeroRegW(newZero);
+/* Sets the zero offset to the angle sensor.
+ * This is done at startup.
+ */
+void Actuator::set_zero_position(uint16_t new_zero)
+{
+    // Zero the zero register first, then write the actual value.
+    stepper_fb.zeroRegW(0);
+    stepper_fb.zeroRegW(new_zero);
 }
