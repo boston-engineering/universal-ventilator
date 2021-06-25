@@ -3,10 +3,14 @@
 #include <AccelStepper.h>
 #include "../config/uvent_conf.h"
 #include "actuators/actuator.h"
+#include "eeprom/storage.h"
 #include "control.h"
 
 // Instance to control the paddle
 Actuator actuator;
+
+// Storage instance
+Storage storage;
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
@@ -46,6 +50,9 @@ void control_init()
     // Initialize the actuator
     actuator.init();
 
+    //  Storage init
+    storage.init();
+
     // Initialize the state machine
     machine.setup();
 
@@ -60,6 +67,17 @@ void control_init()
      */
     Timer1.attachInterrupt(actuator_handler);
     Timer1.start(ACTUATOR_HANDLER_PERIOD_US);
+
+    // Check EEPROM CRC. Load defaults if CRC fails.
+    if (!storage.is_crc_ok()) {
+        Serial.println("CRC failed. Loading defaults.");
+        // No settings found, or settings corrupted.
+        storage.load_defaults();
+    }
+
+#if DEBUG_EEPROM
+    storage.display_storage();
+#endif
 }
 
 /* Called by loop() from main, this function services control
