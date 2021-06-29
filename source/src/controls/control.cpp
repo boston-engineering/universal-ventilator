@@ -47,17 +47,31 @@ void control_init()
     // Debug led setup
     pinMode(DEBUG_LED, OUTPUT);
 
+    //  Storage init
+    storage.init();
+
     // Initialize the actuator
     actuator.init();
 
-    //  Storage init
-    storage.init();
+    /* On startup, the angle feedback sensor needs to be programmed with a calibrated
+     * zero. Usually this is an OTP value burned into the angle register, but it is risky to
+     * do that, as the magnet may fall or go out-of alignment during transport and the zero cannot
+     * be programmed again(because OTP).
+     * To avoid the risk, the EEPROM stores the zero value, which is burned in during manufacture.
+     * This value can be changed by manually "re-homing" the actuator at the user's discretion.
+     *
+     * The below few lines, load the zero value from the EEPROM into the angle sensor register
+     * at statup. Control can then use the value from the angle sensor to home the actuator.
+     */
+    uvent_settings settings;
+    storage.get_settings(settings);
+    actuator.set_zero_position(settings.actuator_home_offset_adc_counts);
 
     // Initialize the state machine
     machine.setup();
 
     /* Setup a timer and a function handler to run
-     * the s
+     * the state machine.
      */
     Timer0.attachInterrupt(control_handler);
     Timer0.start(CONTROL_HANDLER_PERIOD_US);
@@ -108,7 +122,14 @@ double control_get_actuator_position_raw()
  */
 void control_zero_actuator_position()
 {
-    actuator.zero_position();
+    uvent_settings settings;
+    storage.get_settings(settings);
+
+    // Zero the angle sensor and write the value to the EEPROM
+    settings.actuator_home_offset_adc_counts = actuator.set_current_position_as_zero();
+
+    // Store this value to the eeprom.
+    storage.set_settings(settings);
 }
 
 /* Request to switch the state of the state machine.
