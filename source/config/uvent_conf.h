@@ -53,8 +53,8 @@
 #define ACTUATOR_HANDLER_PERIOD_US 50
 
 // Pressure Sensor pins
-#define PRESSURE_GAUGE_PIN 0
-#define PRESSURE_DIFF_PIN 1
+#define PRESSURE_GAUGE_PIN 1
+#define PRESSURE_DIFF_PIN 0
 
 // Pressure Sensor resistor resistance in ohms
 #define RESISTANCE_1 100000
@@ -69,8 +69,8 @@
 // Differential Pressure sensor max and min pressure values, units psi
 // Differential unit number: 001PD
 // data sheet link: https://sensing.honeywell.com/honeywell-sensing-trustability-ssc-series-standard-accuracy-board-mount-pressure-sensors-50099533-a-en.pdf
-#define MAX_DIFF_PRESSURE 1
-#define MIN_DIFF_PRESSURE -1
+#define MAX_DIFF_PRESSURE 0.07
+#define MIN_DIFF_PRESSURE -0.07
 
 // Stepper: Direction pin
 #define STEPPER_DIRECTION_PIN 8
