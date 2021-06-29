@@ -38,8 +38,13 @@ typedef enum class order_type {
 
 class PressureSensor {
 public:
+    // Definition: This version of the constructor requires the init function to be called.
     // Arguments ->
-    // analog_pin: pin on the arduino that the pressure sensor is connected to
+    // analog_pin: the pin the the pressure sensor is connected to.
+    PressureSensor(int analog_pin) : analog_pin(analog_pin){};
+
+    // Arguments ->
+    // analog_pin: the pin the the pressure sensor is connected to.
     // max_psi: the maximum pressure of the sensor in units psi
     // min_psi: the minimum pressure of the sensor in units psi
     // resistance_ohms_1: the resistance of the first resistor in the circuit in units ohms
@@ -47,7 +52,7 @@ public:
     PressureSensor(int analog_pin, double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2);
 
     // Definition:
-    void init(int* zero_val);
+    void init(double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2, int pressure_offset_adc_counts);
 
     // Definition: Returns the pressure from the gauge sensor.
     // Arguments ->

@@ -2,6 +2,11 @@
 
 PressureSensor::PressureSensor(int analog_pin, double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2) : analog_pin(analog_pin)
 {
+    init(max_psi, min_psi, resistance_ohms_1, resistance_ohms_2, 0);
+}
+
+void PressureSensor::init(double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2, int pressure_offset_adc_counts)
+{
     // Set resolution to 12 bits, the default is 10
     analogReadResolution(ADC_RESOLUTION);
     int max_resolution_units = pow(2, ADC_RESOLUTION);
@@ -20,12 +25,7 @@ PressureSensor::PressureSensor(int analog_pin, double max_psi, double min_psi, i
     constant_B = 0.1 * VOLTAGE_SUPPLY * constant_C - min_psi;
 
     // Set zeroed value to 0
-    zero_value = 0;
-}
-
-void PressureSensor::init(int* zero_val)
-{
-    zero_value = *zero_val;
+    zero_value = pressure_offset_adc_counts;
 }
 
 double PressureSensor::get_pressure(Units_pressure units, bool zero)
