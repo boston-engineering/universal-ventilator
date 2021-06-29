@@ -1,7 +1,7 @@
 #include "test_pressure_sensors.h"
 
 PressureSensor gauge_sensor_test = {PRESSURE_GAUGE_PIN, MAX_GAUGE_PRESSURE, MIN_GAUGE_PRESSURE, RESISTANCE_1, RESISTANCE_2};
-PressureSensor diff_sensor_test = {PRESSURE_DIFF_PIN, MAX_DIFF_PRESSURE, MIN_DIFF_PRESSURE, RESISTANCE_1, RESISTANCE_2};
+PressureSensor diff_sensor_test = {PRESSURE_DIFF_PIN, MAX_DIFF_PRESSURE_TYPE_0, MIN_DIFF_PRESSURE_TYPE_0, RESISTANCE_1, RESISTANCE_2};
 int zero_flag = 1;
 
 void test_sensors_read_pressure(int delay_time, bool zero, Units_pressure units_gauge, Units_pressure units_diff)
