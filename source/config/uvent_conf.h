@@ -69,8 +69,10 @@
 // Differential Pressure sensor max and min pressure values, units psi
 // Differential unit number: 001PD
 // data sheet link: https://sensing.honeywell.com/honeywell-sensing-trustability-ssc-series-standard-accuracy-board-mount-pressure-sensors-50099533-a-en.pdf
-#define MAX_DIFF_PRESSURE 0.07
-#define MIN_DIFF_PRESSURE -0.07
+#define MAX_DIFF_PRESSURE_TYPE_0 0.07
+#define MIN_DIFF_PRESSURE_TYPE_0 -0.07
+#define MAX_DIFF_PRESSURE_TYPE_1 0.09
+#define MIN_DIFF_PRESSURE_TYPE_1 -0.09
 
 // Stepper: Direction pin
 #define STEPPER_DIRECTION_PIN 8
