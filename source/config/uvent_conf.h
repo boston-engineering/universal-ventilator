@@ -32,15 +32,14 @@
 
 // Test EEPROM
 #define ENABLE_TEST_EEPROM 0
+
+// Test EEPROM Memory positions
 #define EEPROM_TEST_1_MEM_1 63000
 #define EEPROM_TEST_1_MEM_2 63010
 #define EEPROM_TEST_1_MEM_3 63020
 #define EEPROM_TEST_1_MEM_4 63040
 #define EEPROM_TEST_1_MEM_5 63050
 #define EEPROM_TEST_2_MEM_1 63100
-
-// Eeprom testing
-#define ENABLE_TEST_EEPROM 0
 
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
