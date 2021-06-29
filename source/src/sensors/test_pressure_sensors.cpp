@@ -8,9 +8,9 @@ void test_sensors_read_pressure(int delay_time, bool zero, Units_pressure units_
 {
     Serial.print("Gauge Pressure:        ");
     if (zero && zero_flag == 1) {
-#if ENABLE_TEST_PRESSURE_SENSORS
-        gauge_sensor_test.test_calculate_zero(Zero_type::gauge);
-#endif
+        int32_t offset = 0;
+        gauge_sensor_test.calculate_zero(offset, Zero_type::gauge);
+
         Serial.println(gauge_sensor_test.get_pressure(units_gauge, zero), 6);
     }
     else {
@@ -19,12 +19,12 @@ void test_sensors_read_pressure(int delay_time, bool zero, Units_pressure units_
 
     Serial.print("Differential Pressure: ");
     if (zero && zero_flag == 1) {
-#if ENABLE_TEST_PRESSURE_SENSORS
-        diff_sensor_test.test_calculate_zero(Zero_type::diff);
+        int32_t offset = 0;
+        diff_sensor_test.calculate_zero(offset, Zero_type::diff);
         zero_flag = 0;
-#endif
+
         Serial.println(diff_sensor_test.get_pressure(units_diff, zero), 6);
-        Serial.println("Zeroing, This should print only once. If not, set ENABLE_TEST_PRESSURE_SENSORS to 1");
+        Serial.println("Zeroing, This should print only once.");
     }
     else {
         Serial.println(diff_sensor_test.get_pressure(units_diff, zero), 6);
@@ -41,10 +41,10 @@ void test_sensors_read_gauge(int delay_time, bool zero, Units_pressure units_gau
 {
     Serial.print("Gauge Pressure:        ");
     if (zero && zero_flag == 1) {
-#if ENABLE_TEST_PRESSURE_SENSORS
-        gauge_sensor_test.test_calculate_zero(Zero_type::gauge);
+        int32_t offset = 0;
+        gauge_sensor_test.calculate_zero(offset, Zero_type::gauge);
         zero_flag = 0;
-#endif
+
         Serial.println(gauge_sensor_test.get_pressure(units_gauge, zero), 6);
         Serial.println("Zeroing, This should print only once. If not, set ENABLE_TEST_PRESSURE_SENSORS to 1");
     }
@@ -59,10 +59,10 @@ void test_sensors_read_differential(int delay_time, bool zero, Units_pressure un
 {
     Serial.print("Differential Pressure: ");
     if (zero && zero_flag == 1) {
-#if ENABLE_TEST_PRESSURE_SENSORS
-        diff_sensor_test.test_calculate_zero(Zero_type::diff);
+        int32_t offset = 0;
+        diff_sensor_test.calculate_zero(offset, Zero_type::diff);
         zero_flag = 0;
-#endif
+
         Serial.println(diff_sensor_test.get_pressure(units_diff, zero), 6);
         Serial.println("Zeroing, This should print only once. If not, set ENABLE_TEST_PRESSURE_SENSORS to 1");
     }
@@ -76,10 +76,10 @@ void test_sensors_read_differential(int delay_time, bool zero, Units_pressure un
 void test_sensors_read_flow(int delay_time, bool zero, Order_type order, Units_flow units)
 {
     if (zero && zero_flag == 1) {
-#if ENABLE_TEST_PRESSURE_SENSORS
-        diff_sensor_test.test_calculate_zero(Zero_type::diff);
+        int32_t offset = 0;
+        diff_sensor_test.calculate_zero(offset, Zero_type::diff);
         zero_flag = 0;
-#endif
+
         Serial.println(diff_sensor_test.get_flow(units, true, order));
         Serial.println("Zeroing, This should print only once. If not, set ENABLE_TEST_PRESSURE_SENSORS to 1");
     }

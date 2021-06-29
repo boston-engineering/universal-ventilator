@@ -2,10 +2,11 @@
 
 PressureSensor::PressureSensor(int analog_pin, double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2) : analog_pin(analog_pin)
 {
-    init(max_psi, min_psi, resistance_ohms_1, resistance_ohms_2, 0);
+    int32_t default_adc_offset = 0;
+    init(max_psi, min_psi, resistance_ohms_1, resistance_ohms_2, default_adc_offset);
 }
 
-void PressureSensor::init(double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2, int pressure_offset_adc_counts)
+void PressureSensor::init(double max_psi, double min_psi, int resistance_ohms_1, int resistance_ohms_2, int32_t pressure_offset_adc_counts)
 {
     // Set resolution to 12 bits, the default is 10
     analogReadResolution(ADC_RESOLUTION);
@@ -25,7 +26,7 @@ void PressureSensor::init(double max_psi, double min_psi, int resistance_ohms_1,
     constant_B = 0.1 * VOLTAGE_SUPPLY * constant_C - min_psi;
 
     // Set zeroed value to 0
-    zero_value = pressure_offset_adc_counts;
+    offset_adc_counts = pressure_offset_adc_counts;
 }
 
 double PressureSensor::get_pressure(Units_pressure units, bool zero)
@@ -35,7 +36,7 @@ double PressureSensor::get_pressure(Units_pressure units, bool zero)
 
     // Get analog value, if after zeroing the value is less than 0 then set to zero.
     if (zero) {
-        analog_val = analogRead(analog_pin) - zero_value;
+        analog_val = analogRead(analog_pin) - offset_adc_counts;
         if (analog_val < 0) {
             analog_val = 0;
         }
@@ -60,6 +61,7 @@ double PressureSensor::get_flow(Units_flow units, bool zero, Order_type order)
     double flow = 0;
     double x = get_pressure(Units_pressure::mbar, zero);
 
+    // Equations were derived by mapping values taking from a flow meter into excel and curve fitting the data
     if (order == Order_type::first) {
         flow = COEF_A_1ST_ORDER * x;
     }
@@ -77,26 +79,26 @@ double PressureSensor::get_flow(Units_flow units, bool zero, Order_type order)
     return flow;
 }
 
-void PressureSensor::reset_zero(int* zero_val)
+void PressureSensor::reset_zero(int32_t& pressure_offset_adc_counts)
 {
-    zero_value = *zero_val = 0;
+    offset_adc_counts = pressure_offset_adc_counts = 0;
 }
 
-void PressureSensor::calculate_zero(int* zero_val, Zero_type zero)
+void PressureSensor::calculate_zero(int32_t& pressure_offset_adc_counts, Zero_type zero_type)
 {
     int const average_samples = 100;
 
-    if (zero != Zero_type::DONT_ZERO) {
+    if (zero_type != Zero_type::DONT_ZERO) {
         for (int i = 0; i < average_samples; i++) {
-            *zero_val += analogRead(analog_pin);
+            offset_adc_counts += analogRead(analog_pin);
         }
 
-        *zero_val /= average_samples;
+        offset_adc_counts /= average_samples;
 
-        if (zero == Zero_type::diff) {
-            *zero_val -= diff_zero_resolution;
+        if (zero_type == Zero_type::diff) {
+            offset_adc_counts -= diff_zero_resolution;
         }
-        zero_value = *zero_val;
+        pressure_offset_adc_counts = offset_adc_counts;
     }
 }
 
@@ -153,23 +155,3 @@ void PressureSensor::determine_units_flow(double& flow, Units_flow units)
         break;
     }
 }
-
-#if ENABLE_TEST_PRESSURE_SENSORS
-void PressureSensor::test_calculate_zero(Zero_type zero)
-{
-    int const average_samples = 100;
-    zero_value = 0;
-
-    if (zero != Zero_type::DONT_ZERO) {
-        for (int i = 0; i < average_samples; i++) {
-            zero_value += analogRead(analog_pin);
-        }
-
-        zero_value = zero_value / average_samples;
-
-        if (zero == Zero_type::diff) {
-            zero_value -= diff_zero_resolution;
-        }
-    }
-}
-#endif
