@@ -26,7 +26,6 @@ void Storage::set_settings(uvent_settings& inset)
     external_eeprom.put(EXT_EEPROM_CRC_LOC, crc_calculate());
 }
 
-#if DEBUG_EEPROM
 void Storage::display_storage()
 {
     uvent_settings temp_set;
@@ -45,7 +44,6 @@ void Storage::display_storage()
     Serial.print("Diff. Pressure offset: ");
     Serial.println(temp_set.dpressure_offset_adc_counts);
 }
-#endif
 
 bool Storage::is_crc_ok()
 {

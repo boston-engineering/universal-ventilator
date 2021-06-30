@@ -14,6 +14,7 @@ enum class Error_Codes {
 static void command_help(int argc, char** argv);
 static void command_actuator(int argc, char** argv);
 static void command_state(int argc, char** argv);
+static void command_eeprom(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -56,7 +57,8 @@ command_type commands[] =
         {
                 {"help", command_help, "\t\tDisplay a list of commands.\r\n"},
                 {"actuator", command_actuator, "\tActuator related commands.\r\n"},
-                {"state", command_state, "\tState related commands.\r\n"}};
+                {"state", command_state, "\t\tState related commands.\r\n"},
+                {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
 
@@ -182,7 +184,7 @@ command_actuator(int argc, char** argv)
     }
 }
 
-/* Actuator function. */
+/* State function. */
 static void
 command_state(int argc, char** argv)
 {
@@ -246,6 +248,21 @@ command_state(int argc, char** argv)
             //change state to jog
             control_change_state((States) req_state);
         }
+    }
+}
+
+/* EEPROM function. */
+static void
+command_eeprom(int argc, char** argv)
+{
+    // Check is help is requested for this command or no arguments were included.
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: state command");
+        Serial.println("dump      - Dumps eeprom contents.");
+    }
+    else if (!(strcmp(argv[1], "dump"))) {
+        control_display_storage();
+        return;
     }
 }
 

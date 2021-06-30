@@ -13,4 +13,5 @@ void control_actuator_manual_move(Tick_Type tt, double angle, double speed);
 States control_get_state();
 const char* control_get_state_string();
 const char** control_get_state_list(uint8_t*);
+void control_display_storage();
 #endif

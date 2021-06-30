@@ -24,9 +24,7 @@ public:
     void load_defaults();
     void get_settings(uvent_settings&);
     void set_settings(uvent_settings&);
-#if DEBUG_EEPROM
     void display_storage();
-#endif
 
 private:
     ExternalEEPROM external_eeprom;
