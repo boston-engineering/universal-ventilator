@@ -132,6 +132,31 @@ double Actuator::get_position_raw()
     return stepper_fb.angleR(U_RAW, true);
 }
 
+double Actuator::get_tidal_volume(C_Stat compliance)
+{
+    double position = get_position();
+    double deg_max_range = 180;
+    double deg_0 = 0;
+    double deg_270 = 270;
+
+    // The paddle may go a little over or under its working range of degrees.
+    if (position > deg_max_range && position < deg_270) {
+        position = deg_max_range;
+    }
+    else if (position > deg_270) {
+        position = deg_0;
+    }
+
+    switch (compliance) {
+    case C_Stat::NONE:
+        return COEF_A_NO_LUNG * pow(position, 4) + COEF_B_NO_LUNG * pow(position, 3) + COEF_C_NO_LUNG * pow(position, 2) + COEF_D_NO_LUNG * position;
+    case C_Stat::TWENTY:
+        return COEF_A_COMP_20 * pow(position, 4) + COEF_B_COMP_20 * pow(position, 3) + COEF_C_COMP_20 * pow(position, 2) + COEF_D_COMP_20 * position;
+    case C_Stat::FIFTY:
+        return COEF_A_COMP_50 * pow(position, 4) + COEF_B_COMP_50 * pow(position, 3) + COEF_C_COMP_50 * pow(position, 2) + COEF_D_COMP_50 * position;
+    }
+}
+
 /* Set the current reading of the angle sensor as zero.
  * and return the zero value.
  */
