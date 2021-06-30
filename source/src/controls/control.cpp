@@ -88,10 +88,6 @@ void control_init()
         // No settings found, or settings corrupted.
         storage.load_defaults();
     }
-
-#if DEBUG_EEPROM
-    storage.display_storage();
-#endif
 }
 
 /* Called by loop() from main, this function services control
@@ -158,4 +154,9 @@ const char* control_get_state_string()
 const char** control_get_state_list(uint8_t* size)
 {
     return machine.get_state_list(size);
+}
+
+void control_display_storage()
+{
+    storage.display_storage();
 }

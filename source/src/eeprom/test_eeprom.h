@@ -77,8 +77,6 @@ private:
 
     Return_code setup(void);
 
-    Return_code test_erase_memory(void);
-
     void waitForInput(void);
 
     double getNumber(void);

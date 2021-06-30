@@ -112,7 +112,6 @@
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
-#define DEBUG_EEPROM 0
 
 // EEPROM address
 #define EEPROM_ADDRESS 0x50
