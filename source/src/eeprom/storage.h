@@ -13,8 +13,8 @@ struct __attribute__((packed)) uvent_settings {
     char serial[12];            // YYMMDDLXXXX
     uint16_t diff_pressure_type;// 0: ±0.07, 1: ±0.09
     uint16_t actuator_home_offset_adc_counts;
-    int16_t gpressure_offset_adc_counts;
-    int16_t dpressure_offset_adc_counts;
+    int32_t gpressure_offset_adc_counts;
+    int32_t dpressure_offset_adc_counts;
 };
 
 class Storage {
