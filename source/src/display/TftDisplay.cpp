@@ -32,12 +32,15 @@ bool TftDisplay::init()
         return false;
     }
 
-    tft_display.setClockSpeed(SPI_CLK_SPEED);                   // Manually set clock speed to something faster
     tft_display.displayOn(true);
     tft_display.GPIOX(true);                                // Enable TFT - display enable tied to GPIOX
     tft_display.PWM1config(true, RA8875_PWM_CLK_DIV1024);   // PWM output for backlight
     tft_display.PWM1out(255);
     tft_display.graphicsMode();
+
+#if defined(SPI_DRIVER) && SPI_DRIVER == 1                      // Only set the SPI speed manually if we're using the default driver
+    tft_display.setClockSpeed(SPI_CLK_SPEED);                   // Manually set clock speed to something faster
+#endif
 
     Serial.println("Display connected, starting touchscreen setup...");
 
@@ -46,11 +49,21 @@ bool TftDisplay::init()
     Serial.println("Touchscreen init finished, starting LVGL...");
     lv_init();
 
+#if USE_DMA_INTERRUPT
+    Serial.println("Compiled with DMA & Interrupts, allocating second pixel buffer...");
     lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer_1, pixel_buffer_2, BUFFER_SIZE);
     lv_screen_buffer.buf1 = pixel_buffer_1;
     lv_screen_buffer.buf2 = pixel_buffer_2;
     lv_screen_buffer.buf_act = lv_screen_buffer.buf1;
     lv_screen_buffer.size = BUFFER_SIZE;
+#else
+    Serial.println("Compiled without DMA & Interrupts, no additional buffer required...");
+    lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer_1, nullptr, BUFFER_SIZE);
+    lv_screen_buffer.buf1 = pixel_buffer_1;
+    lv_screen_buffer.buf2 = nullptr;
+    lv_screen_buffer.buf_act = lv_screen_buffer.buf1;
+    lv_screen_buffer.size = BUFFER_SIZE;
+#endif
 
     lv_disp_drv_init(&lv_display_driver);                 // Initialize the display
     lv_display_driver.user_data = this;                   // Save `this` for callback functions
@@ -80,11 +93,20 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
     lv_coord_t width = lv_area_get_width(area);
     lv_coord_t height = lv_area_get_height(area);
 
+#if USE_DMA_INTERRUPT
+
     tft_display.drawPixelsAreaDMA((uint16_t*) color_p, width * height, area->x1, area->y1, width,
             &lv_display_driver,
             [](void* cb_data) {
                 lv_disp_flush_ready((lv_disp_drv_t*) cb_data);
             });
+
+#else
+
+    tft_display.drawPixelsArea((uint16_t*) color_p, width * height, area->x1, area->y1, width);
+    flush_display_complete();
+
+#endif
 
 }
 
@@ -95,7 +117,9 @@ void TftDisplay::flush_display_complete()
 
 void TftDisplay::onDMAInterrupt()
 {
+#if USE_DMA_INTERRUPT
     tft_display.onDMAInterrupt();
+#endif
 }
 
 void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)

@@ -5,6 +5,8 @@
 #include <variant.h>
 #include <display/main_display.h>
 
+#define clamp(n, low, high) max(low, min(n, high))
+
 typedef enum AdjValueType {
     TIDAL_VOLUME = 0,
     RESPIRATION_RATE,
@@ -43,18 +45,17 @@ typedef struct AdjValueParams {
 
 extern const AdjValueParams adj_value_settings[ADJ_VALUE_COUNT];
 
-template<typename T>
 class AdjustableValue {
 public:
     AdjustableValue() = default;
 
-    explicit AdjustableValue(T val)
+    explicit AdjustableValue(double val)
             : target(val) { }
 
     AdjValueType value_type = UNKNOWN;
 
-    void (* control_press_cb)(AdjustableValue<T>* this_ptr, lv_event_t* evt) = nullptr;
-    void (* readout_update_cb)(AdjustableValue<T>* this_ptr, lv_event_t* evt) = nullptr;
+    void (* control_press_cb)(AdjustableValue* this_ptr, lv_event_t* evt) = nullptr;
+    void (* readout_update_cb)(AdjustableValue* this_ptr, lv_event_t* evt) = nullptr;
 
     /**
      * Sets up the object for use. Must be called before calling get_settings
@@ -65,101 +66,45 @@ public:
         value_type = type;
     }
 
-    void on_control_button_press(lv_event_t* evt)
-    {
-        // TODO generic on control press code
-        if (control_press_cb) {
-            control_press_cb(this, evt);
-        }
-    }
-
-    void on_readout_update(lv_event_t* evt)
-    {
-        // TODO generic on control press code
-
-        // TODO LV_EVENT_REFRESH
-        if (readout_update_cb) {
-            readout_update_cb(this, evt);
-        }
-    }
-
-    AdjValueParams get_settings()
-    {
-        if (value_type >= ADJ_VALUE_COUNT) {
-            return adj_value_settings[0];
-        }
-        return adj_value_settings[value_type];
-    }
+    void refresh_readout();
+    void on_control_button_press(lv_event_t* evt);
+    void on_readout_update(lv_event_t* evt);
+    AdjValueParams get_settings() const;
+    double get_step() const;
 
     /**
      * The holder for all the content that displays the sensor-measured value
      * @return The base object
      */
-    lv_obj_t* get_obj_measured()
-    {
-        return lv_obj_measured;
-    }
+    lv_obj_t* get_obj_measured();
 
     /**
      * The holder for all the controls to set the target value for the mechanics
      * @return The base object
      */
-    lv_obj_t* get_obj_target()
-    {
-        return lv_obj_target;
-    }
-
-    AdjustableValue<T> set_obj_measured(lv_obj_t* obj)
-    {
-        if (!obj) return *this;
-        lv_obj_measured = obj;
-        lv_obj_measured->user_data = this;
-        return *this;
-    }
-
-    AdjustableValue<T> set_obj_target(lv_obj_t* obj)
-    {
-        if (!obj) return *this;
-        lv_obj_target = obj;
-        lv_obj_target->user_data = this;
-        return *this;
-    }
+    lv_obj_t* get_obj_target();
+    AdjustableValue set_obj_measured(lv_obj_t* obj);
+    AdjustableValue set_obj_target(lv_obj_t* obj);
 
     /**
      * @return The last measured value
      */
-    T* get_value_measured()
-    {
-        return &measured;
-    }
+    double* get_value_measured();
 
     /**
      * @return The current set target value
      */
-    T* get_value_target()
-    {
-        return &target;
-    }
-
-    AdjustableValue<T> set_value_measured(T& value)
-    {
-        measured = value;
-        return *this;
-    }
-
-    AdjustableValue<T> set_value_target(T& value)
-    {
-        target = value;
-        return *this;
-    }
+    double* get_value_target();
+    AdjustableValue set_value_measured(double value);
+    AdjustableValue set_value_target(double value);
 
 private:
     lv_obj_t* lv_obj_measured = nullptr;
     lv_obj_t* lv_obj_target = nullptr;
-    T measured;
-    T target;
+    double measured = -1;
+    double target = 0;
 };
 
-extern AdjustableValue<double> adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
+extern AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
 #endif //UVENT_INTERFACE_H

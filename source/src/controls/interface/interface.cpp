@@ -3,7 +3,7 @@
 /**
  * Adjustable values
  */
-AdjustableValue<double> adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
+AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
 extern const AdjValueParams adj_value_settings[] = {
         {"Tidal Volume",        "vT",         "%d",   "%d",   "mL",    100, 900, 50,  true,  true,  palette_color_1},
@@ -12,7 +12,109 @@ extern const AdjValueParams adj_value_settings[] = {
         {"PIP Limit (Ceiling)", "PIP",        "%d",   "%d",   "cmH2O", 15,  40,  1,   true,  true,  palette_color_1},
         // TODO ask Dr. Fischer about exact values for this
         {"Plateau Time",        "Plateau",    "%d",   "%d",   "ms",    200, 800, 50,  false, true,  palette_color_1},
-        {"Current Pressure",    nullptr,      "%d",   "%d",   "cmH2O", 5,   40,  0,   true,  false, palette_color_2},
+        {"Current Pressure",    nullptr,      "%d",   "%d",   "cmH2O", 5,   40,  1,   true,  false, palette_color_2},
         {"",                    "",           "%.1f", "%.1f", nullptr, 1,   4,   0.1, false, false, palette_color_1},
         {"",                    "",           "%.1f", "%.1f", nullptr, 1,   4,   0.1, false, false, palette_color_1},
 };
+
+void AdjustableValue::on_control_button_press(lv_event_t* evt)
+{
+    // TODO generic on control press code
+    if (control_press_cb) {
+        control_press_cb(this, evt);
+    }
+}
+
+void AdjustableValue::on_readout_update(lv_event_t* evt)
+{
+    // TODO generic on control press code
+
+    // TODO LV_EVENT_REFRESH
+    if (readout_update_cb) {
+        readout_update_cb(this, evt);
+    }
+}
+
+void AdjustableValue::refresh_readout()
+{
+    if (!lv_obj_measured) {
+        return;
+    }
+    lv_event_send(lv_obj_measured, LV_EVENT_REFRESH, this);
+}
+
+AdjValueParams AdjustableValue::get_settings() const
+{
+    if (value_type >= ADJ_VALUE_COUNT) {
+        return adj_value_settings[0];
+    }
+    return adj_value_settings[value_type];
+}
+
+double AdjustableValue::get_step() const
+{
+    return get_settings().step;
+}
+
+/**
+     * The holder for all the content that displays the sensor-measured value
+     * @return The base object
+     */
+lv_obj_t* AdjustableValue::get_obj_measured()
+{
+    return lv_obj_measured;
+}
+
+/**
+ * The holder for all the controls to set the target value for the mechanics
+ * @return The base object
+ */
+lv_obj_t* AdjustableValue::get_obj_target()
+{
+    return lv_obj_target;
+}
+
+AdjustableValue AdjustableValue::set_obj_measured(lv_obj_t* obj)
+{
+    if (!obj) return *this;
+    lv_obj_measured = obj;
+    lv_obj_measured->user_data = this;
+    return *this;
+}
+
+AdjustableValue AdjustableValue::set_obj_target(lv_obj_t* obj)
+{
+    if (!obj) return *this;
+    lv_obj_target = obj;
+    lv_obj_target->user_data = this;
+    return *this;
+}
+
+/**
+ * @return The last measured value
+ */
+double* AdjustableValue::get_value_measured()
+{
+    return &measured;
+}
+
+/**
+ * @return The current set target value
+ */
+double* AdjustableValue::get_value_target()
+{
+    return &target;
+}
+
+AdjustableValue AdjustableValue::set_value_measured(double value)
+{
+    measured = value;
+    return *this;
+}
+
+AdjustableValue AdjustableValue::set_value_target(double value)
+{
+    AdjValueParams settings = get_settings();
+    target = clamp(value, settings.min_value, settings.max_value);
+    return *this;
+}

@@ -149,4 +149,10 @@
 #define IE_MIN 0.1
 #define IE_MAX 4.0
 
+// How long to wait in between steps of the readout (ms)
+#define TEST_READOUT_STEP_INTERVAL 1322
+
+// How often to refresh the readouts (ms)
+#define TEST_READOUT_REFRESH_INTERVAL 2000
+
 #endif

@@ -5,6 +5,10 @@
 #include "interface/interface.h"
 
 void init_adjustable_values();
+
+void loop_test_readout();
+void setup_controlled_value(AdjValueType type);
+
 void control_init();
 void control_service();
 double control_get_actuator_position();

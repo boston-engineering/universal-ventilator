@@ -68,6 +68,8 @@ void loop()
 #endif
 
     control_service();
+
+    loop_test_readout();
 }
 
 #if USE_DMA_INTERRUPT

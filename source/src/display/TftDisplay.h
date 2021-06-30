@@ -108,7 +108,9 @@ private:
     lv_disp_drv_t lv_display_driver{};
     lv_disp_draw_buf_t lv_screen_buffer{};
     lv_color_t pixel_buffer_1[BUFFER_SIZE]{};
+#if USE_DMA_INTERRUPT
     lv_color_t pixel_buffer_2[BUFFER_SIZE]{};
+#endif
     lv_indev_drv_t lv_input_driver{};
 };
 
