@@ -15,7 +15,6 @@ void test_eeprom::select_test(void)
     Serial.println("(1) test_write_read");
     Serial.println("(2) test_settings");
     Serial.println("(3) test_struct");
-    Serial.println("(4) WARNING: test_erase_memory - this will wipe all memory on the eeprom");
 
     int choice = getNumber();
     Return_code code;
@@ -32,10 +31,6 @@ void test_eeprom::select_test(void)
     case 3:
         Serial.println("\n\n\n");
         code = test_struct();
-        break;
-    case 4:
-        Serial.println("\n\n\n");
-        code = test_erase_memory();
         break;
     default:
         Serial.println("\n");
@@ -167,15 +162,6 @@ Return_code test_eeprom::test_settings(void)
     Serial.println("\n\n\n");
 
     return Return_code::success;
-}
-Return_code test_eeprom::test_erase_memory(void)
-{
-    Serial.println("Begin to erase memory...");
-    Serial.println("This will take about a minute");
-    external_eeprom.erase();
-    Serial.println("Finished deleting memory");
-
-    return Return_code::erased_memory;
 }
 
 Return_code test_eeprom::test_struct(void)
