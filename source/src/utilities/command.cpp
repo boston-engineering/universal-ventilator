@@ -1,9 +1,9 @@
-#include <Arduino.h>
-#include <limits.h>
 #include "command.h"
 #include "controls/control.h"
 #include "controls/machine.h"
 #include "utilities/logging.h"
+#include <Arduino.h>
+#include <limits.h>
 
 enum class Error_Codes {
     ER_NONE,
@@ -87,6 +87,7 @@ command_actuator(int argc, char** argv)
         Serial.println("pos_raw  - Gets the current raw data from the angle sensor .");
         Serial.println("mv_deg   - Moves the actuator to a position(degrees).");
         Serial.println("mv_steps - Moves the actuator by no. of steps(steps).");
+        Serial.println("volume   - Get the tidal volume from the Ambu Bag (liters).");
     }
     else if (!(strcmp(argv[1], "home"))) {
         control_change_state(States::ST_ACTUATOR_HOME);
@@ -180,6 +181,44 @@ command_actuator(int argc, char** argv)
             // Change state to jog
             control_change_state(States::ST_ACTUATOR_JOG);
             control_actuator_manual_move(Tick_Type::TT_STEPS, req_steps, req_speed);
+        }
+    }
+    else if (!(strcmp(argv[1], "volume"))) {
+        if (argc == 2) {
+            // Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: volume compliance");
+            Serial.println("compliance - The compliance of the artificial lung.");
+            Serial.println("Options are: none, 20, or 50");
+            return;
+        }
+
+        if ((strcmp(argv[2], "none")) && (strcmp(argv[2], "None")) && (strcmp(argv[2], "NONE")) && (strcmp(argv[2], "20")) && (strcmp(argv[2], "50"))) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        int dec_place = 3;
+        if (!(strcmp(argv[2], "none")) || !(strcmp(argv[2], "None")) || !(strcmp(argv[2], "NONE"))) {
+            Serial.println(control_get_volume(C_Stat::NONE), dec_place);
+            return;
+        }
+        else if (!(strcmp(argv[2], "20"))) {
+            Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+            return;
+        }
+        else if (!(strcmp(argv[2], "50"))) {
+            Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
+            return;
+        }
+        else {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
         }
     }
 }

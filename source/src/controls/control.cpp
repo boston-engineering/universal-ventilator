@@ -1,10 +1,10 @@
-#include <DueTimer.h>
-#include <ams_as5048b.h>
-#include <AccelStepper.h>
+#include "control.h"
 #include "../config/uvent_conf.h"
 #include "actuators/actuator.h"
 #include "eeprom/storage.h"
-#include "control.h"
+#include <AccelStepper.h>
+#include <DueTimer.h>
+#include <ams_as5048b.h>
 
 // Instance to control the paddle
 Actuator actuator;
@@ -159,4 +159,9 @@ const char** control_get_state_list(uint8_t* size)
 void control_display_storage()
 {
     storage.display_storage();
+}
+
+double control_get_volume(C_Stat compliance)
+{
+    return actuator.get_tidal_volume(compliance);
 }
