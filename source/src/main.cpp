@@ -23,12 +23,12 @@ void setup()
 
     NVIC_EnableIRQ(DMAC_IRQn);
 
-    control_init();
-
     if (!tft_display.init()) {
         while (1)
             ;
     }
+
+    control_init();
 
 #if ENABLE_TEST_DISPLAY
     setup_test_display();
