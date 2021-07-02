@@ -44,7 +44,7 @@
 // Serial baud rate
 #define SERIAL_BAUD_RATE 115200
 
-#define SPI_CLK_SPEED 41000000L
+#define SPI_CLK_SPEED 22000000L
 
 // Control handler  period in microsec.
 #define CONTROL_HANDLER_PERIOD_US 20000
