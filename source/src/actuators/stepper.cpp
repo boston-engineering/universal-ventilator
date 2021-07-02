@@ -78,3 +78,8 @@ bool Stepper::target_reached()
     int32_t distance_to_go = stepper_5718L.distanceToGo();
     return (distance_to_go == 0);
 }
+
+void Stepper::enable(bool en)
+{
+    digitalWrite(STEPPER_DISABLE_PIN, !(en));
+}
