@@ -14,4 +14,5 @@ States control_get_state();
 const char* control_get_state_string();
 const char** control_get_state_list(uint8_t*);
 void control_display_storage();
+double control_get_volume(C_Stat compliance = C_Stat::TWENTY);
 #endif
