@@ -1,5 +1,6 @@
 #include "actuator.h"
 #include "controls/control.h"
+#include "utilities/logging.h"
 
 void Actuator::init()
 {
@@ -268,4 +269,31 @@ bool Actuator::add_correction()
     }
 
     return true;
+}
+
+Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
+{
+    if (duration_s <= 0) return Fault::FT_ACTUATOR_INVALID_TIME;// Invalid time.
+
+    // Get the current position of the actuator
+    const float cur_pos_deg = (float) get_position();
+
+    // Calculate the distance to move.
+    const float distance_deg = abs(goal_pos_deg - cur_pos_deg);
+
+    // Calculate velocity of travel in degrees/second.
+    vel_deg = distance_deg / duration_s;
+
+    if (TIMING_PULLEY_DEGREES_TO_STEPS(vel_deg) > STEPPER_MAX_STEPS_PER_SECOND) {
+        serial_printf("Max velocity requested! %.2f, clipping to %0.2f!\n", vel_deg, TIMING_PULLEY_STEPS_TO_DEGREES(STEPPER_MAX_STEPS_PER_SECOND));
+
+        // Cap to max velocity
+        vel_deg = TIMING_PULLEY_STEPS_TO_DEGREES(STEPPER_MAX_STEPS_PER_SECOND);
+    }
+
+#if DEBUG_WAVEFORM
+    serial_printf("Goal:%f, Speed: %f\n", goal_pos_deg, vel_deg);
+#endif
+
+    return Fault::FT_NONE;
 }
