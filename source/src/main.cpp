@@ -52,7 +52,12 @@ void loop()
     parser.service();
 
 #if ENABLE_TEST_PRESSURE_SENSORS
-    output_pressure_test();
+    //test_sensors_read_pressure(250, true, Units_pressure::cmH20, Units_pressure::mbar);
+    //test_sensors_read_gauge(250, true, Units_pressure::cmH20);
+    //test_sensors_read_differential(250, true, Units_pressure::mbar);
+    //test_sensors_read_flow(250, true, Order_type::first, units_flow::lpm);
+    //test_sensors_read_flow(250, true, Order_type::second, units_flow::lpm);
+    test_sensors_read_flow(100, true, Order_type::third, units_flow::lpm);
 #endif
 
 #if ENABLE_TEST_EEPROM
