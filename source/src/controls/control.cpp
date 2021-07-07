@@ -197,6 +197,16 @@ void control_actuator_set_enable(bool en)
     actuator.set_enable(en);
 }
 
+waveform_params* control_get_waveform_params(void)
+{
+    return (waveform.get_params());
+}
+
+void control_calculate_waveform()
+{
+    waveform.calculate_waveform();
+}
+
 double control_get_gauge_pressure()
 {
     return gauge_sensor.get_pressure(units_pressure::cmH20);

@@ -126,8 +126,17 @@
 #define MIN_ACT_POS_DEG 0.0
 #define MAX_ACT_POS_DEG 180.0
 
-// AMBU Bag limit
+// Waveform
+// Breaths per minute
+#define BPM_MIN 2
+#define BPM_MAX 30
+
+// AMBU Bag limit, aka vt
 #define MIN_BAG_VOL_L 0.1
 #define MAX_BAG_VOL_L 1.06
+
+// I:E ratio
+#define IE_MIN 0.1
+#define IE_MAX 4.0
 
 #endif

@@ -1,6 +1,7 @@
 #include "command.h"
 #include "controls/control.h"
 #include "controls/machine.h"
+#include "controls/waveform.h"
 #include "utilities/logging.h"
 #include <Arduino.h>
 #include <limits.h>
@@ -15,6 +16,7 @@ static void command_help(int argc, char** argv);
 static void command_actuator(int argc, char** argv);
 static void command_state(int argc, char** argv);
 static void command_eeprom(int argc, char** argv);
+static void command_waveform(int argc, char** argv);
 static void command_pressure(int argc, char** argv);
 
 /* Command response, with error code. */
@@ -69,6 +71,7 @@ command_type commands[] =
                 {"actuator", command_actuator, "\tActuator related commands.\r\n"},
                 {"state", command_state, "\t\tState related commands.\r\n"},
                 {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
+                {"wave", command_waveform, "\t\tWaveform related commands.\r\n"},
                 {"press", command_pressure, "\t\tPressure related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
@@ -354,6 +357,130 @@ command_eeprom(int argc, char** argv)
     else if (!(strcmp(argv[1], "dump"))) {
         control_display_storage();
         return;
+    }
+}
+
+/* Waveform function. */
+static void
+command_waveform(int argc, char** argv)
+{
+    waveform_params* p_wave_params = control_get_waveform_params();
+
+    // Check is help is requested for this command or no arguments were included.
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: state command");
+        Serial.println("dump      - Dumps waveform details.");
+        Serial.println("bpm       - Breaths per minute");
+    }
+    else if (!(strcmp(argv[1], "dump"))) {
+        serial_printf("----Waveform Details----\n");
+        serial_printf("tPeriod:\t %0.2f\n", p_wave_params->tPeriod);
+        serial_printf("tHoldIn:\t %0.2f\n", p_wave_params->tHoldIn);
+        serial_printf("tIn:\t\t %0.2f\n", p_wave_params->tIn);
+        serial_printf("tEx:\t\t %0.2f\n", p_wave_params->tEx);
+        serial_printf("bpm:\t\t %d\n", p_wave_params->bpm);
+        serial_printf("ie:\t\t %0.1f:%0.1f\n", p_wave_params->ie_i, p_wave_params->ie_e);
+        serial_printf("Vt:\t\t %0.1f\n", p_wave_params->volume_ml);
+        return;
+    }
+    else if (!(strcmp(argv[1], "bpm"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: bpm value");
+            return;
+        }
+
+        int32_t bpm;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &bpm))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((bpm > BPM_MAX) || (bpm < BPM_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->bpm = bpm;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
+    else if (!(strcmp(argv[1], "vt"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: Vt value");
+            return;
+        }
+
+        float vt;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &vt))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((vt > (MAX_BAG_VOL_L * 1000)) || (vt < (MIN_BAG_VOL_L * 1000))) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->volume_ml = vt;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
+    else if (!(strcmp(argv[1], "ie"))) {
+        if (argc < 4) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: ie i e");
+            Serial.println("eg: ie 1.0 1.5");
+            return;
+        }
+
+        float ie_i;
+        float ie_e;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &ie_i))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        if (!(sanitize_input(argv[3], &ie_e))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        // Sanitize
+        if ((ie_i > IE_MAX) || (ie_i < IE_MIN) || (ie_e > IE_MAX) || (ie_e < IE_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->ie_i = ie_i;
+            p_wave_params->ie_e = ie_e;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
     }
 }
 

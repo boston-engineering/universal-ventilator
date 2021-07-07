@@ -17,6 +17,9 @@ void control_display_storage();
 double control_get_degrees_to_volume(C_Stat compliance = C_Stat::FIFTY);
 double control_calc_volume_to_degrees(C_Stat compliance, double volume);
 void control_actuator_set_enable(bool en);
+void control_display_storage();
+waveform_params* control_get_waveform_params(void);
+void control_calculate_waveform();
 double control_get_gauge_pressure();
 double control_get_diff_pressure();
 #endif
