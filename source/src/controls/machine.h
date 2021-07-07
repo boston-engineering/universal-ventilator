@@ -4,6 +4,7 @@
 #include "actuators/actuator.h"
 #include "controls/fault.h"
 #include "../config/uvent_conf.h"
+#include "waveform.h"
 
 #define stringify(name) #name
 
@@ -25,7 +26,7 @@ enum class States {
 class Machine {
 public:
     // Constructor
-    Machine(States, Actuator*);
+    Machine(States, Actuator*, Waveform*);
 
     void setup();
     void run();
@@ -58,6 +59,9 @@ private:
     Fault fault_id;
 
     Actuator* p_actuator;
+
+    Waveform* p_waveform;
+    waveform_params* p_waveparams;
 
     // Set the current state in the state machine
     void set_state(States);

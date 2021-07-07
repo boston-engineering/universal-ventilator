@@ -4,7 +4,8 @@
 enum class Fault {
     FT_NONE,
     FT_ACTUATOR_FAULT,
-    FT_ACTUATOR_INVALID_TIME
+    FT_ACTUATOR_INVALID_TIME,
+    FT_WAVEFORM_CALC_ERROR,
 };
 
 #endif

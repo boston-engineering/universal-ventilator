@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include "machine.h"
 #include "actuators/actuator.h"
+#include "utilities/util.h"
 
 // Stringify states
 const char* state_string[] =
@@ -18,10 +19,15 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-Machine::Machine(States st, Actuator* act)
+Machine::Machine(States st, Actuator* act, Waveform* wave)
 {
     p_actuator = act;
     state = st;
+
+    p_waveform = wave;
+    p_waveparams = wave->get_params();
+    // Calculate the waveform parameters
+    p_waveform->calculate_waveform();
 }
 
 // Set the current state in the state machine
@@ -62,16 +68,39 @@ void Machine::state_inspiration()
         // The hard coded numbers below will change based on equations.
         p_actuator->set_position(Tick_Type::TT_DEGREES, 180.0);
         p_actuator->set_speed(Tick_Type::TT_DEGREES, 50.0);
+        // Calculate the waveform parameters
+        if (p_waveform->calculate_waveform() == -1) {
+            // Set the fault ID:
+            fault_id = Fault::FT_WAVEFORM_CALC_ERROR;
+            // Error in waveform calculation. Switch to error state
+            set_state(States::ST_FAULT);
+        }
+
+        float goal_pos_deg = p_actuator->volume_to_degrees(C_Stat::FIFTY, p_waveparams->volume_ml / 1000);
+        float vel_deg = 0;
+
+        // Calculate how much and at what speed the actuator should move.
+        p_actuator->calculate_trajectory(p_waveparams->tIn, goal_pos_deg, vel_deg);
+
+        // Move the actuator
+        p_actuator->set_position(Tick_Type::TT_DEGREES, goal_pos_deg);
+        p_actuator->set_speed(Tick_Type::TT_DEGREES, vel_deg);
     }
 
     // Check if target has been reached.
-    if (p_actuator->target_reached()) {
-        set_state(States::ST_EXPR);
+    if (p_waveform->is_inspiration_done()) {
+        set_state(States::ST_INSPR_HOLD);
     }
 }
 
 void Machine::state_inspiration_hold()
 {
+    if (state_first_entry) {
+        state_first_entry = false;
+    }
+    if (p_waveform->is_inspiration_hold_done()) {
+        set_state(States::ST_EXPR);
+    }
 }
 
 void Machine::state_expiration()
@@ -79,22 +108,44 @@ void Machine::state_expiration()
     if (state_first_entry) {
         state_first_entry = false;
 
-        // The hard coded numbers below will change based on equations.
-        p_actuator->set_position(Tick_Type::TT_DEGREES, 0.0);
-        p_actuator->set_speed(Tick_Type::TT_DEGREES, 50.0);
+        float goal_pos_deg = 0;              // Fully retracted.
+        float duration_s = p_waveparams->tEx;// - (now() - p_waveparams->tCycleTimer);
+        float vel_deg = 0;
+
+        // Calculate how much and at what speed the actuator should move.
+        p_actuator->calculate_trajectory(duration_s, goal_pos_deg, vel_deg);
+
+        // Move the actuator
+        p_actuator->set_position(Tick_Type::TT_DEGREES, goal_pos_deg);
+        p_actuator->set_speed(Tick_Type::TT_DEGREES, vel_deg);
     }
 
     // Check if target has been reached.
     if (p_actuator->target_reached()) {
-        set_state(States::ST_INSPR);
+        set_state(States::ST_PEEP_PAUSE);
+    }
+}
+
+void Machine::state_peep_pause()
+{
+    if (state_first_entry) {
+        state_first_entry = false;
+    }
+
+    if (p_waveform->is_peep_pause_done()) {
+        set_state(States::ST_EXPR_HOLD);
     }
 }
 
 void Machine::state_expiration_hold()
 {
-}
-void Machine::state_peep_pause()
-{
+    if (state_first_entry) {
+        state_first_entry = false;
+    }
+
+    if (p_waveform->is_expiration_done()) {
+        set_state(States::ST_INSPR);
+    }
 }
 
 void Machine::state_actuator_home()
