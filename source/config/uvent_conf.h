@@ -84,7 +84,7 @@
 #define STEPPER_DISABLE_PIN 38
 
 // Stepper: Maximum steps per second
-#define STEPPER_MAX_STEPS_PER_SECOND 400
+#define STEPPER_MAX_STEPS_PER_SECOND 600
 
 // Stepper: Homing speed steps/sec
 #define STEPPER_HOMING_SPEED_IN_STEPS_SEC 100
@@ -110,7 +110,7 @@
 #define GEAR_RATIO TEETH_ON_TIMING_PULLEY / TEETH_ON_PINION
 
 // One revolution of Timing pulley in steps
-#define TIMING_PULLEY_STEPS_PER_REV GEAR_RATIO* STEPPER_STEPS_PER_REV
+#define TIMING_PULLEY_STEPS_PER_REV (GEAR_RATIO * STEPPER_STEPS_PER_REV)
 
 // Convert from degrees to steps and vice-versa
 #define TIMING_PULLEY_DEGREES_TO_STEPS(x) x*(TIMING_PULLEY_STEPS_PER_REV / 360.0)
