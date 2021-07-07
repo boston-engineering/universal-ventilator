@@ -2,6 +2,17 @@
 #define UVENT_UTIL_H
 
 #include <Arduino.h>
+#ifdef __cplusplus
+
+// Undef the Arduino implementation
+#undef min
+
+template<typename Tpa, typename Tpb>
+constexpr auto min(const Tpa& a, const Tpb& b) -> decltype(a < b ? a : b)
+{
+    return b < a ? b : a;
+}
+#endif// __cplusplus
 
 /**
  * @param ptr The pointer to the field/var keeping the time
