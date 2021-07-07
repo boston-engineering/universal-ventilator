@@ -37,6 +37,8 @@ void loop_test_readout()
 
     if (has_time_elapsed(&timing_step_counter, TEST_READOUT_STEP_INTERVAL)) {
         for (auto& adjustable_value : adjustable_values) {
+            if (adjustable_value.value_type == IE_RATIO_LEFT || adjustable_value.value_type == IE_RATIO_RIGHT)
+                continue;
             AdjValueParams settings = adjustable_value.get_settings();
             long add_val = random(0, long(settings.step) + 1);
             double new_val = *adjustable_value.get_value_measured() + add_val;
@@ -62,7 +64,7 @@ void init_adjustable_values()
         value_class->init(static_cast<AdjValueType>(i));
         *value_class->get_value_measured() = -1;
     }
-
+    adjustable_values[AdjValueType::IE_RATIO_LEFT].set_selected(false);
 }
 
 void set_readout(AdjValueType type, double val)

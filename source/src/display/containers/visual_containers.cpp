@@ -7,7 +7,7 @@ CONTAINER_INIT_FUNC(VISUAL_MAIN)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_MAIN);
-    lv_style_set_border_color(style_ptr, color_black);
+    lv_style_set_border_color(style_ptr, lv_color_black());
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
 
@@ -38,7 +38,7 @@ CONTAINER_INIT_FUNC(VISUAL_G_C)
 
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(VISUAL_G_C);
-    lv_style_set_border_color(style_ptr, color_black);
+    lv_style_set_border_color(style_ptr, lv_color_black());
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
 }
 

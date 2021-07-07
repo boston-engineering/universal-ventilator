@@ -23,12 +23,10 @@ typedef enum AdjValueType {
 typedef struct AdjValueParams {
     AdjValueParams(const char* title, const char* control_title, const char* measured_formatter,
             const char* target_formatter, const char* unit,
-            float min_val, float max_val, float step, bool readout,
-            bool control, lv_color_t main_color)
+            float min_val, float max_val, float step, lv_color_t main_color)
             : title(title), control_title(control_title), measured_formatter(measured_formatter),
               target_formatter(target_formatter), unit(unit),
-              min_value(min_val), max_value(max_val), step(step), create_readout(readout),
-              create_control(control), main_color(main_color) { }
+              min_value(min_val), max_value(max_val), step(step), main_color(main_color) { }
 
     const char* title;
     const char* control_title;
@@ -38,8 +36,6 @@ typedef struct AdjValueParams {
     double min_value;
     double max_value;
     double step;
-    bool create_readout = true;
-    bool create_control = false;
     lv_color_t main_color;
 } AdjValueParams;
 
@@ -98,11 +94,30 @@ public:
     AdjustableValue set_value_measured(double value);
     AdjustableValue set_value_target(double value);
 
+    inline bool is_selected() const
+    {
+        return selected;
+    }
+
+    inline void set_selected(bool state)
+    {
+        selected = state;
+    }
+
+    inline void toggle_selected()
+    {
+        set_selected(!selected);
+    }
+
 private:
     lv_obj_t* lv_obj_measured = nullptr;
     lv_obj_t* lv_obj_target = nullptr;
     double measured = -1;
     double target = 0;
+    /**
+     * Only used if this is part of a composite value like I:E Ratio
+     */
+    bool selected = true;
 };
 
 extern AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];

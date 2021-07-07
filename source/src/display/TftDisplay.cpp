@@ -1,5 +1,6 @@
 #include <utilities/util.h>
 #include <function_timings.h>
+#include <utilities/logging.h>
 #include "TftDisplay.h"
 #include "../../config/uvent_conf.h"
 #include "global_components.h"
@@ -27,20 +28,22 @@ bool TftDisplay::init()
 {
 
     Serial.println("Initializing...");
+
+#if USE_DMA_INTERRUPT
+    NVIC_EnableIRQ(DMAC_IRQn);
+#endif
+
     if (!tft_display.begin(RA8875_800x480)) {
         Serial.println("Failed to init display, RA8875 did not setup correctly");
         return false;
     }
 
+    tft_display.setClockSpeed(SPI_CLK_SPEED);                   // Manually set clock speed to something faster
     tft_display.displayOn(true);
     tft_display.GPIOX(true);                                // Enable TFT - display enable tied to GPIOX
     tft_display.PWM1config(true, RA8875_PWM_CLK_DIV1024);   // PWM output for backlight
     tft_display.PWM1out(255);
     tft_display.graphicsMode();
-
-#if defined(SPI_DRIVER) && SPI_DRIVER == 1                      // Only set the SPI speed manually if we're using the default driver
-    tft_display.setClockSpeed(SPI_CLK_SPEED);                   // Manually set clock speed to something faster
-#endif
 
     Serial.println("Display connected, starting touchscreen setup...");
 
@@ -80,6 +83,8 @@ bool TftDisplay::init()
     lv_input_driver.type = LV_INDEV_TYPE_POINTER;
     lv_input_driver.user_data = this;
     lv_input_driver.read_cb = wrapped_read_inputs;
+    lv_input_driver.long_press_time = 750;
+    lv_input_driver.long_press_repeat_time = 250;
     lv_indev_drv_register(&lv_input_driver);
 
     Serial.println("DONE.");
@@ -152,7 +157,7 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
 void TftDisplay::update()
 {
     //TODO add sleep handler code
-    if (has_time_elapsed(&chart_update_timer, 750)) {
+    if (has_time_elapsed(&chart_update_timer, 1000)) {
         update_chart();
     }
     if (!RA_GET_DEBUG_STATE() && has_time_elapsed(&debug_toggle_timer, 10000)) {

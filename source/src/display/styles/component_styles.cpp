@@ -13,7 +13,7 @@ STYLE_INIT_FUNC(READOUT)
     lv_style_set_pad_all(style, 0 px);
     // Shadow
     lv_style_set_shadow_width(style, 8 px);
-    lv_style_set_shadow_color(style, color_black);
+    lv_style_set_shadow_color(style, lv_color_black());
     lv_style_set_shadow_ofs_x(style, 4 px);
     lv_style_set_shadow_ofs_y(style, 4 px);
     // Flexbox
@@ -196,6 +196,25 @@ STYLE_INIT_FUNC(CONTROL_TEXT_CONTAINER_TOP)
 }
 
 /**
+* ComponentType::CONTROL_TEXT_CONTAINER_IE_TOP
+*/
+STYLE_INIT_FUNC(CONTROL_TEXT_CONTAINER_IE_TOP)
+{
+    lv_style_t* style = STYLE_PTR_CM(CONTROL_TEXT_CONTAINER_IE_TOP);
+    // Colors & Borders
+    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);
+    lv_style_set_flex_main_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_pad_column(style, 6 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    lv_style_set_width(style, LV_SIZE_CONTENT);
+    lv_style_set_height(style, LV_SIZE_CONTENT);
+//    lv_style_set_height(style,LV_PCT(100));
+}
+
+/**
 * ComponentType::CONTROL_TEXT_VALUE
 */
 STYLE_INIT_FUNC(CONTROL_TEXT_VALUE)
@@ -252,6 +271,6 @@ STYLE_INIT_FUNC(DIVIDER)
     lv_style_t* style = STYLE_PTR_CM(DIVIDER);
     // Line properties
     lv_style_set_line_width(style, 2 px);
-    lv_style_set_line_color(style, color_black);
+    lv_style_set_line_color(style, lv_color_black());
     lv_style_set_line_rounded(style, true);
 }

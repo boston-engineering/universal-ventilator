@@ -1,19 +1,31 @@
+#include <display/layouts/layouts.h>
 #include "screen.h"
 
-MainScreen::MainScreen()
-        : Screen() { }
+Screen::~Screen()
+{
+    if (screen) {
+        lv_obj_del(screen);
+    }
+}
 
-void MainScreen::init()
+void Screen::init()
+{
+    screen = lv_obj_create(nullptr);
+}
+
+void Screen::select_screen()
+{
+    lv_scr_load(screen);
+}
+
+void Screen::setup()
 {
 
 }
 
-void MainScreen::setup()
+void Screen::cleanup()
 {
-
-}
-
-void MainScreen::cleanup()
-{
-
+    if (screen) {
+        lv_obj_clean(screen);
+    }
 }

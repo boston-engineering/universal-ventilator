@@ -7,7 +7,9 @@
 void init_adjustable_values();
 
 void loop_test_readout();
-void setup_controlled_value(AdjValueType type);
+
+void set_readout(AdjValueType type, double val);
+double get_readout(AdjValueType type);
 
 void control_init();
 void control_service();

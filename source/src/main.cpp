@@ -1,6 +1,7 @@
 #include <DueTimer.h>
 #include <utilities/logging.h>
 #include <function_timings.h>
+#include <display/screens/screen.h>
 #include "display/test_display.h"
 #include "../config/uvent_conf.h"
 #include "controls/control.h"
@@ -13,16 +14,18 @@
 #include "eeprom/test_eeprom.h"
 
 TftDisplay tft_display = {TFT_CS, TFT_RST, TOUCH_INT, TOUCH_RST};
+MainScreen screen;
 
 // Parser instance to parse commands on the serial line
 Parser parser;
 test_eeprom eeprom_test;
 
+// TODO clean up setup & main loop
+
 void setup()
 {
     Serial.begin(SERIAL_BAUD_RATE);
 
-    NVIC_EnableIRQ(DMAC_IRQn);
 
     if (!tft_display.init()) {
         while (1);
@@ -33,10 +36,12 @@ void setup()
 #if ENABLE_TEST_DISPLAY
     setup_test_display();
 #else
-    init_main_display();
-#endif
-
     init_adjustable_values();
+    screen.init();
+    screen.select_screen();
+    init_main_display();
+    screen.setup();
+#endif
 
     // Initialize the parser, with the command array and command array size
     parser.init(command_get_array(), command_get_array_size());
