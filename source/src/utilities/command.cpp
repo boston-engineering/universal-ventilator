@@ -88,6 +88,7 @@ command_actuator(int argc, char** argv)
         Serial.println("mv_deg   - Moves the actuator to a position(degrees).");
         Serial.println("mv_steps - Moves the actuator by no. of steps(steps).");
         Serial.println("volume   - Get the tidal volume from the Ambu Bag (liters).");
+        Serial.println("enable   - Enable/Disable the drive.");
     }
     else if (!(strcmp(argv[1], "home"))) {
         control_change_state(States::ST_ACTUATOR_HOME);
@@ -217,6 +218,26 @@ command_actuator(int argc, char** argv)
         }
         else {
             // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+    }
+    else if (!(strcmp(argv[1], "enable"))) {
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: enable 0/1");
+            return;
+        }
+        else if (!(strcmp(argv[2], "1"))) {
+            control_actuator_set_enable(true);
+            print_response(Error_Codes::ER_NONE);
+            return;
+        }
+        else if (!(strcmp(argv[2], "0"))) {
+            control_actuator_set_enable(false);
+            print_response(Error_Codes::ER_NONE);
+            return;
+        }
+        else {
             print_response(Error_Codes::ER_INVALID_ARG);
             return;
         }

@@ -17,6 +17,7 @@ public:
     void set_position(double);
     void set_position_as_home(int32_t position);
     bool target_reached();
+    void set_enable(bool en);
 
 private:
     // Accelstepper object for Stepper 5718L

@@ -80,6 +80,9 @@
 // Stepper: Step pin
 #define STEPPER_STEP_PIN 9
 
+// Stepper: Disable pin
+#define STEPPER_DISABLE_PIN 38
+
 // Stepper: Maximum steps per second
 #define STEPPER_MAX_STEPS_PER_SECOND 400
 

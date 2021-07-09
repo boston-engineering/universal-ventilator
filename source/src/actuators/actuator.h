@@ -37,7 +37,7 @@ class Actuator
 public:
     void init();
     void run();
-    void disable();
+    void set_enable(bool);
 
     // Set the speed in steps.
     void set_speed(Tick_Type tt, float speed);

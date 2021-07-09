@@ -24,6 +24,7 @@ void Stepper::init()
     // Setup stepper pins
     pinMode(STEPPER_DIRECTION_PIN, OUTPUT);
     pinMode(STEPPER_STEP_PIN, OUTPUT);
+    pinMode(STEPPER_DISABLE_PIN, OUTPUT);
 
     // Max speed in steps per second.
     stepper_5718L.setMaxSpeed(STEPPER_MAX_STEPS_PER_SECOND);
@@ -77,4 +78,9 @@ bool Stepper::target_reached()
 {
     int32_t distance_to_go = stepper_5718L.distanceToGo();
     return (distance_to_go == 0);
+}
+
+void Stepper::set_enable(bool en)
+{
+    digitalWrite(STEPPER_DISABLE_PIN, !(en));
 }

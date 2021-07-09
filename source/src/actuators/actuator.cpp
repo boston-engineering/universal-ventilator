@@ -6,6 +6,9 @@ void Actuator::init()
     stepper_fb.begin();
     stepper.init();
 
+    // Enable the drive
+    stepper.set_enable(true);
+
     // Set the current position as home.
     stepper.set_position_as_home(0);
 }
@@ -15,9 +18,9 @@ void Actuator::run()
     stepper.run();
 }
 
-void Actuator::disable()
+void Actuator::set_enable(bool en)
 {
-    stepper.set_speed(0);
+    stepper.set_enable(en);
 }
 
 void Actuator::set_speed(Tick_Type tt, float speed)

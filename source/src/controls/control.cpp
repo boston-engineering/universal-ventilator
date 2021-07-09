@@ -183,3 +183,8 @@ double control_get_volume(C_Stat compliance)
 {
     return actuator.get_tidal_volume(compliance);
 }
+
+void control_actuator_set_enable(bool en)
+{
+    actuator.set_enable(en);
+}
