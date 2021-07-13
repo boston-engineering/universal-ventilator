@@ -15,6 +15,7 @@ static void command_help(int argc, char** argv);
 static void command_actuator(int argc, char** argv);
 static void command_state(int argc, char** argv);
 static void command_eeprom(int argc, char** argv);
+static void command_pressure(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -52,13 +53,23 @@ inline bool sanitize_input(const char* str, float* result)
     return !(pEnd == str);
 }
 
+/* Used by the callee to repeatedly print the requested value.
+ */
+bool repeat_break()
+{
+    delay(100);
+    // read the incoming byte:
+    return (Serial.read() == '\r');
+}
+
 /* Command list with their associated help text */
 command_type commands[] =
         {
                 {"help", command_help, "\t\tDisplay a list of commands.\r\n"},
                 {"actuator", command_actuator, "\tActuator related commands.\r\n"},
                 {"state", command_state, "\t\tState related commands.\r\n"},
-                {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"}};
+                {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
+                {"press", command_pressure, "\t\tPressure related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
 
@@ -89,6 +100,7 @@ command_actuator(int argc, char** argv)
         Serial.println("mv_steps - Moves the actuator by no. of steps(steps).");
         Serial.println("volume   - Get the tidal volume from the Ambu Bag (liters).");
         Serial.println("enable   - Enable/Disable the drive.");
+        return;
     }
     else if (!(strcmp(argv[1], "home"))) {
         control_change_state(States::ST_ACTUATOR_HOME);
@@ -101,7 +113,15 @@ command_actuator(int argc, char** argv)
         return;
     }
     else if (!(strcmp(argv[1], "pos"))) {
-        Serial.println(control_get_actuator_position(), DEC);
+        if (!(strcmp(argv[2], "r"))) {
+            // Repeat requested. Print till Enter is pressed.
+            while (!repeat_break()) {
+                Serial.println(control_get_actuator_position(), DEC);
+            }
+        }
+        else {
+            Serial.println(control_get_actuator_position(), DEC);
+        }
         return;
     }
     else if (!(strcmp(argv[1], "pos_raw"))) {
@@ -209,16 +229,27 @@ command_actuator(int argc, char** argv)
             return;
         }
         else if (!(strcmp(argv[2], "20"))) {
-            Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+            if (!(strcmp(argv[2], "r"))) {
+                // Repeat requested. Print till Enter is pressed.
+                while (!repeat_break()) {
+                    Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+                }
+            }
+            else {
+                Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+            }
             return;
         }
         else if (!(strcmp(argv[2], "50"))) {
-            Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
-            return;
-        }
-        else {
-            // Invalid request
-            print_response(Error_Codes::ER_INVALID_ARG);
+            if (!(strcmp(argv[2], "r"))) {
+                // Repeat requested. Print till Enter is pressed.
+                while (!repeat_break()) {
+                    Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
+                }
+            }
+            else {
+                Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
+            }
             return;
         }
     }
@@ -322,6 +353,42 @@ command_eeprom(int argc, char** argv)
     }
     else if (!(strcmp(argv[1], "dump"))) {
         control_display_storage();
+        return;
+    }
+}
+
+/* Pressure function. */
+static void
+command_pressure(int argc, char** argv)
+{
+    // Check is help is requested for this command or no arguments were included.
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: press command");
+        Serial.println("gauge      - Dumps gauge pressure.");
+        Serial.println("diff       - Dumps diff pressure");
+    }
+    else if (!(strcmp(argv[1], "gauge"))) {
+        if (!(strcmp(argv[2], "r"))) {
+            // Repeat requested. Print till Enter is pressed.
+            while (!repeat_break()) {
+                Serial.println(control_get_gauge_pressure(), DEC);
+            }
+        }
+        else {
+            Serial.println(control_get_gauge_pressure(), DEC);
+        }
+        return;
+    }
+    else if (!(strcmp(argv[1], "diff"))) {
+        if (!(strcmp(argv[2], "r"))) {
+            // Repeat requested. Print till Enter is pressed.
+            while (!repeat_break()) {
+                Serial.println(control_get_diff_pressure(), DEC);
+            }
+        }
+        else {
+            Serial.println(control_get_diff_pressure(), DEC);
+        }
         return;
     }
 }
