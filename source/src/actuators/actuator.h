@@ -52,9 +52,11 @@ public:
     uint16_t set_current_position_as_zero();
     void set_zero_position(uint16_t new_zero);
     void set_position(Tick_Type tt, double value);
+    void set_position_relative(Tick_Type tt, double value);
     bool is_running();
     void set_position_as_home();
     bool target_reached();
+    bool add_correction();
 
 private:
     Stepper stepper;

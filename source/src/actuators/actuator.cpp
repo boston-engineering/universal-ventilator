@@ -31,7 +31,7 @@ void Actuator::set_speed(Tick_Type tt, float speed)
         * 360 degrees(1 rev) is TIMING_PULLEY_STEPS_PER_REV steps.
         * X degrees is X * TIMING_PULLEY_STEPS_PER_REV/360
         */
-        double steps_per_sec = speed * TIMING_PULLEY_DEGREES_TO_STEPS;
+        double steps_per_sec = TIMING_PULLEY_DEGREES_TO_STEPS(speed);
         stepper.set_speed(float(steps_per_sec));
     }
     else {
@@ -50,11 +50,27 @@ void Actuator::set_position(Tick_Type tt, double value)
         * 360 degrees is TIMING_PULLEY_STEPS_PER_REV steps.
         * X degrees is TIMING_PULLEY_STEPS_PER_REV/360
         */
-        double angle_to_steps = value * TIMING_PULLEY_DEGREES_TO_STEPS;
+        double angle_to_steps = TIMING_PULLEY_DEGREES_TO_STEPS(value);
         stepper.set_position(angle_to_steps);
     }
     else {
         stepper.set_position(value);
+    }
+}
+
+void Actuator::set_position_relative(Tick_Type tt, double value)
+{
+    if (tt == Tick_Type::TT_DEGREES) {
+        /* Degree to steps calculation.
+        * In reference to the actuator pulley,
+        * 360 degrees is TIMING_PULLEY_STEPS_PER_REV steps.
+        * X degrees is TIMING_PULLEY_STEPS_PER_REV/360
+        */
+        double angle_to_steps = TIMING_PULLEY_DEGREES_TO_STEPS(value);
+        stepper.set_position_relative(angle_to_steps);
+    }
+    else {
+        stepper.set_position_relative(value);
     }
 }
 
@@ -81,7 +97,7 @@ bool Actuator::is_home()
      * = 0.419~0.42 degrees on the wobbler shaft.
      * Check within a degree while homing.
      */
-    return (((current_position >= 0.0) && (current_position <= 1.0)));
+    return (((current_position >= 0.2) && (current_position <= 1.0)));
 }
 
 bool Actuator::is_running()
@@ -181,4 +197,34 @@ void Actuator::set_zero_position(uint16_t new_zero)
     // Zero the zero register first, then write the actual value.
     stepper_fb.zeroRegW(0);
     stepper_fb.zeroRegW(new_zero);
+}
+
+bool Actuator::add_correction()
+{
+    double current_position = get_position();
+
+    /* Only correct for 5 degrees of offset on either side of 0.
+     * If the offset is more than that, then something is wrong.
+     * Move in deltas of x degrees at a time.
+     */
+    if (current_position > 0.0 && current_position <= 5.0) {
+        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(-1.0));
+        set_speed(Tick_Type::TT_STEPS, 100);
+#if DEBUG_CORRECTION
+        serial_printf("Correcting! %0.2f\n", current_position);
+#endif
+    }
+    else if ((current_position > 355 && current_position < 360.0)) {
+        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(1.0));
+        set_speed(Tick_Type::TT_STEPS, 100);
+#if DEBUG_CORRECTION
+        serial_printf("Correcting! %0.2f\n", current_position);
+#endif
+    }
+    else if (current_position > 5.0 && current_position < 355.0) {
+        // Unable to correct
+        return false;
+    }
+
+    return true;
 }

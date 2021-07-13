@@ -52,6 +52,13 @@ void Machine::state_inspiration()
     if (state_first_entry) {
         state_first_entry = false;
 
+        // Check if paddle is at home.
+        if (!(p_actuator->is_home())) {
+            p_actuator->add_correction();
+            state_first_entry = true;
+            return;
+        }
+
         // The hard coded numbers below will change based on equations.
         p_actuator->set_position(Tick_Type::TT_DEGREES, 180.0);
         p_actuator->set_speed(Tick_Type::TT_DEGREES, 50.0);

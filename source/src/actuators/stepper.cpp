@@ -69,6 +69,11 @@ void Stepper::set_position(double steps)
     stepper_5718L.moveTo(steps);
 }
 
+void Stepper::set_position_relative(double steps)
+{
+    stepper_5718L.move(steps);
+}
+
 void Stepper::set_position_as_home(int32_t position)
 {
     stepper_5718L.setCurrentPosition(position);
