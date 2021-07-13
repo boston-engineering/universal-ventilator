@@ -97,7 +97,7 @@ bool Actuator::is_home()
      * = 0.419~0.42 degrees on the wobbler shaft.
      * Check within a degree while homing.
      */
-    return (((current_position >= 0.0) && (current_position <= 1.0)));
+    return (((current_position >= 0.2) && (current_position <= 1.0)));
 }
 
 bool Actuator::is_running()
