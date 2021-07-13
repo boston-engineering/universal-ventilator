@@ -31,7 +31,7 @@ void Actuator::set_speed(Tick_Type tt, float speed)
         * 360 degrees(1 rev) is TIMING_PULLEY_STEPS_PER_REV steps.
         * X degrees is X * TIMING_PULLEY_STEPS_PER_REV/360
         */
-        double steps_per_sec = speed * TIMING_PULLEY_DEGREES_TO_STEPS;
+        double steps_per_sec = TIMING_PULLEY_DEGREES_TO_STEPS(speed);
         stepper.set_speed(float(steps_per_sec));
     }
     else {
@@ -50,7 +50,7 @@ void Actuator::set_position(Tick_Type tt, double value)
         * 360 degrees is TIMING_PULLEY_STEPS_PER_REV steps.
         * X degrees is TIMING_PULLEY_STEPS_PER_REV/360
         */
-        double angle_to_steps = value * TIMING_PULLEY_DEGREES_TO_STEPS;
+        double angle_to_steps = TIMING_PULLEY_DEGREES_TO_STEPS(value);
         stepper.set_position(angle_to_steps);
     }
     else {

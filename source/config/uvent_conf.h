@@ -112,8 +112,9 @@
 // One revolution of Timing pulley in steps
 #define TIMING_PULLEY_STEPS_PER_REV GEAR_RATIO* STEPPER_STEPS_PER_REV
 
-// Convert from degrees to steps
-#define TIMING_PULLEY_DEGREES_TO_STEPS TIMING_PULLEY_STEPS_PER_REV / 360.0
+// Convert from degrees to steps and vice-versa
+#define TIMING_PULLEY_DEGREES_TO_STEPS(x) x*(TIMING_PULLEY_STEPS_PER_REV / 360.0)
+#define TIMING_PULLEY_STEPS_TO_DEGREES(x) x*(360.0 / TIMING_PULLEY_STEPS_PER_REV)
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
