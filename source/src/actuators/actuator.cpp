@@ -58,6 +58,22 @@ void Actuator::set_position(Tick_Type tt, double value)
     }
 }
 
+void Actuator::set_position_relative(Tick_Type tt, double value)
+{
+    if (tt == Tick_Type::TT_DEGREES) {
+        /* Degree to steps calculation.
+        * In reference to the actuator pulley,
+        * 360 degrees is TIMING_PULLEY_STEPS_PER_REV steps.
+        * X degrees is TIMING_PULLEY_STEPS_PER_REV/360
+        */
+        double angle_to_steps = TIMING_PULLEY_DEGREES_TO_STEPS(value);
+        stepper.set_position_relative(angle_to_steps);
+    }
+    else {
+        stepper.set_position_relative(value);
+    }
+}
+
 void Actuator::set_position_as_home()
 {
     stepper.set_position_as_home(0);
