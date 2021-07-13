@@ -56,6 +56,7 @@ public:
     bool is_running();
     void set_position_as_home();
     bool target_reached();
+    bool add_correction();
 
 private:
     Stepper stepper;
