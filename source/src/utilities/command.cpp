@@ -15,6 +15,7 @@ static void command_help(int argc, char** argv);
 static void command_actuator(int argc, char** argv);
 static void command_state(int argc, char** argv);
 static void command_eeprom(int argc, char** argv);
+static void command_pressure(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -58,7 +59,8 @@ command_type commands[] =
                 {"help", command_help, "\t\tDisplay a list of commands.\r\n"},
                 {"actuator", command_actuator, "\tActuator related commands.\r\n"},
                 {"state", command_state, "\t\tState related commands.\r\n"},
-                {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"}};
+                {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
+                {"press", command_pressure, "\t\tPressure related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
 
@@ -89,6 +91,7 @@ command_actuator(int argc, char** argv)
         Serial.println("mv_steps - Moves the actuator by no. of steps(steps).");
         Serial.println("volume   - Get the tidal volume from the Ambu Bag (liters).");
         Serial.println("enable   - Enable/Disable the drive.");
+        return;
     }
     else if (!(strcmp(argv[1], "home"))) {
         control_change_state(States::ST_ACTUATOR_HOME);
@@ -323,6 +326,24 @@ command_eeprom(int argc, char** argv)
     else if (!(strcmp(argv[1], "dump"))) {
         control_display_storage();
         return;
+    }
+}
+
+/* Pressure function. */
+static void
+command_pressure(int argc, char** argv)
+{
+    // Check is help is requested for this command or no arguments were included.
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: press command");
+        Serial.println("gauge      - Dumps gauge pressure.");
+        Serial.println("diff       - Dumps diff pressure");
+    }
+    else if (!(strcmp(argv[1], "gauge"))) {
+        Serial.println(control_get_gauge_pressure(), DEC);
+    }
+    else if (!(strcmp(argv[1], "diff"))) {
+        Serial.println(control_get_diff_pressure(), DEC);
     }
 }
 

@@ -188,3 +188,13 @@ void control_actuator_set_enable(bool en)
 {
     actuator.set_enable(en);
 }
+
+double control_get_gauge_pressure()
+{
+    return gauge_sensor.get_pressure(units_pressure::cmH20);
+}
+
+double control_get_diff_pressure()
+{
+    return diff_sensor.get_pressure(units_pressure::cmH20);
+}
