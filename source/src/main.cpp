@@ -31,7 +31,9 @@ void setup()
         while (1);
     }
 
+#if ENABLE_CONTROL
     control_init();
+#endif
 
 #if ENABLE_TEST_DISPLAY
     setup_test_display();

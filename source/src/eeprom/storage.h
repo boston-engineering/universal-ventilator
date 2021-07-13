@@ -32,10 +32,11 @@ private:
     // Defaults cal. settings
     uvent_settings def_settings = {
             .serial = "210000A0000",
-            .diff_pressure_type = 0,
+            .diff_pressure_type = PRESSURE_SENSOR_TYPE_0,
             .actuator_home_offset_adc_counts = 0,
             .gpressure_offset_adc_counts = 0,
-            .dpressure_offset_adc_counts = 0};
+            .dpressure_offset_adc_counts = 0,
+    };
 
     uint32_t crc_calculate();
 };

@@ -66,6 +66,7 @@
  * Blank, adds no code.
  */
 #define px
+#define FLEX_SHRINK 0
 #define FLEX_GROW 1
 
 typedef enum DisplayContainer {
@@ -102,6 +103,7 @@ typedef enum ComponentType {
     CONTROL_BUTTON_TEXT,            /**< Value Adjuster Button Text*/
     // Purely Visual Elements
     DIVIDER,                        /**< Divider*/
+    POPUP_WINDOW,                   /**< Main Styles for popup windows*/
     BLANK,
     COMPONENT_COUNT,
 } ComponentType;
@@ -222,6 +224,7 @@ static inline void setup_styles()
     STYLE_DECL(CONTROL_BUTTON);
     STYLE_DECL(CONTROL_BUTTON_TEXT);
     STYLE_DECL(DIVIDER);
+    STYLE_DECL(POPUP_WINDOW);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H

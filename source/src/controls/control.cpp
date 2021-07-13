@@ -137,11 +137,13 @@ void control_init()
     gauge_sensor.init(MAX_GAUGE_PRESSURE, MIN_GAUGE_PRESSURE, RESISTANCE_1, RESISTANCE_2, settings.gpressure_offset_adc_counts);
 
     // Initialize the Differential Pressure Sensor
-    if (settings.diff_pressure_type == 0) {
-        diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_0, MIN_DIFF_PRESSURE_TYPE_0, RESISTANCE_1, RESISTANCE_2, settings.dpressure_offset_adc_counts);
+    if (settings.diff_pressure_type == PRESSURE_SENSOR_TYPE_0) {
+        diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_0, MIN_DIFF_PRESSURE_TYPE_0, RESISTANCE_1, RESISTANCE_2,
+                settings.dpressure_offset_adc_counts);
     }
-    else if (settings.diff_pressure_type == 1) {
-        diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_1, MIN_DIFF_PRESSURE_TYPE_1, RESISTANCE_1, RESISTANCE_2, settings.dpressure_offset_adc_counts);
+    else if (settings.diff_pressure_type == PRESSURE_SENSOR_TYPE_1) {
+        diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_1, MIN_DIFF_PRESSURE_TYPE_1, RESISTANCE_1, RESISTANCE_2,
+                settings.dpressure_offset_adc_counts);
     }
 
     // Initialize the state machine

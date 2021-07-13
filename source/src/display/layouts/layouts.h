@@ -4,6 +4,12 @@
 #include "../config/uvent_conf.h"
 #include <controls/interface/interface.h>
 
+typedef void (* LabelConfigCb)(lv_obj_t* label);
+
+lv_obj_t* open_option_dialog(const char* title, bool enable_close_button = false);
+
+/*****************************************************/
+
 // Main Screen
 void setup_readouts();
 void setup_controls();

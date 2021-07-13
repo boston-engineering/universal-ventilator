@@ -274,3 +274,25 @@ STYLE_INIT_FUNC(DIVIDER)
     lv_style_set_line_color(style, lv_color_black());
     lv_style_set_line_rounded(style, true);
 }
+
+/**
+* ComponentType::POPUP_WINDOW
+*/
+STYLE_INIT_FUNC(POPUP_WINDOW)
+{
+    lv_style_t* style = STYLE_PTR_CM(POPUP_WINDOW);
+
+    // Colors & Borders
+    lv_style_set_max_width(style, 500 px);
+    lv_style_set_max_height(style, 300 px);
+    //lv_style_set_min_height(style, 100 px);
+    //lv_style_set_height(style, LV_SIZE_CONTENT);
+    lv_style_set_outline_width(style, 4);
+    lv_style_set_outline_color(style, lv_color_black());
+
+    // Shadow
+    lv_style_set_shadow_width(style, 8 px);
+    lv_style_set_shadow_color(style, lv_color_black());
+    lv_style_set_shadow_ofs_x(style, 4 px);
+    lv_style_set_shadow_ofs_y(style, 4 px);
+}
