@@ -173,7 +173,25 @@ double Actuator::get_tidal_volume(C_Stat compliance)
         return D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
     case C_Stat::FIFTY:
         return D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
+    default:
+        break;
     }
+    return -1;
+}
+
+double Actuator::volume_to_degrees(C_Stat compliance, double volume)
+{
+    switch (compliance) {
+    case C_Stat::NONE:
+        return (V2D_COEF_A_NO_LUNG * pow(volume, 3)) + (V2D_COEF_B_NO_LUNG * pow(volume, 2)) + (V2D_COEF_C_NO_LUNG * volume) + V2D_COEF_D_NO_LUNG;
+    case C_Stat::TWENTY:
+        return (V2D_COEF_A_COMP_20 * pow(volume, 3)) + (V2D_COEF_B_COMP_20 * pow(volume, 2)) + (V2D_COEF_C_COMP_20 * volume) + V2D_COEF_D_COMP_20;
+    case C_Stat::FIFTY:
+        return (V2D_COEF_A_COMP_50 * pow(volume, 3)) + (V2D_COEF_B_COMP_50 * pow(volume, 2)) + (V2D_COEF_C_COMP_50 * volume) + V2D_COEF_D_COMP_50;
+    default:
+        break;
+    }
+    return -1;
 }
 
 /* Set the current reading of the angle sensor as zero.

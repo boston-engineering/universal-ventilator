@@ -57,6 +57,7 @@ public:
     void set_position_as_home();
     bool target_reached();
     bool add_correction();
+    double volume_to_degrees(C_Stat compliance, double volume);
 
 private:
     Stepper stepper;
