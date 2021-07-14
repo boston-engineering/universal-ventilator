@@ -225,18 +225,18 @@ command_actuator(int argc, char** argv)
 
         int dec_place = 3;
         if (!(strcmp(argv[2], "none")) || !(strcmp(argv[2], "None")) || !(strcmp(argv[2], "NONE"))) {
-            Serial.println(control_get_volume(C_Stat::NONE), dec_place);
+            Serial.println(control_get_degrees_to_volume(C_Stat::NONE), dec_place);
             return;
         }
         else if (!(strcmp(argv[2], "20"))) {
             if (!(strcmp(argv[2], "r"))) {
                 // Repeat requested. Print till Enter is pressed.
                 while (!repeat_break()) {
-                    Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+                    Serial.println(control_get_degrees_to_volume(C_Stat::TWENTY), dec_place);
                 }
             }
             else {
-                Serial.println(control_get_volume(C_Stat::TWENTY), dec_place);
+                Serial.println(control_get_degrees_to_volume(C_Stat::TWENTY), dec_place);
             }
             return;
         }
@@ -244,11 +244,11 @@ command_actuator(int argc, char** argv)
             if (!(strcmp(argv[2], "r"))) {
                 // Repeat requested. Print till Enter is pressed.
                 while (!repeat_break()) {
-                    Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
+                    Serial.println(control_get_degrees_to_volume(C_Stat::FIFTY), dec_place);
                 }
             }
             else {
-                Serial.println(control_get_volume(C_Stat::FIFTY), dec_place);
+                Serial.println(control_get_degrees_to_volume(C_Stat::FIFTY), dec_place);
             }
             return;
         }

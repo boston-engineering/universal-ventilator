@@ -122,4 +122,12 @@
 // EEPROM address
 #define EEPROM_ADDRESS 0x50
 
+// Actuator Limits
+#define MIN_ACT_POS_DEG 0.0
+#define MAX_ACT_POS_DEG 180.0
+
+// AMBU Bag limit
+#define MIN_BAG_VOL_L 0.1
+#define MAX_BAG_VOL_L 1.06
+
 #endif
