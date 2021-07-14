@@ -168,11 +168,11 @@ double Actuator::get_tidal_volume(C_Stat compliance)
 
     switch (compliance) {
     case C_Stat::NONE:
-        return COEF_A_NO_LUNG * pow(position, 4) + COEF_B_NO_LUNG * pow(position, 3) + COEF_C_NO_LUNG * pow(position, 2) + COEF_D_NO_LUNG * position;
+        return D2V_COEF_A_NO_LUNG * pow(position, 4) + D2V_COEF_B_NO_LUNG * pow(position, 3) + D2V_COEF_C_NO_LUNG * pow(position, 2) + D2V_COEF_D_NO_LUNG * position;
     case C_Stat::TWENTY:
-        return COEF_A_COMP_20 * pow(position, 4) + COEF_B_COMP_20 * pow(position, 3) + COEF_C_COMP_20 * pow(position, 2) + COEF_D_COMP_20 * position;
+        return D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
     case C_Stat::FIFTY:
-        return COEF_A_COMP_50 * pow(position, 4) + COEF_B_COMP_50 * pow(position, 3) + COEF_C_COMP_50 * pow(position, 2) + COEF_D_COMP_50 * position;
+        return D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
     }
 }
 
