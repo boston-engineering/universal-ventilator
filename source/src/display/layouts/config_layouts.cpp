@@ -3,8 +3,7 @@
 
 lv_obj_t* active_floating_window = nullptr;
 
-static void open_stepper_confirm_dialog(lv_event_t* evt);
-
+static void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb);
 
 static lv_obj_t* add_config_button(const char* title)
 {
@@ -41,14 +40,25 @@ static void add_stepper_home_button()
 {
 
     lv_obj_t* button = add_config_button("Home Actuator");
-    lv_obj_add_event_cb(button, open_stepper_confirm_dialog, LV_EVENT_RELEASED, nullptr);
+
+    auto event_cb = [](lv_event_t* evt) {
+        open_control_confirm_dialog(evt, [](lv_event_t* evt) {
+            control_change_state(States::ST_ACTUATOR_HOME);
+        });
+    };
+    lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
 }
 
 static void add_actuator_zero_button()
 {
 
     lv_obj_t* button = add_config_button("Zero Actuator");
-    lv_obj_add_event_cb(button, open_stepper_confirm_dialog, LV_EVENT_RELEASED, nullptr);
+    auto event_cb = [](lv_event_t* evt) {
+        open_control_confirm_dialog(evt, [](lv_event_t* evt) {
+            control_zero_actuator_position();
+        });
+    };
+    lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
 }
 
 static void quick_flex_obj(lv_obj_t* obj, lv_flex_flow_t flow = LV_FLEX_FLOW_COLUMN, bool allow_grow = true)
@@ -76,7 +86,20 @@ static void default_window_container_styles(lv_obj_t* obj)
     lv_obj_set_width(obj, LV_PCT(100));
 }
 
-static void open_stepper_confirm_dialog(lv_event_t* evt)
+static void close_floating_window(lv_event_t* evt)
+{
+    active_floating_window = nullptr;
+
+    if (!evt->user_data) {
+        return;
+    }
+
+    Serial.println("Closing option dialog...");
+    auto* win = (lv_obj_t*) lv_event_get_user_data(evt);
+    lv_obj_del(win);
+}
+
+static void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb)
 {
     if (active_floating_window) {
         Serial.println("Can't open a second window");
@@ -124,6 +147,7 @@ static void open_stepper_confirm_dialog(lv_event_t* evt)
     lv_obj_set_style_bg_color(no_button, LV_COLOR_MAKE(215, 215, 215), LV_PART_MAIN);
     lv_obj_set_width(no_button, LV_SIZE_CONTENT);
     lv_obj_set_style_flex_grow(no_button, FLEX_GROW, LV_PART_MAIN);
+    lv_obj_add_event_cb(no_button, close_floating_window, LV_EVENT_CLICKED, window);
     lv_obj_t* no_label = lv_label_create(no_button);
     lv_label_set_text(no_label, "NO");
     lv_obj_add_style(no_label, STYLE_PTR_CM(OPTION_BUTTON_TEXT), LV_PART_MAIN);
@@ -133,14 +157,16 @@ static void open_stepper_confirm_dialog(lv_event_t* evt)
     lv_obj_t* yes_button = lv_btn_create(button_container);
     lv_obj_set_width(yes_button, LV_SIZE_CONTENT);
     lv_obj_set_style_flex_grow(yes_button, FLEX_GROW, LV_PART_MAIN);
-    lv_obj_add_event_cb(
-            yes_button,
-            [](lv_event_t* evt) {
-                control_change_state(States::ST_ACTUATOR_HOME);
-            },
-            LV_EVENT_CLICKED,
-            nullptr
-    );
+    lv_obj_add_event_cb(yes_button, close_floating_window, LV_EVENT_CLICKED, window);
+    if (confirm_cb != nullptr) {
+        lv_obj_add_event_cb(
+                yes_button,
+                confirm_cb,
+                LV_EVENT_CLICKED,
+                nullptr
+        );
+    }
+
     lv_obj_t* yes_label = lv_label_create(yes_button);
     lv_label_set_text(yes_label, "YES");
     lv_obj_set_style_text_align(yes_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
@@ -159,17 +185,7 @@ lv_obj_t* open_option_dialog(const char* title, bool enable_close_button)
 
     if (enable_close_button) {
         lv_obj_t* close_button = lv_win_add_btn(window, LV_SYMBOL_CLOSE, 40);
-        lv_obj_add_event_cb(close_button, [](lv_event_t* evt) {
-            active_floating_window = nullptr;
-
-            if (!evt->user_data) {
-                return;
-            }
-
-            Serial.println("Closing option dialog...");
-            auto* win = (lv_obj_t*) lv_event_get_user_data(evt);
-            lv_obj_del(win);
-        }, LV_EVENT_CLICKED, window);
+        lv_obj_add_event_cb(close_button, close_floating_window, LV_EVENT_CLICKED, window);
     }
 
     lv_obj_align_to(window, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);

@@ -4,7 +4,7 @@
 #include "../config/uvent_conf.h"
 #include <controls/interface/interface.h>
 
-typedef void (* LabelConfigCb)(lv_obj_t* label);
+typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
 
 lv_obj_t* open_option_dialog(const char* title, bool enable_close_button = false);
 
