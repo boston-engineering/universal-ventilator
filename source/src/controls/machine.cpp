@@ -65,9 +65,6 @@ void Machine::state_inspiration()
             return;
         }
 
-        // The hard coded numbers below will change based on equations.
-        p_actuator->set_position(Tick_Type::TT_DEGREES, 180.0);
-        p_actuator->set_speed(Tick_Type::TT_DEGREES, 50.0);
         // Calculate the waveform parameters
         if (p_waveform->calculate_waveform() == -1) {
             // Set the fault ID:

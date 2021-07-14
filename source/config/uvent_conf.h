@@ -118,6 +118,8 @@
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
+#define DEBUG_CORRECTION 0
+#define DEBUG_WAVEFORM 0
 
 // EEPROM address
 #define EEPROM_ADDRESS 0x50
@@ -125,6 +127,14 @@
 // Actuator Limits
 #define MIN_ACT_POS_DEG 0.0
 #define MAX_ACT_POS_DEG 180.0
+
+#define HOME_MIN_DEG 0.2
+#define HOME_MAX_DEG 1.0
+
+#define HOME_CORR_MOVE_DEG 0.5
+#define HOME_CORRECTION_MAX_DEG 5.0
+#define HOME_CORRECTION_MIN_DEG 355.0
+#define HOME_CORRECTION_SPEED_DEG_P_SEC 100
 
 // Waveform
 // Breaths per minute
