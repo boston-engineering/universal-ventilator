@@ -68,32 +68,59 @@ private:
     // Used to detect movement.
     double prev_position;
 
-    // No Lung
+    // No Lung - Degrees To Volume(D2V)
     // y = -5E-09*x^4 + 1E-06x^3 - 4E-05x^2 + 0.0003x
     // C_Stat = none
     // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
-    double const COEF_A_NO_LUNG = -0.00000000539259422946378;
-    double const COEF_B_NO_LUNG = 0.00000137006464979886;
-    double const COEF_C_NO_LUNG = -0.0000370548541166471;
-    double const COEF_D_NO_LUNG = 0.000260254960634754;
+    double const D2V_COEF_A_NO_LUNG = -0.00000000539259422946378;
+    double const D2V_COEF_B_NO_LUNG = 0.00000137006464979886;
+    double const D2V_COEF_C_NO_LUNG = -0.0000370548541166471;
+    double const D2V_COEF_D_NO_LUNG = 0.000260254960634754;
 
-    // With Lung
+    // No Lung - Volume To Degrees(V2D)
+    // y = 227.452^3 - 424.84x^2 + 309.29x + 26.668
+    // C_Stat = none
+    // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
+    double const V2D_COEF_A_NO_LUNG = 227.42;
+    double const V2D_COEF_B_NO_LUNG = -424.84;
+    double const V2D_COEF_C_NO_LUNG = 309.29;
+    double const V2D_COEF_D_NO_LUNG = 26.668;
+
+    // With Lung - Degrees To Volume(D2V)
     // y = -3E-09*x^4 + 9E-07*x^3 - 3E-05*x^2 - 7E-05*x
     // C_Stat = 20 (mL/cmH2O)
     // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
-    double const COEF_A_COMP_20 = -0.00000000318509207676739;
-    double const COEF_B_COMP_20 = 0.000000868855116173189;
-    double const COEF_C_COMP_20 = -0.0000278632433332315;
-    double const COEF_D_COMP_20 = -0.0000703187442674391;
+    double const D2V_COEF_A_COMP_20 = -0.00000000318509207676739;
+    double const D2V_COEF_B_COMP_20 = 0.000000868855116173189;
+    double const D2V_COEF_C_COMP_20 = -0.0000278632433332315;
+    double const D2V_COEF_D_COMP_20 = -0.0000703187442674391;
+
+    // With Lung - Volume To Degrees(V2D)
+    // y = 612.61^3 - 812.82x^2 + 436.56x + 34.416
+    // C_Stat = 20 (mL/cmH2O)
+    // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
+    double const V2D_COEF_A_COMP_20 = 612.61;
+    double const V2D_COEF_B_COMP_20 = -812.82;
+    double const V2D_COEF_C_COMP_20 = 436.56;
+    double const V2D_COEF_D_COMP_20 = 34.416;
 
     // With Lung
     // y = -3E-09*x^4 + 8E-07*x^3 - 3E-06*x^2 - 0.0006*x
     // C_Stat = 50 (mL/cmH2O)
     // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
-    double const COEF_A_COMP_50 = -0.00000000342520216878951;
-    double const COEF_B_COMP_50 = 0.000000834768084837607;
-    double const COEF_C_COMP_50 = -0.00000305968137895296;
-    double const COEF_D_COMP_50 = -0.000643516160449664;
+    double const D2V_COEF_A_COMP_50 = -0.00000000342520216878951;
+    double const D2V_COEF_B_COMP_50 = 0.000000834768084837607;
+    double const D2V_COEF_C_COMP_50 = -0.00000305968137895296;
+    double const D2V_COEF_D_COMP_50 = -0.000643516160449664;
+
+    // With Lung - Volume To Degrees(V2D)
+    // y = 263.07^3 - 449.69x^2 + 321.88x + 30.01
+    // C_Stat = 50 (mL/cmH2O)
+    // Equation was derived by mapping volume displaced per degree the paddle moved. A Fluke Biomedical VT900A Gas Flow Analyzer was used to measure the volume displaced.
+    double const V2D_COEF_A_COMP_50 = 263.07;
+    double const V2D_COEF_B_COMP_50 = -449.69;
+    double const V2D_COEF_C_COMP_50 = 321.88;
+    double const V2D_COEF_D_COMP_50 = 30.01;
 };
 
 #endif
