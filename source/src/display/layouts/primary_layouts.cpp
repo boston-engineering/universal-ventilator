@@ -404,9 +404,11 @@ void add_start_button()
             LV_LOG_USER("State Value: %d", enabled);
             if (enabled) {
                 lv_label_set_text_fmt(label, "Start");
+                control_change_state(States::ST_OFF);
             }
             else {
                 lv_label_set_text_fmt(label, "Standby");
+                control_change_state(States::ST_INSPR);
             }
         }
     };
