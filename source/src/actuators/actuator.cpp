@@ -151,7 +151,7 @@ double Actuator::get_position_raw()
     return stepper_fb.angleR(U_RAW, true);
 }
 
-double Actuator::get_tidal_volume(C_Stat compliance)
+double Actuator::degreesToVolume(C_Stat compliance)
 {
     double position = get_position();
     double deg_max_range = 180;

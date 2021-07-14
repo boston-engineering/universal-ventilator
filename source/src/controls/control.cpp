@@ -181,7 +181,7 @@ void control_display_storage()
 
 double control_get_volume(C_Stat compliance)
 {
-    return actuator.get_tidal_volume(compliance);
+    return actuator.degreesToVolume(compliance);
 }
 
 void control_actuator_set_enable(bool en)
