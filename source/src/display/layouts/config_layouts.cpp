@@ -61,6 +61,36 @@ static void add_actuator_zero_button()
     lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
 }
 
+static void add_disable_actuator_button()
+{
+
+    lv_obj_t* button = add_config_button("Disable Actuator");
+    lv_obj_add_flag(button, LV_OBJ_FLAG_CHECKABLE);
+    // Set Actuator enabled by default
+    lv_obj_add_state(button, LV_STATE_CHECKED);
+    lv_obj_set_style_bg_color(button, LV_COLOR_MAKE(195, 195, 195), LV_STATE_CHECKED);
+    auto event_cb = [](lv_event_t* evt) {
+        lv_obj_t* target = lv_event_get_target(evt);
+        if(!target) {
+            return;
+        }
+        lv_obj_t* label = lv_obj_get_child(target, 0);
+
+        bool new_state_enabled = lv_obj_has_state(target, LV_STATE_CHECKED);
+        if(new_state_enabled) {
+            lv_label_set_text_fmt(label, "Disable Actuator");
+            Serial.println("Enabling Actuator");
+        } else {
+            lv_label_set_text_fmt(label, "Enable Actuator");
+            Serial.println("Disabling Actuator");
+        }
+#if ENABLE_CONTROL
+        control_actuator_set_enable(new_state_enabled);
+#endif
+    };
+    lv_obj_add_event_cb(button, event_cb, LV_EVENT_VALUE_CHANGED, nullptr);
+}
+
 static void quick_flex_obj(lv_obj_t* obj, lv_flex_flow_t flow = LV_FLEX_FLOW_COLUMN, bool allow_grow = true)
 {
     lv_obj_set_style_flex_flow(obj, flow, LV_PART_MAIN);
@@ -204,4 +234,5 @@ void setup_config_window()
     add_pressure_select_button();
     add_stepper_home_button();
     add_actuator_zero_button();
+    add_disable_actuator_button();
 }
