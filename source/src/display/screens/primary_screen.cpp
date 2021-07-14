@@ -44,9 +44,6 @@ void MainScreen::attach_settings_cb()
                 return;
             }
 
-            // TODO check to make sure the ventilator is stopped before opening the settings menu
-            // If started, display the confirm dialog for turning off the ventilator
-
             auto* screen_ptr = (MainScreen*) evt->user_data;
 
             if ((state & LV_STATE_CHECKED) != 0) {

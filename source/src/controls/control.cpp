@@ -56,13 +56,47 @@ void loop_test_readout()
     }
 }
 
+static void load_stored_target(AdjustableValue* value, uvent_settings& settings)
+{
+    double val = 0;
+    switch (value->value_type) {
+        case TIDAL_VOLUME:
+            val = settings.tidal_volume;
+            break;
+        case RESPIRATION_RATE:
+            val = settings.respiration_rate;
+            break;
+        case PEEP:
+            val = settings.peep_limit;
+            break;
+        case PIP:
+            val = settings.pip_limit;
+            break;
+        case PLATEAU_TIME:
+            val = settings.plateau_time;
+            break;
+        case IE_RATIO_LEFT:
+            val = settings.ie_ratio_left;
+            break;
+        case IE_RATIO_RIGHT:
+            val = settings.ie_ratio_right;
+            break;
+        default:
+            break;
+    }
+    value->set_value_target(val);
+}
+
 void init_adjustable_values()
 {
-    // TODO Read stored values from EEPROM on startup
+    uvent_settings settings{};
+    storage.get_settings(settings);
+
     for (uint i = 0; i < AdjValueType::ADJ_VALUE_COUNT; i++) {
-        auto value_class = &adjustable_values[i];
+        AdjustableValue* value_class = &adjustable_values[i];
         value_class->init(static_cast<AdjValueType>(i));
-        *value_class->get_value_measured() = -1;
+        load_stored_target(value_class, settings);
+        value_class->set_value_measured(-1);
     }
     adjustable_values[AdjValueType::IE_RATIO_LEFT].set_selected(false);
 }
@@ -110,6 +144,7 @@ void actuator_handler()
  */
 void control_init()
 {
+#if ENABLE_CONTROL
     // Debug led setup
     pinMode(DEBUG_LED, OUTPUT);
 
@@ -167,6 +202,7 @@ void control_init()
         // No settings found, or settings corrupted.
         storage.load_defaults();
     }
+#endif
 }
 
 /* Called by loop() from main, this function services control

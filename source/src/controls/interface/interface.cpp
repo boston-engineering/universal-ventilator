@@ -10,7 +10,6 @@ extern const AdjValueParams adj_value_settings[] = {
         {"Respiration Rate",    "Resp. Rate", "%d",   "%d",   "/min",  8,   30,  2,                  palette_color_1},
         {"PEEP Limit (Floor)",  "PEEP",       "%d",   "%d",   "cmH2O", 5,   20,  1,                  palette_color_1},
         {"PIP Limit (Ceiling)", "PIP",        "%d",   "%d",   "cmH2O", 15,  40,  1,                  palette_color_1},
-        // TODO ask Dr. Fischer about exact values for this
         {"Plateau Time",        "Plateau",    "%d",   "%d",   "ms",    200, 800, 50,                 palette_color_1},
         {"Current Pressure",    nullptr,      "%d",   "%d",   "cmH2O", 5,   40,  1,                  palette_color_2},
         {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 1,   4,   0.1000000000000000, palette_color_1},

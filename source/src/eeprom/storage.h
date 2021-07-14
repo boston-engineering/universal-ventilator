@@ -15,6 +15,16 @@ struct __attribute__((packed)) uvent_settings {
     uint16_t actuator_home_offset_adc_counts;
     int32_t gpressure_offset_adc_counts;
     int32_t dpressure_offset_adc_counts;
+    /***************************************************/
+    /*             Adjustable Value Storage            */
+    /***************************************************/
+    uint16_t tidal_volume;
+    uint8_t respiration_rate;
+    uint8_t peep_limit;
+    uint8_t pip_limit;
+    uint16_t plateau_time;
+    double ie_ratio_left;
+    double ie_ratio_right;
 };
 
 class Storage {
@@ -36,6 +46,13 @@ private:
             .actuator_home_offset_adc_counts = 0,
             .gpressure_offset_adc_counts = 0,
             .dpressure_offset_adc_counts = 0,
+            .tidal_volume = 100,
+            .respiration_rate = 8,
+            .peep_limit = 5,
+            .pip_limit = 15,
+            .plateau_time = 200,
+            .ie_ratio_left = 1,
+            .ie_ratio_right = 1,
     };
 
     uint32_t crc_calculate();

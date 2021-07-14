@@ -265,6 +265,14 @@ void setup_ie_readout()
     };
 }
 
+static void ie_label_text(lv_obj_t* label, double val) {
+    if(is_whole(val)) {
+        lv_label_set_text_fmt(label, "%ld", (uint32_t) val);
+    } else {
+        lv_label_set_text_fmt(label, "%.1f", val);
+    }
+}
+
 void setup_ie_controls()
 {
     AdjustableValue* left_class = &adjustable_values[IE_RATIO_LEFT];
@@ -332,12 +340,9 @@ void setup_ie_controls()
     double left_val = *left_class->get_value_target();
     double right_val = *right_class->get_value_target();
 
-    const char* left_format = is_whole(left_val) ? "%ld" : "%.1f";
-    const char* right_format = is_whole(right_val) ? "%ld" : "%.1f";
-
-    lv_label_set_text_fmt(value_label_left, left_format, is_whole(left_val) ? (int32_t) left_val : left_val);
+    ie_label_text(value_label_left, left_val);
     lv_label_set_text_fmt(value_label_divider, ":");
-    lv_label_set_text_fmt(value_label_right, right_format, is_whole(right_val) ? (int32_t) right_val : right_val);
+    ie_label_text(value_label_right, right_val);
 
     lv_obj_t* name_label = lv_label_create(text_container);
     lv_obj_set_width(name_label, LV_PCT(100));
