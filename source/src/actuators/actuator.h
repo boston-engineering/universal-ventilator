@@ -48,7 +48,7 @@ public:
     bool is_moving();
     double get_position();
     double get_position_raw();
-    double degreesToVolume(C_Stat compliance);
+    double degrees_to_volume(C_Stat compliance);
     uint16_t set_current_position_as_zero();
     void set_zero_position(uint16_t new_zero);
     void set_position(Tick_Type tt, double value);

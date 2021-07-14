@@ -179,9 +179,14 @@ void control_display_storage()
     storage.display_storage();
 }
 
-double control_get_volume(C_Stat compliance)
+double control_get_degrees_to_volume(C_Stat compliance)
 {
-    return actuator.degreesToVolume(compliance);
+    return actuator.degrees_to_volume(compliance);
+}
+
+double control_calc_volume_to_degrees(C_Stat compliance, double volume)
+{
+    return actuator.volume_to_degrees(compliance, volume);
 }
 
 void control_actuator_set_enable(bool en)

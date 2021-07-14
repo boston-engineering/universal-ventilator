@@ -151,7 +151,7 @@ double Actuator::get_position_raw()
     return stepper_fb.angleR(U_RAW, true);
 }
 
-double Actuator::degreesToVolume(C_Stat compliance)
+double Actuator::degrees_to_volume(C_Stat compliance)
 {
     double position = get_position();
 
