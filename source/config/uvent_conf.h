@@ -154,10 +154,13 @@
 #define IE_MIN 0.1
 #define IE_MAX 4.0
 
-// How long to wait in between steps of the readout (ms)
+// How long to wait in between steps of the readout (ms). Debug only
 #define TEST_READOUT_STEP_INTERVAL 1322
 
-// How often to refresh the readouts (ms)
+// How often to refresh the readouts (ms). Debug only
 #define TEST_READOUT_REFRESH_INTERVAL 2000
+
+// How often to poll sensors for readouts (ms)
+#define SENSOR_POLL_INTERVAL 2000
 
 #endif

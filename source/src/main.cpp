@@ -73,8 +73,11 @@ void loop()
 #endif
 
     control_service();
-
+#if ENABLE_CONTROL
+    loop_update_readouts();
+#else
     loop_test_readout();
+#endif
 }
 
 #if USE_DMA_INTERRUPT

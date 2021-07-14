@@ -56,6 +56,19 @@ void loop_test_readout()
     }
 }
 
+void loop_update_readouts() {
+    static uint32_t sensor_poll_counter = 0;
+    if(has_time_elapsed(&sensor_poll_counter, SENSOR_POLL_INTERVAL)) {
+        set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume(C_Stat::FIFTY));
+        set_readout(CUR_PRESSURE, control_get_gauge_pressure());
+
+        // Refresh all of the readout labels
+        for (auto& adjustable_value : adjustable_values) {
+            adjustable_value.refresh_readout();
+        }
+    }
+}
+
 static void load_stored_target(AdjustableValue* value, uvent_settings& settings)
 {
     double val = 0;

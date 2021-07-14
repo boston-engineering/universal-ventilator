@@ -7,6 +7,7 @@
 void init_adjustable_values();
 
 void loop_test_readout();
+void loop_update_readouts();
 
 void set_readout(AdjValueType type, double val);
 double get_readout(AdjValueType type);

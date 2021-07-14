@@ -1,8 +1,10 @@
+#include <controls/control.h>
 #include "layouts.h"
 
 lv_obj_t* active_floating_window = nullptr;
 
 static void open_stepper_confirm_dialog(lv_event_t* evt);
+
 
 static lv_obj_t* add_config_button(const char* title)
 {
@@ -38,8 +40,14 @@ static void add_pressure_select_button()
 static void add_stepper_home_button()
 {
 
-    lv_obj_t* button = add_config_button("Stepper Motor Homing Sequence");
+    lv_obj_t* button = add_config_button("Home Actuator");
+    lv_obj_add_event_cb(button, open_stepper_confirm_dialog, LV_EVENT_RELEASED, nullptr);
+}
 
+static void add_actuator_zero_button()
+{
+
+    lv_obj_t* button = add_config_button("Zero Actuator");
     lv_obj_add_event_cb(button, open_stepper_confirm_dialog, LV_EVENT_RELEASED, nullptr);
 }
 
@@ -125,6 +133,14 @@ static void open_stepper_confirm_dialog(lv_event_t* evt)
     lv_obj_t* yes_button = lv_btn_create(button_container);
     lv_obj_set_width(yes_button, LV_SIZE_CONTENT);
     lv_obj_set_style_flex_grow(yes_button, FLEX_GROW, LV_PART_MAIN);
+    lv_obj_add_event_cb(
+            yes_button,
+            [](lv_event_t* evt) {
+                control_change_state(States::ST_ACTUATOR_HOME);
+            },
+            LV_EVENT_CLICKED,
+            nullptr
+    );
     lv_obj_t* yes_label = lv_label_create(yes_button);
     lv_label_set_text(yes_label, "YES");
     lv_obj_set_style_text_align(yes_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
@@ -171,4 +187,5 @@ void setup_config_window()
 
     add_pressure_select_button();
     add_stepper_home_button();
+    add_actuator_zero_button();
 }
