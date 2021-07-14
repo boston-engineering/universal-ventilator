@@ -154,44 +154,67 @@ double Actuator::get_position_raw()
 double Actuator::degreesToVolume(C_Stat compliance)
 {
     double position = get_position();
-    double deg_max_range = 180;
-    double deg_0 = 0;
-    double deg_270 = 270;
 
-    // The paddle may go a little over or under its working range of degrees.
-    if (position > deg_max_range && position < deg_270) {
-        position = deg_max_range;
+    // The actuator can only move to MAX_ACT_POS_DEG, before going back. Limit it here.
+    if (position > MAX_ACT_POS_DEG) {
+        position = MAX_ACT_POS_DEG;
     }
-    else if (position > deg_270) {
-        position = deg_0;
-    }
+
+    double volume = 0.0;
 
     switch (compliance) {
     case C_Stat::NONE:
-        return D2V_COEF_A_NO_LUNG * pow(position, 4) + D2V_COEF_B_NO_LUNG * pow(position, 3) + D2V_COEF_C_NO_LUNG * pow(position, 2) + D2V_COEF_D_NO_LUNG * position;
-    case C_Stat::TWENTY:
-        return D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
-    case C_Stat::FIFTY:
-        return D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
-    default:
+        volume = D2V_COEF_A_NO_LUNG * pow(position, 4) + D2V_COEF_B_NO_LUNG * pow(position, 3) + D2V_COEF_C_NO_LUNG * pow(position, 2) + D2V_COEF_D_NO_LUNG * position;
         break;
+    case C_Stat::TWENTY:
+        volume = D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
+        break;
+    case C_Stat::FIFTY:
+        volume = D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
+        break;
+    default:
+        // Unknown complaince.
+        return -1;
     }
-    return -1;
+
+    // Cage to max volume.
+    if (volume > (MAX_BAG_VOL_L)) {
+        volume = (MAX_BAG_VOL_L);
+    }
+
+    return volume;
 }
 
 double Actuator::volume_to_degrees(C_Stat compliance, double volume)
 {
+    double degrees = 0.0;
+
+    // Check if volume requested is within limit
+    if (volume < MIN_BAG_VOL_L && volume > MAX_BAG_VOL_L) {
+        return -1;
+    }
+
     switch (compliance) {
     case C_Stat::NONE:
-        return (V2D_COEF_A_NO_LUNG * pow(volume, 3)) + (V2D_COEF_B_NO_LUNG * pow(volume, 2)) + (V2D_COEF_C_NO_LUNG * volume) + V2D_COEF_D_NO_LUNG;
-    case C_Stat::TWENTY:
-        return (V2D_COEF_A_COMP_20 * pow(volume, 3)) + (V2D_COEF_B_COMP_20 * pow(volume, 2)) + (V2D_COEF_C_COMP_20 * volume) + V2D_COEF_D_COMP_20;
-    case C_Stat::FIFTY:
-        return (V2D_COEF_A_COMP_50 * pow(volume, 3)) + (V2D_COEF_B_COMP_50 * pow(volume, 2)) + (V2D_COEF_C_COMP_50 * volume) + V2D_COEF_D_COMP_50;
-    default:
+        degrees = (V2D_COEF_A_NO_LUNG * pow(volume, 3)) + (V2D_COEF_B_NO_LUNG * pow(volume, 2)) + (V2D_COEF_C_NO_LUNG * volume) + V2D_COEF_D_NO_LUNG;
         break;
+    case C_Stat::TWENTY:
+        degrees = (V2D_COEF_A_COMP_20 * pow(volume, 3)) + (V2D_COEF_B_COMP_20 * pow(volume, 2)) + (V2D_COEF_C_COMP_20 * volume) + V2D_COEF_D_COMP_20;
+        break;
+    case C_Stat::FIFTY:
+        degrees = (V2D_COEF_A_COMP_50 * pow(volume, 3)) + (V2D_COEF_B_COMP_50 * pow(volume, 2)) + (V2D_COEF_C_COMP_50 * volume) + V2D_COEF_D_COMP_50;
+        break;
+    default:
+        // Unknown compliance
+        return -1;
     }
-    return -1;
+
+    // The actuator can only move to MAX_ACT_POS_DEG, before going back. Limit it here.
+    if (degrees > MAX_ACT_POS_DEG) {
+        degrees = MAX_ACT_POS_DEG;
+    }
+
+    return degrees;
 }
 
 /* Set the current reading of the angle sensor as zero.
