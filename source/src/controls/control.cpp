@@ -63,16 +63,16 @@ void loop_update_readouts(lv_timer_t* timer)
     static uint32_t last_readout_refresh = 0;
     static uint32_t gauge_chart_refresh = 0;
     static uint32_t vt_chart_refresh = 0;
-    if(!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
+    if (!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
     }
-    if(!timer_delay_complete) {
+    if (!timer_delay_complete) {
         LV_LOG_USER("Timer is not ready yet, returning (%d)", millis());
         return;
     }
 
 #if VERBOSE_DATA_POLLING == 0
-    if(control_get_state() == States::ST_OFF) {
+    if (control_get_state() == States::ST_OFF) {
         return;
     }
 #endif
@@ -89,18 +89,18 @@ void loop_update_readouts(lv_timer_t* timer)
     screen->add_vt_chart_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
 
-    if(has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
+    if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
             value.refresh_readout();
         }
     }
 
-    if(has_time_elapsed(&gauge_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
+    if (has_time_elapsed(&gauge_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
         screen->refresh_gauge_pressure_chart();
     }
 
-    if(has_time_elapsed(&vt_chart_refresh, VT_CHART_REFRESH_TIME)) {
+    if (has_time_elapsed(&vt_chart_refresh, VT_CHART_REFRESH_TIME)) {
         screen->refresh_vt_chart();
     }
 }
@@ -181,6 +181,14 @@ void init_adjustable_values()
         value_class->set_value_measured(READOUT_VALUE_DEFAULT);
     }
     adjustable_values[AdjValueType::IE_RATIO_LEFT].set_selected(false);
+}
+
+double get_control_target(AdjValueType type) {
+    if (type >= AdjValueType::ADJ_VALUE_COUNT) {
+        //TODO add defaults
+        return -1;
+    }
+    return *adjustable_values[type].get_value_target();
 }
 
 void set_readout(AdjValueType type, double val)
@@ -322,6 +330,22 @@ void control_zero_actuator_position()
     settings.actuator_home_offset_adc_counts = actuator.set_current_position_as_zero();
 
     // Store this value to the eeprom.
+    storage.set_settings(settings);
+}
+
+void control_write_ventilator_params()
+{
+    uvent_settings settings;
+    storage.get_settings(settings);
+
+    settings.tidal_volume = (uint16_t) get_control_target(TIDAL_VOLUME);
+    settings.respiration_rate = (uint8_t) get_control_target(RESPIRATION_RATE);
+    settings.peep_limit = (uint8_t) get_control_target(PEEP);
+    settings.pip_limit = (uint8_t) get_control_target(PIP);
+    settings.plateau_time = (uint16_t) get_control_target(PLATEAU_TIME);
+    settings.ie_ratio_left = get_control_target(IE_RATIO_LEFT);
+    settings.ie_ratio_right = get_control_target(IE_RATIO_RIGHT);
+
     storage.set_settings(settings);
 }
 

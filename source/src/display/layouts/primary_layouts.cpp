@@ -414,7 +414,6 @@ void add_start_button()
         lv_obj_t* label = lv_obj_get_child(btn, 0);
         if (evt->code == LV_EVENT_VALUE_CHANGED) {
             bool enabled = (strcmp(lv_label_get_text(label), "Standby") == 0);
-            LV_LOG_USER("State Value: %d", enabled);
             if (enabled) {
                 lv_label_set_text_fmt(label, "Start");
                 control_change_state(States::ST_OFF);
@@ -423,6 +422,7 @@ void add_start_button()
                 lv_label_set_text_fmt(label, "Standby");
                 control_change_state(States::ST_INSPR);
             }
+            control_write_ventilator_params();
         }
     };
 
