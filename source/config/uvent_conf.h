@@ -160,6 +160,7 @@
 
 // How often to refresh the readouts (ms). Debug only
 #define TEST_READOUT_REFRESH_INTERVAL 2000
+#define READOUT_REFRESH_INTERVAL 500
 
 // How often to poll sensors for readouts (ms)
 #define SENSOR_POLL_INTERVAL 2000

@@ -60,6 +60,7 @@ void loop_test_readout(lv_timer_t* timer)
 void loop_update_readouts(lv_timer_t* timer)
 {
     static bool timer_delay_complete = false;
+    static uint32_t last_readout_refresh = 0;
     static uint32_t last_chart_refresh = 0;
     if(!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
@@ -76,9 +77,11 @@ void loop_update_readouts(lv_timer_t* timer)
     set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
     set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume_ml());
 
-    // Refresh all of the readout labels
-    for (auto& value : adjustable_values) {
-        value.refresh_readout();
+    if(has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
+        // Refresh all of the readout labels
+        for (auto& value : adjustable_values) {
+            value.refresh_readout();
+        }
     }
 
     if(has_time_elapsed(&last_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
