@@ -76,7 +76,7 @@ void loop()
 #if ENABLE_CONTROL
     loop_update_readouts();
 #else
-    loop_test_readout();
+    loop_update_readouts();
 #endif
 }
 

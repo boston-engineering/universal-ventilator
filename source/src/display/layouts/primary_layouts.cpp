@@ -114,7 +114,7 @@ void setup_adjustable_readout(AdjValueType type, const char* override_str)
 
         double* measured = value_class->get_value_measured();
         const char* formatter = settings.measured_formatter;
-        if (*measured < 0) { // Use blanks since we haven't measured anything yet
+        if (*measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
             lv_label_set_text_fmt(value_amount_label, "--");
         }
         else {
@@ -239,14 +239,14 @@ void setup_ie_readout()
     const char* right_format = is_whole(right) ? "%ld" : "%.1f";
     char buf_left[5];
     char buf_right[5];
-    if (left < 0) {
+    if (left <= READOUT_VALUE_NONE) {
         snprintf(buf_left, 5, "--");
     }
     else {
         snprintf(buf_left, 5, left_format, is_whole(left) ? (int32_t) left : left);
     }
 
-    if (right < 0) {
+    if (right <= READOUT_VALUE_NONE) {
         snprintf(buf_right, 5, "--");
     }
     else {
@@ -494,7 +494,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 
     double* measured = this_ptr->get_value_measured();
     const char* formatter = settings.measured_formatter;
-    if (*measured < 0) { // Use blanks since we haven't measured anything yet
+    if (*measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
         lv_label_set_text_fmt(value_amount_label, "--");
     }
     else {

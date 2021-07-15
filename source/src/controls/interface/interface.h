@@ -6,6 +6,8 @@
 #include <display/main_display.h>
 
 #define clamp(n, low, high) max(low, min(n, high))
+#define READOUT_VALUE_NONE -1e3
+#define READOUT_VALUE_DEFAULT (READOUT_VALUE_NONE - 1)
 
 typedef enum AdjValueType {
     TIDAL_VOLUME = 0,

@@ -56,25 +56,28 @@ void loop_test_readout()
     }
 }
 
-void loop_update_readouts() {
+void loop_update_readouts()
+{
     static uint32_t sensor_poll_counter = 0;
-    if(has_time_elapsed(&sensor_poll_counter, SENSOR_POLL_INTERVAL)) {
-        set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume(C_Stat::FIFTY));
-        set_readout(CUR_PRESSURE, control_get_gauge_pressure());
+    if (has_time_elapsed(&sensor_poll_counter, SENSOR_POLL_INTERVAL)) {
+
+        set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume_ml());
+        set_readout(AdjValueType::CUR_PRESSURE, control_get_gauge_pressure());
 
         // Refresh all of the readout labels
-        for (auto& adjustable_value : adjustable_values) {
-            adjustable_value.refresh_readout();
+        for (auto& value : adjustable_values) {
+            value.refresh_readout();
         }
     }
 }
 
-void control_update_waveform_param(AdjValueType type, float new_value) {
-    if(type >= AdjValueType::ADJ_VALUE_COUNT) {
+void control_update_waveform_param(AdjValueType type, float new_value)
+{
+    if (type >= AdjValueType::ADJ_VALUE_COUNT) {
         return;
     }
     waveform_params* wave_params = control_get_waveform_params();
-    switch(type) {
+    switch (type) {
         case TIDAL_VOLUME:
             wave_params->volume_ml = new_value;
             LV_LOG_USER("Tidal Volume is now %.1f", new_value);
@@ -141,7 +144,7 @@ void init_adjustable_values()
         AdjustableValue* value_class = &adjustable_values[i];
         value_class->init(static_cast<AdjValueType>(i));
         load_stored_target(value_class, settings);
-        value_class->set_value_measured(-1);
+        value_class->set_value_measured(READOUT_VALUE_DEFAULT);
     }
     adjustable_values[AdjValueType::IE_RATIO_LEFT].set_selected(false);
 }
@@ -331,6 +334,11 @@ double control_get_degrees_to_volume(C_Stat compliance)
     return actuator.degrees_to_volume(compliance);
 }
 
+double control_get_degrees_to_volume_ml(C_Stat compliance)
+{
+    return actuator.degrees_to_volume(compliance) * 1000;
+}
+
 double control_calc_volume_to_degrees(C_Stat compliance, double volume)
 {
     return actuator.volume_to_degrees(compliance, volume);
@@ -351,7 +359,8 @@ void control_calculate_waveform()
     waveform.calculate_waveform();
 }
 
-void control_waveform_display_details() {
+void control_waveform_display_details()
+{
     waveform.display_details();
 }
 

@@ -27,6 +27,7 @@ const char** control_get_state_list(uint8_t*);
 void control_display_storage();
 bool control_is_crc_ok();
 double control_get_degrees_to_volume(C_Stat compliance = C_Stat::FIFTY);
+double control_get_degrees_to_volume_ml(C_Stat compliance = C_Stat::FIFTY);
 double control_calc_volume_to_degrees(C_Stat compliance, double volume);
 void control_actuator_set_enable(bool en);
 waveform_params* control_get_waveform_params(void);
