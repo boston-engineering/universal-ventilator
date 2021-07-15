@@ -61,7 +61,8 @@ void loop_update_readouts(lv_timer_t* timer)
 {
     static bool timer_delay_complete = false;
     static uint32_t last_readout_refresh = 0;
-    static uint32_t last_chart_refresh = 0;
+    static uint32_t gauge_chart_refresh = 0;
+    static uint32_t vt_chart_refresh = 0;
     if(!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
     }
@@ -70,12 +71,23 @@ void loop_update_readouts(lv_timer_t* timer)
         return;
     }
 
+#if VERBOSE_DATA_POLLING == 0
+    if(control_get_state() == States::ST_OFF) {
+        return;
+    }
+#endif
+
     auto* screen = static_cast<MainScreen*>(timer->user_data);
 
+    // Add gauge pressure points
     double cur_pressure = control_get_gauge_pressure();
     screen->add_gauge_pressure_chart_point(cur_pressure);
     set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
-    set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume_ml());
+
+    // Add tidal volume points
+    double cur_tidal_volume = control_get_degrees_to_volume_ml();
+    screen->add_vt_chart_point(cur_tidal_volume);
+    set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
 
     if(has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
@@ -84,8 +96,12 @@ void loop_update_readouts(lv_timer_t* timer)
         }
     }
 
-    if(has_time_elapsed(&last_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
+    if(has_time_elapsed(&gauge_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
         screen->refresh_gauge_pressure_chart();
+    }
+
+    if(has_time_elapsed(&vt_chart_refresh, VT_CHART_REFRESH_TIME)) {
+        screen->refresh_vt_chart();
     }
 }
 

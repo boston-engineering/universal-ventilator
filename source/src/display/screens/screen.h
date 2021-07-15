@@ -26,10 +26,14 @@ public:
 
     void add_gauge_pressure_chart_point(double data);
     void refresh_gauge_pressure_chart();
+    void add_vt_chart_point(double data);
+    void refresh_vt_chart();
 private:
     void add_gauge_chart();
+    void add_vt_chart();
 
     lv_obj_t* gauge_pressure_chart = nullptr;
+    lv_obj_t* vt_chart = nullptr;
 };
 
 #endif //UVENT_SCREEN_H
