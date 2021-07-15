@@ -4,7 +4,9 @@
 #include "../config/uvent_conf.h"
 #include <controls/interface/interface.h>
 
+typedef void (* ButtonCreateFunc)();
 typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
+typedef void (* LabelConfigCb)(lv_obj_t* label, uint8_t label_idx);
 
 lv_obj_t* open_option_dialog(const char* title, bool enable_close_button = false);
 
@@ -32,6 +34,7 @@ lv_obj_t* add_settings_toggle_button(const char* title, lv_obj_t* parent = SCR_C
 extern lv_obj_t* active_floating_window;
 
 // Config Screen
+lv_obj_t* get_config_button_container();
 void setup_config_window();
 
 // Config Windows

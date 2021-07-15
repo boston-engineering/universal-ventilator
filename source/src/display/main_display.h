@@ -69,6 +69,9 @@
 #define FLEX_SHRINK 0
 #define FLEX_GROW 1
 
+// The default font for config buttons to check if we need to shrink it
+#define DEFAULT_CONFIG_BUTTON_FONT &lv_font_montserrat_24
+
 typedef enum DisplayContainer {
     VISUAL_MAIN = 0,    /**< Left 600x480. Contains VISUAL_AREA_1 and VISUAL_G_C*/
     VISUAL_AREA_1,      /**< Left 200x480. Responsible for data readout boxes.*/
@@ -92,6 +95,7 @@ typedef enum ComponentType {
     // Start/Stop Buttons, Mute Button, Settings, Configuration
     OPTION_BUTTON,                  /**< Action Button*/
     OPTION_BUTTON_TEXT,             /**< Action Button Text*/
+    CONFIG_OPTION_BUTTON_TEXT,      /**< Action Button Text for config buttons. May change size*/
     // Value Adjustment Controls
     CONTROL,
     CONTROL_TEXT_CONTAINER,         /**< Holder for configuration readout*/
@@ -104,6 +108,9 @@ typedef enum ComponentType {
     // Purely Visual Elements
     DIVIDER,                        /**< Divider*/
     POPUP_WINDOW,                   /**< Main Styles for popup windows*/
+    CONFIG_BUTTON_HOLDER,           /**< Sits inside CONTROL_AREA_1, helps position config buttons*/
+    PAGINATION_GROUP_HOLDER,        /**< Holder for the buttongroup part of pagination*/
+    PAGINATION_BUTTON_ITEM,         /**< Individual pagination button*/
     BLANK,
     COMPONENT_COUNT,
 } ComponentType;
@@ -215,6 +222,7 @@ static inline void setup_styles()
     STYLE_DECL(READOUT_VALUE_AMOUNT_TEXT);
     STYLE_DECL(OPTION_BUTTON);
     STYLE_DECL(OPTION_BUTTON_TEXT);
+    STYLE_DECL(CONFIG_OPTION_BUTTON_TEXT);
     STYLE_DECL(CONTROL);
     STYLE_DECL(CONTROL_TEXT_CONTAINER);
     STYLE_DECL(CONTROL_TEXT_CONTAINER_TOP);
@@ -225,6 +233,9 @@ static inline void setup_styles()
     STYLE_DECL(CONTROL_BUTTON_TEXT);
     STYLE_DECL(DIVIDER);
     STYLE_DECL(POPUP_WINDOW);
+    STYLE_DECL(CONFIG_BUTTON_HOLDER);
+    STYLE_DECL(PAGINATION_GROUP_HOLDER);
+    STYLE_DECL(PAGINATION_BUTTON_ITEM);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H

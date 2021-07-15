@@ -39,10 +39,6 @@ void setup_controls()
     lv_obj_t* parent = SCR_C(CONTROL_AREA_1);
     lv_obj_clean(parent);
 
-    lv_obj_remove_local_style_prop(parent, LV_STYLE_PAD_LEFT, LV_PART_MAIN);
-    lv_obj_remove_local_style_prop(parent, LV_STYLE_PAD_RIGHT, LV_PART_MAIN);
-    lv_obj_remove_local_style_prop(parent, LV_STYLE_PAD_TOP, LV_PART_MAIN);
-    lv_obj_remove_local_style_prop(parent, LV_STYLE_PAD_BOTTOM, LV_PART_MAIN);
     lv_obj_remove_local_style_prop(parent, LV_STYLE_PAD_ROW, LV_PART_MAIN);
 
     setup_adjustable_control(TIDAL_VOLUME);

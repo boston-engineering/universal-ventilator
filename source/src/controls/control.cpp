@@ -289,6 +289,11 @@ void control_display_storage()
     storage.display_storage();
 }
 
+bool control_is_crc_ok()
+{
+    return storage.is_crc_ok();
+}
+
 double control_get_degrees_to_volume(C_Stat compliance)
 {
     return actuator.degrees_to_volume(compliance);
@@ -312,6 +317,10 @@ waveform_params* control_get_waveform_params(void)
 void control_calculate_waveform()
 {
     waveform.calculate_waveform();
+}
+
+void control_waveform_display_details() {
+    waveform.display_details();
 }
 
 double control_get_gauge_pressure()

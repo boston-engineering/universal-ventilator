@@ -22,7 +22,7 @@ public:
     bool is_inspiration_hold_done();
     bool is_expiration_done();
     bool is_peep_pause_done();
-    void display_details();
+    void display_details() const;
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation

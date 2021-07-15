@@ -141,6 +141,18 @@ STYLE_INIT_FUNC(OPTION_BUTTON_TEXT)
 }
 
 /**
+* ComponentType::CONFIG_OPTION_BUTTON_TEXT
+*/
+STYLE_INIT_FUNC(CONFIG_OPTION_BUTTON_TEXT)
+{
+    lv_style_t* style = STYLE_PTR_CM(CONFIG_OPTION_BUTTON_TEXT);
+    // Font Properties
+    lv_style_set_text_color(style, lv_color_black());
+    lv_style_set_text_align(style, LV_TEXT_ALIGN_CENTER);
+    lv_style_set_text_font(style, DEFAULT_CONFIG_BUTTON_FONT);
+}
+
+/**
 * ComponentType::CONTROL
 */
 STYLE_INIT_FUNC(CONTROL)
@@ -295,4 +307,54 @@ STYLE_INIT_FUNC(POPUP_WINDOW)
     lv_style_set_shadow_color(style, lv_color_black());
     lv_style_set_shadow_ofs_x(style, 4 px);
     lv_style_set_shadow_ofs_y(style, 4 px);
+}
+
+/**
+* ComponentType::CONFIG_BUTTON_HOLDER
+*/
+STYLE_INIT_FUNC(CONFIG_BUTTON_HOLDER)
+{
+    lv_style_t* style = STYLE_PTR_CM(CONFIG_BUTTON_HOLDER);
+
+    // Colors & Borders
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_pad_all(style, 10 px);
+    lv_style_set_pad_row(style, 10 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    // Inside Flex
+    lv_style_set_flex_grow(style, FLEX_GROW);
+}
+
+/**
+* ComponentType::PAGINATION_GROUP_HOLDER
+*/
+STYLE_INIT_FUNC(PAGINATION_GROUP_HOLDER)
+{
+    lv_style_t* style = STYLE_PTR_CM(PAGINATION_GROUP_HOLDER);
+
+    // Colors & Borders
+    lv_style_set_pad_gap(style, 0);
+    lv_style_set_clip_corner(style, true);
+//    lv_style_set_radius(style, LV_RADIUS_CIRCLE);
+    lv_style_set_radius(style, 0 px);
+    lv_style_set_max_height(style, 50 px);
+    lv_style_set_width(style, LV_PCT(100));
+}
+
+/**
+* ComponentType::PAGINATION_BUTTON_ITEM
+*/
+STYLE_INIT_FUNC(PAGINATION_BUTTON_ITEM)
+{
+    lv_style_t* style = STYLE_PTR_CM(PAGINATION_BUTTON_ITEM);
+
+    // Colors & Borders
+    lv_style_set_text_font(style, &lv_font_montserrat_22);
+    lv_style_set_border_width(style, 1);
+    lv_style_set_border_opa(style, LV_OPA_50);
+    lv_style_set_border_color(style, lv_palette_main(LV_PALETTE_GREY));
+    lv_style_set_border_side(style, LV_BORDER_SIDE_INTERNAL);
+    lv_style_set_radius(style, 0);
 }
