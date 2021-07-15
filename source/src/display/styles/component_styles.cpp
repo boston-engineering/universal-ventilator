@@ -34,7 +34,7 @@ STYLE_INIT_FUNC(READOUT_NAME_CONTAINER)
     lv_style_t* style = STYLE_PTR_CM(READOUT_NAME_CONTAINER);
     // Colors & Borders
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
-    lv_style_set_pad_left(style, 4 px);
+    lv_style_set_pad_left(style, 2 px);
     lv_style_set_pad_right(style, 0 px);
     lv_style_set_pad_top(style, 0 px);
     lv_style_set_pad_bottom(style, 4 px);
@@ -72,7 +72,7 @@ STYLE_INIT_FUNC(READOUT_VALUE_CONTAINER)
     // Colors & Borders
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     lv_style_set_pad_left(style, 0 px);
-    lv_style_set_pad_right(style, 6 px);
+    lv_style_set_pad_right(style, 2 px);
     lv_style_set_pad_top(style, 2 px);
     lv_style_set_pad_bottom(style, 2 px);
     // Flexbox
@@ -109,7 +109,7 @@ STYLE_INIT_FUNC(READOUT_VALUE_AMOUNT_TEXT)
     // Font Properties
     lv_style_set_text_color(style, lv_color_white());
     lv_style_set_text_align(style, LV_TEXT_ALIGN_RIGHT);
-    lv_style_set_text_font(style, &lv_font_montserrat_40);
+    lv_style_set_text_font(style, &lv_font_montserrat_36);
     // Flexbox
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
