@@ -3,7 +3,9 @@
 #include <controls/control.h>
 #include "layouts.h"
 
-// Static callback function defs
+/************************************************/
+/*        Static Defs & Function Callbacks      */
+/************************************************/
 static void on_readout_update(lv_event_t*);
 static void readout_update_cb(AdjustableValue*, lv_event_t*);
 
@@ -17,7 +19,9 @@ static void get_ie_control_label(AdjustableValue* this_ptr, lv_obj_t** obj_ptr);
 static void update_ie_control_state(AdjustableValue* this_ptr, lv_obj_t* label);
 static void toggle_ie_select();
 
-// Functions to generate & fill entire screen areas
+/***************************************************************/
+/*      Functions to generate & fill entire screen areas       */
+/***************************************************************/
 
 void setup_readouts()
 {
@@ -68,7 +72,18 @@ void setup_buttons()
     add_settings_toggle_button("Settings &\nConfig");
 }
 
-// Functions to generate components like the readouts & controls
+void setup_visual_2() {
+    // Wipe areas
+    lv_obj_t* visual_area_2 = SCR_C(VISUAL_AREA_2);
+    lv_obj_clean(visual_area_2);
+
+    lv_obj_t* chart_holder = lv_obj_create(visual_area_2);
+    lv_obj_add_style(chart_holder, STYLE_PTR_CM(CHART_HOLDER), LV_PART_MAIN);
+}
+
+/*******************************************************************/
+/*  Functions to generate components like the readouts & controls  */
+/*******************************************************************/
 
 void setup_adjustable_readout(AdjValueType type, const char* override_str)
 {
@@ -373,7 +388,9 @@ void setup_ie_controls()
 #endif
 }
 
-// Functions to generate buttons
+/************************************************/
+/*          Functions to generate buttons       */
+/************************************************/
 
 void add_start_button()
 {
@@ -458,11 +475,9 @@ lv_obj_t* add_settings_toggle_button(const char* title, lv_obj_t* parent)
     return button;
 }
 
-/**************************************
- * Callback functions & event handlers
- ***************************************/
-
-// Event handlers to run callbacks
+/************************************************/
+/*     Event Handlers (callback dispatcher)     */
+/************************************************/
 
 static void on_control_button_press(lv_event_t* evt)
 {
@@ -479,7 +494,9 @@ static void on_readout_update(lv_event_t* evt)
     value_class->on_readout_update(evt);
 }
 
-// Readout callbacks
+/************************************************/
+/*               Readout Callbacks              */
+/************************************************/
 
 static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
@@ -508,7 +525,9 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
     }
 }
 
-// Control callbacks
+/************************************************/
+/*               Control Callbacks              */
+/************************************************/
 
 static void control_press_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
@@ -611,7 +630,9 @@ static void toggle_ie_select()
     update_ie_control_state(right_class, right_label);
 }
 
-// Utility methods to aid in callbacks & event handlers
+/************************************************/
+/*   Utility methods for callbacks & handlers   */
+/************************************************/
 
 static void get_ie_control_label(AdjustableValue* this_ptr, lv_obj_t** obj_ptr)
 {

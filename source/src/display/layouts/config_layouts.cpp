@@ -407,7 +407,6 @@ static void create_config_button_container()
     // TODO set up flex and other control parts
     lv_obj_set_width(button_container, LV_PCT(100));
     lv_obj_add_style(button_container, STYLE_PTR_CM(CONFIG_BUTTON_HOLDER), LV_PART_MAIN);
-    lv_obj_set_style_border_color(button_container, lv_color_black(), LV_PART_MAIN);
     //lv_obj_set_style_border_width(button_container, 1 px, LV_PART_MAIN);
 }
 

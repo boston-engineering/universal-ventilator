@@ -20,6 +20,9 @@ MainScreen screen;
 Parser parser;
 test_eeprom eeprom_test;
 
+// Timers
+lv_timer_t* update_readout_timer = nullptr;
+
 // TODO clean up setup & main loop
 
 void setup()
@@ -45,6 +48,9 @@ void setup()
 
     // Initialize the parser, with the command array and command array size
     parser.init(command_get_array(), command_get_array_size());
+
+    // LVGL Timer to poll sensors and update screen data
+    update_readout_timer = lv_timer_create(loop_update_readouts, SENSOR_POLL_INTERVAL, &screen);
 }
 
 void loop()
@@ -73,11 +79,6 @@ void loop()
 #endif
 
     control_service();
-#if ENABLE_CONTROL
-    loop_update_readouts();
-#else
-    loop_update_readouts();
-#endif
 }
 
 #if USE_DMA_INTERRUPT

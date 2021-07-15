@@ -55,9 +55,11 @@ CONTAINER_INIT_FUNC(VISUAL_AREA_2)
     // Flexbox
     lv_style_set_flex_flow(style_ptr, LV_FLEX_FLOW_ROW);
     lv_style_set_flex_cross_place(style_ptr, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_pad_row(style_ptr, 4 px);
     lv_style_set_layout(style_ptr, LV_LAYOUT_FLEX);
 
     lv_obj_add_style(container, style_ptr, LV_PART_MAIN);
+    lv_obj_set_height(container, LV_PCT(100));
 }
 
 CONTAINER_INIT_FUNC(VISUAL_AREA_3)

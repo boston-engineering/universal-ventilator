@@ -16,6 +16,7 @@ lv_obj_t* open_option_dialog(const char* title, bool enable_close_button = false
 void setup_readouts();
 void setup_controls();
 void setup_buttons();
+void setup_visual_2();
 
 // Main screen readout functions
 void setup_adjustable_readout(AdjValueType type, const char* override_str = nullptr);

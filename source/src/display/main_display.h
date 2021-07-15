@@ -111,6 +111,7 @@ typedef enum ComponentType {
     CONFIG_BUTTON_HOLDER,           /**< Sits inside CONTROL_AREA_1, helps position config buttons*/
     PAGINATION_GROUP_HOLDER,        /**< Holder for the buttongroup part of pagination*/
     PAGINATION_BUTTON_ITEM,         /**< Individual pagination button*/
+    CHART_HOLDER,                   /**< Holder for all the charts in VISUAL_AREA_2*/
     BLANK,
     COMPONENT_COUNT,
 } ComponentType;
@@ -161,12 +162,6 @@ void populate_items();
  * Positioned floating so they don't get in the way of the main layout.
  */
 void add_dividers();
-
-/**
- * Adds a simple chart to the screen.
- * Currently a dummy function
- */
-void add_chart();
 
 /**
  * Sets up all containers for the main display
@@ -236,6 +231,7 @@ static inline void setup_styles()
     STYLE_DECL(CONFIG_BUTTON_HOLDER);
     STYLE_DECL(PAGINATION_GROUP_HOLDER);
     STYLE_DECL(PAGINATION_BUTTON_ITEM);
+    STYLE_DECL(CHART_HOLDER);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H

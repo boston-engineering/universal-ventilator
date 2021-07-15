@@ -3,7 +3,6 @@
 #include <utilities/logging.h>
 #include "TftDisplay.h"
 #include "../../config/uvent_conf.h"
-#include "global_components.h"
 
 uint32_t chart_update_timer = 0;
 uint32_t debug_toggle_timer = 0;
@@ -157,9 +156,6 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
 void TftDisplay::update()
 {
     //TODO add sleep handler code
-    if (has_time_elapsed(&chart_update_timer, 1000)) {
-        update_chart();
-    }
     if (!RA_GET_DEBUG_STATE() && has_time_elapsed(&debug_toggle_timer, 10000)) {
         RA_SET_DEBUG(true);
     }

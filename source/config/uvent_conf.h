@@ -20,6 +20,7 @@
 // Draw borders around flexbox components for debugging
 #define DEBUG_BORDER_READOUTS 0
 #define DEBUG_BORDER_CONTROLS 0
+#define DEBUG_BORDER_CHARTS 1
 
 // Pressure sensor testing
 #define ENABLE_TEST_PRESSURE_SENSORS 0
@@ -162,5 +163,12 @@
 
 // How often to poll sensors for readouts (ms)
 #define SENSOR_POLL_INTERVAL 2000
+#define SENSOR_POLL_STARTUP_DELAY 5000
+
+// Chart Configuration
+#define GAUGE_PRESSURE_CHART_MIN_VALUE -2
+#define GAUGE_PRESSURE_CHART_MAX_VALUE 30
+#define GAUGE_PRESSURE_CHART_MAX_POINTS 100
+#define GAUGE_PRESSURE_CHART_REFRESH_TIME 1000
 
 #endif

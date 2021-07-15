@@ -6,8 +6,13 @@
 
 void init_adjustable_values();
 
-void loop_test_readout();
-void loop_update_readouts();
+void loop_test_readout(lv_timer_t* timer);
+/**
+ * Timer function to poll sensors and update values accordingly.
+ * This should not be called manually under normal circumstances
+ * @param timer
+ */
+void loop_update_readouts(lv_timer_t* timer);
 
 void set_readout(AdjValueType type, double val);
 double get_readout(AdjValueType type);

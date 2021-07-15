@@ -358,3 +358,26 @@ STYLE_INIT_FUNC(PAGINATION_BUTTON_ITEM)
     lv_style_set_border_side(style, LV_BORDER_SIDE_INTERNAL);
     lv_style_set_radius(style, 0);
 }
+
+/**
+* ComponentType::CHART_HOLDER
+*/
+STYLE_INIT_FUNC(CHART_HOLDER)
+{
+    lv_style_t* style = STYLE_PTR_CM(CHART_HOLDER);
+
+    // Size
+    lv_style_set_max_height(style, 260 px);
+    lv_style_set_height(style, LV_PCT(100));
+    // Colors & Borders
+    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    //lv_style_set_border_width(style, 1 px);
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_pad_all(style, 4 px);
+    lv_style_set_pad_row(style, 4 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    // Inside Flex
+    lv_style_set_flex_grow(style, FLEX_GROW);
+}

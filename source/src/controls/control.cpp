@@ -9,6 +9,7 @@
 #include <AccelStepper.h>
 #include <DueTimer.h>
 #include <ams_as5048b.h>
+#include <display/screens/screen.h>
 
 // Instance to control the paddle
 Actuator actuator;
@@ -29,7 +30,7 @@ Waveform waveform;
  */
 Machine machine(States::ST_STARTUP, &actuator, &waveform);
 
-void loop_test_readout()
+void loop_test_readout(lv_timer_t* timer)
 {
 
     static uint32_t timing_step_counter = 0;
@@ -56,18 +57,32 @@ void loop_test_readout()
     }
 }
 
-void loop_update_readouts()
+void loop_update_readouts(lv_timer_t* timer)
 {
-    static uint32_t sensor_poll_counter = 0;
-    if (has_time_elapsed(&sensor_poll_counter, SENSOR_POLL_INTERVAL)) {
+    static bool timer_delay_complete = false;
+    static uint32_t last_chart_refresh = 0;
+    if(!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
+        timer_delay_complete = true;
+    }
+    if(!timer_delay_complete) {
+        LV_LOG_USER("Timer is not ready yet, returning (%d)", millis());
+        return;
+    }
 
-        set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume_ml());
-        set_readout(AdjValueType::CUR_PRESSURE, control_get_gauge_pressure());
+    auto* screen = static_cast<MainScreen*>(timer->user_data);
 
-        // Refresh all of the readout labels
-        for (auto& value : adjustable_values) {
-            value.refresh_readout();
-        }
+    double cur_pressure = control_get_gauge_pressure();
+    screen->add_gauge_pressure_chart_point(cur_pressure);
+    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
+    set_readout(AdjValueType::TIDAL_VOLUME, control_get_degrees_to_volume_ml());
+
+    // Refresh all of the readout labels
+    for (auto& value : adjustable_values) {
+        value.refresh_readout();
+    }
+
+    if(has_time_elapsed(&last_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
+        screen->refresh_gauge_pressure_chart();
     }
 }
 

@@ -1,11 +1,10 @@
 #include <utilities/waves.h>
+#include <utilities/logging.h>
 #include "main_display.h"
-#include "global_components.h"
 
 lv_obj_t* containers[DisplayContainer::CONTAINER_COUNT];
 lv_style_t container_styles[DisplayContainer::CONTAINER_COUNT];
 lv_style_t component_styles[ComponentType::COMPONENT_COUNT];
-lv_obj_t* chart;
 
 lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
 lv_color_t palette_color_2 = LV_COLOR_MAKE(59, 125, 185);
@@ -64,35 +63,4 @@ void add_dividers()
     lv_obj_add_flag(line, LV_OBJ_FLAG_FLOATING);
     lv_line_set_points(line, divider_2_points, 2);
     lv_obj_add_style(line, STYLE_PTR_CM(DIVIDER), LV_PART_MAIN);
-}
-
-void add_chart()
-{
-    /*Create a chart*/
-    chart = lv_chart_create(SCR_C(VISUAL_AREA_2));
-    lv_obj_set_width(chart, LV_PCT(100));
-
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
-    lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 256);
-
-    /*Add data series*/
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "UnusedValue"
-    lv_chart_series_t* series1 = lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
-#pragma clang diagnostic pop
-    lv_chart_set_point_count(chart, WAVE_LEN * .75);
-    lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
-
-    lv_chart_refresh(chart); /*Required after direct set*/
-}
-
-void update_chart()
-{
-    static int pos = WAVE_LEN * .75;
-    lv_chart_series_t* series = lv_chart_get_series_next(chart, nullptr);
-    if (++pos >= WAVE_LEN) {
-        pos = 0;
-    }
-    lv_chart_set_next_value(chart, series, sin_wave_static[pos]);
-    lv_chart_refresh(chart);
 }
