@@ -543,6 +543,9 @@ static void control_press_cb(AdjustableValue* this_ptr, lv_event_t* evt)
         this_ptr->set_value_target(val);
     }
 
+#if ENABLE_CONTROL
+    control_update_waveform_param(this_ptr->value_type, (float) *this_ptr->get_value_target());
+#endif
     update_control_label(this_ptr);
 }
 

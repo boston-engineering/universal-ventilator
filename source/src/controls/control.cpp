@@ -69,6 +69,38 @@ void loop_update_readouts() {
     }
 }
 
+void control_update_waveform_param(AdjValueType type, float new_value) {
+    if(type >= AdjValueType::ADJ_VALUE_COUNT) {
+        return;
+    }
+    waveform_params* wave_params = control_get_waveform_params();
+    switch(type) {
+        case TIDAL_VOLUME:
+            wave_params->volume_ml = new_value;
+            LV_LOG_USER("Tidal Volume is now %.1f", new_value);
+            break;
+        case RESPIRATION_RATE:
+            wave_params->bpm = (uint16_t) new_value;
+            LV_LOG_USER("Respiration Rate is now %.1f", new_value);
+            break;
+        case PLATEAU_TIME:
+            // TODO
+            LV_LOG_USER("TO ADD: PLATEAU TIME");
+            break;
+        case IE_RATIO_LEFT:
+            wave_params->ie_i = new_value;
+            LV_LOG_USER("IE Inspiration is now %.1f", new_value);
+            break;
+        case IE_RATIO_RIGHT:
+            wave_params->ie_e = new_value;
+            LV_LOG_USER("IE Expiration is now %.1f", new_value);
+            break;
+        default:
+            break;
+    }
+    control_calculate_waveform();
+}
+
 static void load_stored_target(AdjustableValue* value, uvent_settings& settings)
 {
     double val = 0;

@@ -12,6 +12,8 @@ void loop_update_readouts();
 void set_readout(AdjValueType type, double val);
 double get_readout(AdjValueType type);
 
+void control_update_waveform_param(AdjValueType type, float new_value);
+
 void control_init();
 void control_service();
 double control_get_actuator_position();
