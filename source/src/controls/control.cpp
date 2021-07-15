@@ -66,7 +66,7 @@ void loop_test_readout(lv_timer_t* timer)
     set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
     cur_pressure += 1;
     cur_pressure += random(100) / 100.0;
-    if(cur_pressure > 40) {
+    if (cur_pressure > 40) {
         cur_pressure -= 42;
     }
 
@@ -77,7 +77,7 @@ void loop_test_readout(lv_timer_t* timer)
     screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
     test2 += 50;
-    if(test2 > 1000) {
+    if (test2 > 1000) {
         test2 -= 1002;
     }
 
@@ -90,7 +90,7 @@ void loop_test_readout(lv_timer_t* timer)
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
-            if(!value.is_dirty()) {
+            if (!value.is_dirty()) {
                 continue;
             }
             value.refresh_readout();
@@ -145,7 +145,7 @@ void loop_update_readouts(lv_timer_t* timer)
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
-            if(!value.is_dirty()) {
+            if (!value.is_dirty()) {
                 continue;
             }
             value.refresh_readout();
@@ -234,7 +234,8 @@ void init_adjustable_values()
     adjustable_values[AdjValueType::IE_RATIO_LEFT].set_selected(false);
 }
 
-double get_control_target(AdjValueType type) {
+double get_control_target(AdjValueType type)
+{
     if (type >= AdjValueType::ADJ_VALUE_COUNT) {
 
         return adjustable_values[type].get_settings().default_value;
@@ -316,11 +317,11 @@ void control_init()
     // Initialize the Differential Pressure Sensor
     if (settings.diff_pressure_type == PRESSURE_SENSOR_TYPE_0) {
         diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_0, MIN_DIFF_PRESSURE_TYPE_0, RESISTANCE_1, RESISTANCE_2,
-                settings.dpressure_offset_adc_counts);
+                         settings.dpressure_offset_adc_counts);
     }
     else if (settings.diff_pressure_type == PRESSURE_SENSOR_TYPE_1) {
         diff_sensor.init(MAX_DIFF_PRESSURE_TYPE_1, MIN_DIFF_PRESSURE_TYPE_1, RESISTANCE_1, RESISTANCE_2,
-                settings.dpressure_offset_adc_counts);
+                         settings.dpressure_offset_adc_counts);
     }
 
     // Initialize the state machine

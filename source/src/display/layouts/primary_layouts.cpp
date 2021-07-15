@@ -157,14 +157,14 @@ void setup_adjustable_readout(AdjValueType type, const char* override_str)
     lv_span_t* primary_amount_span = lv_spangroup_new_span(value_amount_spangroup);
     border_span(primary_amount_span);
 
-    if (override_str) {  // If we have a pre-formatted string like I:E, just use that
+    if (override_str) {// If we have a pre-formatted string like I:E, just use that
 
         lv_span_set_text(primary_amount_span, override_str);
     }
-    else {            // Else get the actual thing we need
+    else {// Else get the actual thing we need
 
         double measured = *value_class->get_value_measured();
-        if (measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
+        if (measured <= READOUT_VALUE_NONE) {// Use blanks since we haven't measured anything yet
             lv_span_set_text(primary_amount_span, "--");
         }
     }
@@ -341,7 +341,7 @@ void setup_ie_controls()
     lv_obj_t* text_container = lv_obj_create(obj);
     auto change_selected_cb = [](lv_event_t* evt) {
         if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-                || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+              || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
             return;
         }
         toggle_ie_select();
@@ -367,7 +367,6 @@ void setup_ie_controls()
 
     lv_obj_set_width(value_label_right, LV_SIZE_CONTENT);
     lv_obj_add_flag(value_label_right, LV_OBJ_FLAG_EVENT_BUBBLE);
-
 
     // Set the styles. Larger part is the selected value
     lv_obj_add_style(value_label_left, STYLE_PTR_CM(CONTROL_TEXT_VALUE), LV_PART_MAIN);
@@ -568,7 +567,7 @@ static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup
     double measured = *this_ptr->get_value_measured();
     const char* formatter = settings.measured_formatter;
 
-    if (measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
+    if (measured <= READOUT_VALUE_NONE) {// Use blanks since we haven't measured anything yet
         trim_spans_to_size(spangroup, 1);
         primary_span = lv_spangroup_get_child(spangroup, 0);
         lv_span_set_text(primary_span, "--");
@@ -599,7 +598,7 @@ static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup
             double decimal_portion = 0;
             if (measured != 0) {
                 decimal_portion = measured - ((int32_t) measured);
-                if(decimal_portion < 0) {
+                if (decimal_portion < 0) {
                     decimal_portion *= -1;
                 }
             }
@@ -639,7 +638,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
     }
 
     update_readout_labels(this_ptr, value_amount_spangroup);
-//    printMem();
+    //    printMem();
 }
 
 /************************************************/
@@ -649,7 +648,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 static void control_press_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
     if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-            || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+          || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
         return;
     }
 
@@ -726,7 +725,6 @@ static void update_ie_control_label(AdjustableValue* this_ptr)
     else {
         lv_label_set_text_fmt(selected_label, "%.1f", val);
     }
-
 }
 
 static void toggle_ie_select()
