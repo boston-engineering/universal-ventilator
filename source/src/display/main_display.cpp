@@ -11,7 +11,7 @@ lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
 lv_color_t palette_color_2 = LV_COLOR_MAKE(59, 125, 185);
 lv_color_t color_start_button = LV_COLOR_MAKE(49, 230, 133);
 lv_color_t color_button_alert = LV_COLOR_MAKE(255, 172, 53);
-lv_color_t color_text_disabled = LV_COLOR_MAKE(225, 225, 225);
+lv_color_t color_text_disabled = LV_COLOR_MAKE(130, 130, 130);
 lv_color_t color_gray = LV_COLOR_MAKE(248, 248, 248);
 
 lv_point_t divider_1_points[] = {
