@@ -462,7 +462,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_SPAN         1
 #if LV_USE_SPAN
 /*A line text can contain maximum num of span descriptor */
-#  define LV_SPAN_SNIPPET_STACK_SIZE   64
+#  define LV_SPAN_SNIPPET_STACK_SIZE   32
 #endif
 
 /*-----------

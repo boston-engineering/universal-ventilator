@@ -7,6 +7,7 @@
 /*        Static Defs & Function Callbacks      */
 /************************************************/
 static void on_readout_update(lv_event_t*);
+static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup);
 static void readout_update_cb(AdjustableValue*, lv_event_t*);
 
 static void on_control_button_press(lv_event_t*);
@@ -18,6 +19,8 @@ static void update_ie_control_label(AdjustableValue* this_ptr);
 static void get_ie_control_label(AdjustableValue* this_ptr, lv_obj_t** obj_ptr);
 static void update_ie_control_state(AdjustableValue* this_ptr, lv_obj_t* label);
 static void toggle_ie_select();
+
+static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refresh = false);
 
 /***************************************************************/
 /*      Functions to generate & fill entire screen areas       */
@@ -72,7 +75,8 @@ void setup_buttons()
     add_settings_toggle_button("Settings &\nConfig");
 }
 
-void setup_visual_2() {
+void setup_visual_2()
+{
     // Wipe areas
     lv_obj_t* visual_area_2 = SCR_C(VISUAL_AREA_2);
     lv_obj_clean(visual_area_2);
@@ -84,6 +88,22 @@ void setup_visual_2() {
 /*******************************************************************/
 /*  Functions to generate components like the readouts & controls  */
 /*******************************************************************/
+
+static void configure_label_spangroup(lv_obj_t* obj)
+{
+    lv_spangroup_set_mode(obj, LV_SPAN_MODE_EXPAND);
+    lv_spangroup_set_align(obj, LV_TEXT_ALIGN_RIGHT);
+#if DEBUG_BORDER_READOUTS
+    lv_obj_set_style_border_width(obj, 1 px, LV_PART_MAIN);
+#endif
+    lv_obj_add_style(obj, STYLE_PTR_CM(READOUT_VALUE_AMOUNT_TEXT), LV_PART_MAIN);
+}
+
+static void border_span(lv_span_t* span)
+{
+    lv_style_set_border_color(&span->style, lv_color_black());
+    lv_style_set_border_width(&span->style, 1 px);
+}
 
 void setup_adjustable_readout(AdjValueType type, const char* override_str)
 {
@@ -115,35 +135,29 @@ void setup_adjustable_readout(AdjValueType type, const char* override_str)
     lv_label_set_text_fmt(name_label, settings.title);
     //
 
-    lv_obj_t* value_amount_label = lv_label_create(value_container);
+    lv_obj_t* value_amount_spangroup = lv_spangroup_create(value_container);
     lv_obj_t* value_unit_label;
-    lv_obj_set_width(value_amount_label, LV_SIZE_CONTENT);
-    lv_obj_add_style(value_amount_label, STYLE_PTR_CM(READOUT_VALUE_AMOUNT_TEXT), LV_PART_MAIN);
+
+    configure_label_spangroup(value_amount_spangroup);
+
+    lv_span_t* primary_amount_span = lv_spangroup_new_span(value_amount_spangroup);
+    border_span(primary_amount_span);
 
     if (override_str) {  // If we have a pre-formatted string like I:E, just use that
 
-        lv_label_set_text_fmt(value_amount_label, override_str);
-
+        lv_span_set_text(primary_amount_span, override_str);
     }
     else {            // Else get the actual thing we need
 
-        double* measured = value_class->get_value_measured();
+        double measured = *value_class->get_value_measured();
         const char* formatter = settings.measured_formatter;
-        if (*measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
-            lv_label_set_text_fmt(value_amount_label, "--");
-        }
-        else {
-            // Make sure to cast if we're trying for an int
-            if (strcmp("%d", formatter) == 0 || strcmp("%i", formatter) == 0) {
-                lv_label_set_text_fmt(value_amount_label, formatter, (int32_t) *value_class->get_value_measured());
-            }
-            else {
-                lv_label_set_text_fmt(value_amount_label, formatter, *value_class->get_value_measured());
-            }
+        if (measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
+            lv_span_set_text(primary_amount_span, "--");
         }
     }
 
-    lv_obj_center(value_amount_label);
+    lv_spangroup_refr_mode(value_amount_spangroup);
+    lv_obj_center(value_amount_spangroup);
 
     if (settings.unit) {
         value_unit_label = lv_label_create(value_container);
@@ -155,7 +169,6 @@ void setup_adjustable_readout(AdjValueType type, const char* override_str)
     lv_obj_set_style_border_width(name_container, 1 px, LV_PART_MAIN);
     lv_obj_set_style_border_width(value_container, 1 px, LV_PART_MAIN);
     lv_obj_set_style_border_width(name_label, 1 px, LV_PART_MAIN);
-    lv_obj_set_style_border_width(value_amount_label, 1 px, LV_PART_MAIN);
     if (settings.unit && value_unit_label) {
         lv_obj_set_style_border_width(value_unit_label, 1 px, LV_PART_MAIN);
     }
@@ -276,10 +289,12 @@ void setup_ie_readout()
     };
 }
 
-static void ie_label_text(lv_obj_t* label, double val) {
-    if(is_whole(val)) {
+static void ie_label_text(lv_obj_t* label, double val)
+{
+    if (is_whole(val)) {
         lv_label_set_text_fmt(label, "%ld", (uint32_t) val);
-    } else {
+    }
+    else {
         lv_label_set_text_fmt(label, "%.1f", val);
     }
 }
@@ -422,7 +437,9 @@ void add_start_button()
                 lv_label_set_text_fmt(label, "Standby");
                 control_change_state(States::ST_INSPR);
             }
+#if ENABLE_CONTROL
             control_write_ventilator_params();
+#endif
         }
     };
 
@@ -498,31 +515,110 @@ static void on_readout_update(lv_event_t* evt)
 /*               Readout Callbacks              */
 /************************************************/
 
+static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refresh)
+{
+    size_t size = lv_spangroup_get_child_cnt(spangroup);
+    if (size == final_size) {
+        return;
+    }
+    else if (size < final_size) {
+
+        for (; size < final_size; size++) {
+            lv_span_t* span = lv_spangroup_new_span(spangroup);
+            border_span(span);
+        }
+        return;
+    }
+    else {
+
+        while (size > final_size) {
+            lv_span_t* last = lv_spangroup_get_child(spangroup, -1);
+            lv_spangroup_del_span(spangroup, last);
+            size--;
+        }
+    }
+
+    if (refresh) {
+        lv_spangroup_refr_mode(spangroup);
+    }
+}
+
+static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup)
+{
+
+    auto settings = this_ptr->get_settings();
+    lv_span_t* primary_span;
+    double measured = *this_ptr->get_value_measured();
+    const char* formatter = settings.measured_formatter;
+
+    if (measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
+        trim_spans_to_size(spangroup, 1);
+        primary_span = lv_spangroup_get_child(spangroup, 0);
+        lv_span_set_text(primary_span, "--");
+    }
+    else {
+
+        size_t spanlist_size = lv_spangroup_get_child_cnt(spangroup);
+        char buf[12];
+        // Get the int portion by default, we'll get the decimal portion later for float options
+        snprintf(buf, 12, "%ld", (int32_t) measured);
+
+        if (spanlist_size < 1) {
+            primary_span = lv_spangroup_new_span(spangroup);
+        }
+        else {
+            primary_span = lv_spangroup_get_child(spangroup, 0);
+        }
+
+        lv_span_set_text(primary_span, buf);
+
+        // Make sure to cast if we're trying for an int
+        if (strcmp("%d", formatter) == 0 || strcmp("%ld", formatter) == 0 || strcmp("%i", formatter) == 0) {
+            trim_spans_to_size(spangroup, 1);
+        }
+        else {
+
+            // Create a new span just for decimal values with smaller font
+            lv_span_t* decimal_span;
+            double decimal_portion = 0;
+            if (measured != 0) {
+                decimal_portion = abs(measured - ((int32_t) measured));
+            }
+            snprintf(buf, 12, formatter, decimal_portion);
+
+            if (spanlist_size == 1) {
+                decimal_span = lv_spangroup_new_span(spangroup);
+                lv_style_set_text_font(&decimal_span->style, &lv_font_montserrat_28);
+                border_span(decimal_span);
+            }
+            else {
+                trim_spans_to_size(spangroup, 2);
+                decimal_span = lv_spangroup_get_child(spangroup, 1);
+            }
+
+            // The formatter will give 0.xxxx, we need to cut off the 0 to attach to the large portion
+            lv_span_set_text(decimal_span, &buf[1]);
+        }
+    }
+
+    lv_spangroup_refr_mode(spangroup);
+}
+
 static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
     if (evt->code != LV_EVENT_REFRESH) {
         return;
     }
 
-    auto settings = this_ptr->get_settings();
     lv_obj_t* target = this_ptr->get_obj_measured();
     lv_obj_t* value_container = lv_obj_get_child(target, 1);
-    lv_obj_t* value_amount_label = lv_obj_get_child(value_container, 0);
+    lv_obj_t* value_amount_spangroup = lv_obj_get_child(value_container, 0);
 
-    double* measured = this_ptr->get_value_measured();
-    const char* formatter = settings.measured_formatter;
-    if (*measured <= READOUT_VALUE_NONE) { // Use blanks since we haven't measured anything yet
-        lv_label_set_text_fmt(value_amount_label, "--");
+    if (!value_amount_spangroup) {
+        return;
     }
-    else {
-        // Make sure to cast if we're trying for an int
-        if (strcmp("%d", formatter) == 0 || strcmp("%i", formatter) == 0) {
-            lv_label_set_text_fmt(value_amount_label, formatter, (int32_t) *this_ptr->get_value_measured());
-        }
-        else {
-            lv_label_set_text_fmt(value_amount_label, formatter, *this_ptr->get_value_measured());
-        }
-    }
+
+    update_readout_labels(this_ptr, value_amount_spangroup);
 }
 
 /************************************************/

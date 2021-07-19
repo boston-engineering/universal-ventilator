@@ -4,6 +4,12 @@
 #include "../config/uvent_conf.h"
 #include <controls/interface/interface.h>
 
+/************************************************/
+/*              Defines and Macros              */
+/************************************************/
+// abs does some weird stuff when defined by arduino
+#undef abs
+
 typedef void (* ButtonCreateFunc)();
 typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
 typedef void (* LabelConfigCb)(lv_obj_t* label, uint8_t label_idx);

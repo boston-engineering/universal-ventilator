@@ -20,7 +20,7 @@ STYLE_INIT_FUNC(READOUT)
     lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);
     lv_style_set_flex_main_place(style, LV_FLEX_ALIGN_SPACE_EVENLY);
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
-    lv_style_set_pad_column(style, 2 px);
+    lv_style_set_pad_column(style, 0 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
     // Inside Flex
     lv_style_set_flex_grow(style, FLEX_GROW);
@@ -69,6 +69,8 @@ STYLE_INIT_FUNC(READOUT_NAME_TEXT)
 STYLE_INIT_FUNC(READOUT_VALUE_CONTAINER)
 {
     lv_style_t* style = STYLE_PTR_CM(READOUT_VALUE_CONTAINER);
+    // Sizing
+    lv_style_set_min_width(style, LV_PCT(35));
     // Colors & Borders
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     lv_style_set_pad_left(style, 0 px);
@@ -79,6 +81,7 @@ STYLE_INIT_FUNC(READOUT_VALUE_CONTAINER)
     lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
     lv_style_set_flex_main_place(style, LV_FLEX_ALIGN_CENTER);
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_END);
+    lv_style_set_flex_track_place(style, LV_FLEX_ALIGN_END);
     lv_style_set_pad_row(style, 0 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
 }
@@ -89,6 +92,8 @@ STYLE_INIT_FUNC(READOUT_VALUE_CONTAINER)
 STYLE_INIT_FUNC(READOUT_VALUE_UNIT_TEXT)
 {
     lv_style_t* style = STYLE_PTR_CM(READOUT_VALUE_UNIT_TEXT);
+    // Size and color
+    lv_style_set_width(style, LV_PCT(100));
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     // Font Properties
     lv_style_set_text_color(style, lv_color_white());
@@ -105,11 +110,13 @@ STYLE_INIT_FUNC(READOUT_VALUE_UNIT_TEXT)
 STYLE_INIT_FUNC(READOUT_VALUE_AMOUNT_TEXT)
 {
     lv_style_t* style = STYLE_PTR_CM(READOUT_VALUE_AMOUNT_TEXT);
+    // Size and color
+    lv_style_set_width(style, LV_PCT(100));
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     // Font Properties
     lv_style_set_text_color(style, lv_color_white());
     lv_style_set_text_align(style, LV_TEXT_ALIGN_RIGHT);
-    lv_style_set_text_font(style, &lv_font_montserrat_36);
+    lv_style_set_text_font(style, &lv_font_montserrat_40);
     // Flexbox
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);

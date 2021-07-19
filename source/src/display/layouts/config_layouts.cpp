@@ -434,7 +434,6 @@ static void create_pagination()
 
     for (uint8_t i = 0; i < CONFIG_PAGES; i++) {
         if (buffer_filled[i]) {
-            LV_LOG_USER("Buffer %d is already filled, skipping...", i);
             continue;
         }
 
