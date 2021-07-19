@@ -2,6 +2,7 @@
 #define UVENT_ACTUATOR_H
 
 #include "stepper.h"
+#include "controls/fault.h"
 
 /* The type of ticks for the motor.
  * Although the actuator can be controlled in degrees,
@@ -58,6 +59,7 @@ public:
     bool target_reached();
     bool add_correction();
     double volume_to_degrees(C_Stat compliance, double volume);
+    Fault calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg);
 
 private:
     Stepper stepper;
@@ -122,6 +124,9 @@ private:
     double const V2D_COEF_B_COMP_50 = -449.69;
     double const V2D_COEF_C_COMP_50 = 321.88;
     double const V2D_COEF_D_COMP_50 = 30.01;
+
+    float degrees_to_steps(const float& d_val);
+    float steps_to_degrees(const float& s_val);
 };
 
 #endif

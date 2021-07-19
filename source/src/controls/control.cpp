@@ -3,6 +3,7 @@
 #include "actuators/actuator.h"
 #include "eeprom/storage.h"
 #include "sensors/pressure_sensor.h"
+#include "waveform.h"
 #include <AccelStepper.h>
 #include <DueTimer.h>
 #include <ams_as5048b.h>
@@ -18,11 +19,13 @@ PressureSensor gauge_sensor = {PRESSURE_GAUGE_PIN};
 
 // Differential Pressure Sensor instance
 PressureSensor diff_sensor = {PRESSURE_DIFF_PIN};
+// Waveform instance
+Waveform waveform;
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
  */
-Machine machine(States::ST_STARTUP, &actuator);
+Machine machine(States::ST_STARTUP, &actuator, &waveform);
 
 void control_handler()
 {
@@ -192,6 +195,16 @@ double control_calc_volume_to_degrees(C_Stat compliance, double volume)
 void control_actuator_set_enable(bool en)
 {
     actuator.set_enable(en);
+}
+
+waveform_params* control_get_waveform_params(void)
+{
+    return (waveform.get_params());
+}
+
+void control_calculate_waveform()
+{
+    waveform.calculate_waveform();
 }
 
 double control_get_gauge_pressure()

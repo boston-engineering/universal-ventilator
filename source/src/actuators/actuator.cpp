@@ -1,5 +1,6 @@
 #include "actuator.h"
 #include "controls/control.h"
+#include "utilities/logging.h"
 
 void Actuator::init()
 {
@@ -244,28 +245,102 @@ bool Actuator::add_correction()
 {
     double current_position = get_position();
 
-    /* Only correct for 5 degrees of offset on either side of 0.
-     * If the offset is more than that, then something is wrong.
-     * Move in deltas of x degrees at a time.
+    /* Home for the actuator is between HOME_MIN_DEG and HOME_MAX_DEG
+     * This is because, leaving the home at 0.0 deg causes, the angle sensor
+     * to overflow to 359.*, causing an error with waveform calculation.
+     * 
+     * Use DEBUG_CORRECTION to see debug statements during correction.
+     * 
+     * If the actuator is between 0.0 and HOME_MIN_DEG, it needs to be
+     * nudged forward(+) in HOME_CORR_MOVE_DEG degrees.
+     * 
+     * If the actuaor is between HOME_MAX_DEG and HOME_CORRECTION_MAX_DEG,
+     * it is out of home range and needs to be nudged back(-)
+     * 
+     * If the actuaor is between 0.0 and HOME_CORRECTION_MIN_DEG,
+     * it is out of home range and needs to be nudged forward(+)
+     * ------------------------------------------------------------------------------------------
+     *            |                    |          |               |                   |
+     *            |                    |          |--Happy Place--|                   |
+     *            |                    |          |               |                   |
+     * (HOME_CORRECTION_MIN_DEG)       0   (HOME_MIN_DEG)  (HOME_MAX_DEG) (HOME_CORRECTION_MAX_DEG)
      */
-    if (current_position > 0.0 && current_position <= 5.0) {
-        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(-1.0));
-        set_speed(Tick_Type::TT_STEPS, 100);
+
+    if (current_position >= 0.0 && current_position < HOME_MIN_DEG) {
+        /* ------------------------------------------------------------------------------------------
+        *            |                    |            |               |                   |
+        *            |                    |In this slot|--Happy Place--|                   |
+        *            |                    | MOVE---->  |               |                   |
+        *            |                    |            |               |                   |
+        * (HOME_CORRECTION_MIN_DEG)       0   (HOME_MIN_DEG)  (HOME_MAX_DEG) (HOME_CORRECTION_MAX_DEG)
+        */
+        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(HOME_CORR_MOVE_DEG));
+        set_speed(Tick_Type::TT_STEPS, HOME_CORRECTION_SPEED_DEG_P_SEC);
 #if DEBUG_CORRECTION
-        serial_printf("Correcting! %0.2f\n", current_position);
+        serial_printf("Correcting! %0.2f Move +%0.2f\n", current_position, HOME_CORR_MOVE_DEG);
 #endif
     }
-    else if ((current_position > 355 && current_position < 360.0)) {
-        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(1.0));
-        set_speed(Tick_Type::TT_STEPS, 100);
+
+    if (current_position > HOME_MAX_DEG && current_position <= HOME_CORRECTION_MAX_DEG) {
+        /* ------------------------------------------------------------------------------------------
+        *            |                    |            |               |                   |
+        *            |                    |            |--Happy Place--|   In this slot    |
+        *            |                    |            |               | <-----MOVE        |
+        *            |                    |            |               |                   |
+        * (HOME_CORRECTION_MIN_DEG)       0   (HOME_MIN_DEG)  (HOME_MAX_DEG) (HOME_CORRECTION_MAX_DEG)
+        */
+        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(-HOME_CORR_MOVE_DEG));
+        set_speed(Tick_Type::TT_STEPS, HOME_CORRECTION_SPEED_DEG_P_SEC);
 #if DEBUG_CORRECTION
-        serial_printf("Correcting! %0.2f\n", current_position);
+        serial_printf("Correcting! %0.2f Move -%0.2f\n", current_position, HOME_CORR_MOVE_DEG);
 #endif
     }
-    else if (current_position > 5.0 && current_position < 355.0) {
+
+    else if ((current_position > HOME_CORRECTION_MIN_DEG && current_position < 360.0)) {
+        /* ------------------------------------------------------------------------------------------
+        *            |                    |            |               |                   |
+        *            |   In this slot     |            |               |                   |
+        *            |       MOVE----->   |            |               |                   |
+        *            |                    |            |               |                   |
+        * (HOME_CORRECTION_MIN_DEG)       0   (HOME_MIN_DEG)  (HOME_MAX_DEG) (HOME_CORRECTION_MAX_DEG)
+        */
+        set_position_relative(Tick_Type::TT_STEPS, TIMING_PULLEY_DEGREES_TO_STEPS(HOME_CORR_MOVE_DEG));
+        set_speed(Tick_Type::TT_STEPS, HOME_CORRECTION_SPEED_DEG_P_SEC);
+#if DEBUG_CORRECTION
+        serial_printf("Correcting! %0.2f Move +%0.2f\n", current_position, HOME_CORR_MOVE_DEG);
+#endif
+    }
+    else if (HOME_CORRECTION_MAX_DEG > 5.0 && HOME_CORRECTION_MIN_DEG < 355.0) {
         // Unable to correct
         return false;
     }
 
     return true;
+}
+
+Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
+{
+    if (duration_s <= 0) return Fault::FT_ACTUATOR_INVALID_TIME;// Invalid time.
+
+    // Get the current position of the actuator
+    const float cur_pos_deg = (float) get_position();
+
+    // Calculate the distance to move.
+    const float distance_deg = abs(goal_pos_deg - cur_pos_deg);
+
+    // Calculate velocity of travel in degrees/second.
+    vel_deg = distance_deg / duration_s;
+
+    if (TIMING_PULLEY_DEGREES_TO_STEPS(vel_deg) > STEPPER_MAX_STEPS_PER_SECOND) {
+        serial_printf("Max velocity requested! %.2f, clipping to %0.2f!\n", vel_deg, TIMING_PULLEY_STEPS_TO_DEGREES(STEPPER_MAX_STEPS_PER_SECOND));
+
+        // Cap to max velocity
+        vel_deg = TIMING_PULLEY_STEPS_TO_DEGREES(STEPPER_MAX_STEPS_PER_SECOND);
+    }
+
+#if DEBUG_WAVEFORM
+    serial_printf("Pos: %f, Goal:%f, Speed: %f\n", cur_pos_deg, goal_pos_deg, vel_deg);
+#endif
+
+    return Fault::FT_NONE;
 }

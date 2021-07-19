@@ -84,7 +84,7 @@
 #define STEPPER_DISABLE_PIN 38
 
 // Stepper: Maximum steps per second
-#define STEPPER_MAX_STEPS_PER_SECOND 400
+#define STEPPER_MAX_STEPS_PER_SECOND 600
 
 // Stepper: Homing speed steps/sec
 #define STEPPER_HOMING_SPEED_IN_STEPS_SEC 100
@@ -110,7 +110,7 @@
 #define GEAR_RATIO TEETH_ON_TIMING_PULLEY / TEETH_ON_PINION
 
 // One revolution of Timing pulley in steps
-#define TIMING_PULLEY_STEPS_PER_REV GEAR_RATIO* STEPPER_STEPS_PER_REV
+#define TIMING_PULLEY_STEPS_PER_REV (GEAR_RATIO * STEPPER_STEPS_PER_REV)
 
 // Convert from degrees to steps and vice-versa
 #define TIMING_PULLEY_DEGREES_TO_STEPS(x) x*(TIMING_PULLEY_STEPS_PER_REV / 360.0)
@@ -118,6 +118,8 @@
 
 // DEBUG FLAGS
 #define DEBUG_STEPPER 0
+#define DEBUG_CORRECTION 0
+#define DEBUG_WAVEFORM 0
 
 // EEPROM address
 #define EEPROM_ADDRESS 0x50
@@ -126,8 +128,25 @@
 #define MIN_ACT_POS_DEG 0.0
 #define MAX_ACT_POS_DEG 180.0
 
-// AMBU Bag limit
+#define HOME_MIN_DEG 0.2
+#define HOME_MAX_DEG 1.0
+
+#define HOME_CORR_MOVE_DEG 0.5
+#define HOME_CORRECTION_MAX_DEG 5.0
+#define HOME_CORRECTION_MIN_DEG 355.0
+#define HOME_CORRECTION_SPEED_DEG_P_SEC 100
+
+// Waveform
+// Breaths per minute
+#define BPM_MIN 2
+#define BPM_MAX 30
+
+// AMBU Bag limit, aka vt
 #define MIN_BAG_VOL_L 0.1
 #define MAX_BAG_VOL_L 1.06
+
+// I:E ratio
+#define IE_MIN 0.1
+#define IE_MAX 4.0
 
 #endif
