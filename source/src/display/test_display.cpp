@@ -1,4 +1,3 @@
-#include <utilities/memtest.h>
 #include <utilities/util.h>
 #include "test_display.h"
 
@@ -19,7 +18,7 @@ void setup_test_display()
     pinMode(LED_BUILTIN, OUTPUT);
     memset(time_counts, 0, sizeof(uint32_t) * 2);
 
-    printMem();
+//    printMem();
 
     //lv_example_style();
     //create_lv_chart(&chart1, &ser1);
@@ -31,7 +30,7 @@ void update_test_display()
 {
     static bool state = false;
     if (has_time_elapsed(time_counts, PRINT_MEM_DELAY)) {
-        printMem();
+//        printMem();
     }
 
     if (has_time_elapsed(&time_counts[1], CHART_UPDATE_DELAY)) {

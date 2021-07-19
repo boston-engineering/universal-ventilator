@@ -63,9 +63,9 @@ void loop_test_readout(lv_timer_t* timer)
     // Will not refresh until explicitly told
     static double cur_pressure = -2;
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
-    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
+    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure + .23);
     cur_pressure += 1;
-    cur_pressure += random(100) / 100.0;
+    //cur_pressure += random(100) / 100.0;
     if(cur_pressure > 40) {
         cur_pressure -= 42;
     }
@@ -82,8 +82,6 @@ void loop_test_readout(lv_timer_t* timer)
     }
 
     set_readout(RESPIRATION_RATE, 30);
-    set_readout(IE_RATIO_LEFT, 1.8);
-    set_readout(IE_RATIO_RIGHT, 1.8);
 
     set_readout(PEEP, 30);
     set_readout(PIP, 30);
@@ -92,7 +90,12 @@ void loop_test_readout(lv_timer_t* timer)
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
+            if(!value.is_dirty()) {
+                continue;
+            }
+            Serial.print("Value: "); Serial.println(value.value_type);
             value.refresh_readout();
+            value.clear_dirty();
         }
     }
 
@@ -143,7 +146,12 @@ void loop_update_readouts(lv_timer_t* timer)
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
+            if(!value.is_dirty()) {
+                continue;
+            }
+            Serial.print("Refreshing readout: "); Serial.println(value.value_type);
             value.refresh_readout();
+            value.clear_dirty();
         }
     }
 
@@ -219,7 +227,7 @@ void init_adjustable_values()
     uvent_settings settings{};
     storage.get_settings(settings);
 
-    for (uint i = 0; i < AdjValueType::ADJ_VALUE_COUNT; i++) {
+    for (uint8_t i = 0; i < AdjValueType::ADJ_VALUE_COUNT; i++) {
         AdjustableValue* value_class = &adjustable_values[i];
         value_class->init(static_cast<AdjValueType>(i));
         load_stored_target(value_class, settings);

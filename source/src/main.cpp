@@ -2,6 +2,7 @@
 #include <utilities/logging.h>
 #include <function_timings.h>
 #include <display/screens/screen.h>
+#include <utilities/util.h>
 #include "display/test_display.h"
 #include "../config/uvent_conf.h"
 #include "controls/control.h"

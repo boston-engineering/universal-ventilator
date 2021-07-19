@@ -2,6 +2,9 @@
 #define UVENT_UTIL_H
 
 #include <Arduino.h>
+#include <malloc.h>
+#include "logging.h"
+
 #ifdef __cplusplus
 
 // Undef the Arduino implementation

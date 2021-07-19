@@ -113,6 +113,14 @@ public:
         set_selected(!selected);
     }
 
+    inline bool is_dirty() {
+        return dirty;
+    }
+
+    inline void clear_dirty() {
+        dirty = false;
+    };
+
 private:
     lv_obj_t* lv_obj_measured = nullptr;
     lv_obj_t* lv_obj_target = nullptr;
@@ -122,6 +130,7 @@ private:
      * Only used if this is part of a composite value like I:E Ratio
      */
     bool selected = true;
+    bool dirty = false;
 };
 
 extern AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];

@@ -1,8 +1,5 @@
 #include "interface.h"
 
-static const char* format_dec = "%d";
-static const char* format_float_1 = "%.1f";
-static const char* format_float_2 = "%.2f";
 static const char* cmh20 = "cmH2O";
 
 /**
@@ -11,14 +8,14 @@ static const char* cmh20 = "cmH2O";
 AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
 extern const AdjValueParams adj_value_settings[] = {
-        {"Tidal Volume",        "vT",         format_dec,     format_dec,     "mL",    100, 900, 50,  palette_color_1},
-        {"Respiration Rate",    "Resp. Rate", format_dec,     format_dec,     "/min",  8,   30,  2,   palette_color_1},
-        {"PEEP Limit (Floor)",  "PEEP",       format_dec,     format_dec,     cmh20,   5,   20,  1,   palette_color_1},
-        {"PIP Limit (Ceiling)", "PIP",        format_dec,     format_dec,     cmh20,   15,  40,  1,   palette_color_1},
-        {"Plateau Time",        "Plateau",    format_dec,     format_dec,     "ms",    200, 800, 50,  palette_color_1},
-        {"Pressure",            nullptr,      format_float_2, format_float_2, cmh20,   5,   40,  1,   palette_color_2},
-        {"I:E Ratio",           "",           format_float_1, format_float_1, nullptr, 0.5, 4,   0.1, palette_color_1},
-        {"I:E Ratio",           "",           format_float_1, format_float_1, nullptr, 0.5, 4,   0.1, palette_color_1},
+        {"Tidal Volume",        "vT",         "%ld",     "%ld",     "mL",    100, 900, 50,  palette_color_1},
+        {"Respiration Rate",    "Resp. Rate", "%ld",     "%ld",     "/min",  8,   30,  2,   palette_color_1},
+        {"PEEP Limit (Floor)",  "PEEP",       "%ld",     "%ld",     cmh20,   5,   20,  1,   palette_color_1},
+        {"PIP Limit (Ceiling)", "PIP",        "%ld",     "%ld",     cmh20,   15,  40,  1,   palette_color_1},
+        {"Plateau Time",        "Plateau",    "%ld",     "%ld",     "ms",    200, 800, 50,  palette_color_1},
+        {"Pressure",            nullptr,      "%.2f", "%.2f", cmh20,   5,   40,  1,   palette_color_2},
+        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   0.1, palette_color_1},
+        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   0.1, palette_color_1},
 };
 
 void AdjustableValue::on_control_button_press(lv_event_t* evt)
@@ -112,6 +109,7 @@ double* AdjustableValue::get_value_target()
 
 AdjustableValue AdjustableValue::set_value_measured(double value)
 {
+    dirty = true;
     measured = value;
     return *this;
 }

@@ -6,12 +6,10 @@
 
 extern char _end;
 extern "C" char* sbrk(int i);
-char* ramstart = (char*) 0x20070000;
-char* ramend = (char*) 0x20088000;
+const char* ramstart = (char*) 0x20070000;
+const char* ramend = (char*) 0x20088000;
 
-void printMem();
-
-void printMem()
+inline void printMem()
 {
     char* heapend = sbrk(0);
     register char* stack_ptr asm ("sp");

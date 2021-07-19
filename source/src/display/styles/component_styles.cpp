@@ -116,7 +116,7 @@ STYLE_INIT_FUNC(READOUT_VALUE_AMOUNT_TEXT)
     // Font Properties
     lv_style_set_text_color(style, lv_color_white());
     lv_style_set_text_align(style, LV_TEXT_ALIGN_RIGHT);
-    lv_style_set_text_font(style, &lv_font_montserrat_40);
+    lv_style_set_text_font(style, &lv_font_montserrat_38);
     // Flexbox
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_CENTER);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);

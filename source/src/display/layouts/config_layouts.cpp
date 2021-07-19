@@ -438,7 +438,7 @@ static void create_pagination()
         }
 
         buffer_filled[i] = true;
-        snprintf(page_buffers[i], 8, "%d / %d", (i + 1), CONFIG_PAGES);
+        lv_snprintf(page_buffers[i], 8, "%d / %d", (i + 1), CONFIG_PAGES);
     }
 
     pagination_button_map[1] = page_buffers[cur_page_index];

@@ -1,7 +1,10 @@
 #include <display/main_display.h>
 #include <utilities/util.h>
 #include <controls/control.h>
+#include <utilities/memtest.h>
 #include "layouts.h"
+
+#define LABEL_BUF_SIZE 24
 
 /************************************************/
 /*        Static Defs & Function Callbacks      */
@@ -21,6 +24,13 @@ static void update_ie_control_state(AdjustableValue* this_ptr, lv_obj_t* label);
 static void toggle_ie_select();
 
 static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refresh = false);
+
+/***************************************************************/
+/*                      Global variables                       */
+/***************************************************************/
+
+char buf[LABEL_BUF_SIZE];
+
 
 /***************************************************************/
 /*      Functions to generate & fill entire screen areas       */
@@ -268,20 +278,20 @@ void setup_ie_readout()
     char buf_left[5];
     char buf_right[5];
     if (left <= READOUT_VALUE_NONE) {
-        snprintf(buf_left, 5, "--");
+        lv_snprintf(buf_left, 5, "--");
     }
     else {
-        snprintf(buf_left, 5, left_format, is_whole(left) ? (int32_t) left : left);
+        lv_snprintf(buf_left, 5, left_format, is_whole(left) ? (int32_t) left : left);
     }
 
     if (right <= READOUT_VALUE_NONE) {
-        snprintf(buf_right, 5, "--");
+        lv_snprintf(buf_right, 5, "--");
     }
     else {
-        snprintf(buf_right, 5, right_format, is_whole(right) ? (int32_t) right : right);
+        lv_snprintf(buf_right, 5, right_format, is_whole(right) ? (int32_t) right : right);
     }
 
-    snprintf(ie_ratio, 12, "%s : %s", buf_left, buf_right);
+    lv_snprintf(ie_ratio, 12, "%s : %s", buf_left, buf_right);
     setup_adjustable_readout(IE_RATIO_LEFT, ie_ratio);
 
     adjustable_values[IE_RATIO_LEFT].readout_update_cb = [](AdjustableValue* this_ptr, lv_event_t* evt) {
@@ -519,6 +529,7 @@ static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refr
 {
     size_t size = lv_spangroup_get_child_cnt(spangroup);
     if (size == final_size) {
+        LV_LOG_USER("Spangroup is already correct size");
         return;
     }
     else if (size < final_size) {
@@ -534,6 +545,7 @@ static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refr
         while (size > final_size) {
             lv_span_t* last = lv_spangroup_get_child(spangroup, -1);
             lv_spangroup_del_span(spangroup, last);
+            LV_LOG_USER("Deleting span, size is now %d", size-1);
             size--;
         }
     }
@@ -545,6 +557,7 @@ static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size, bool refr
 
 static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup)
 {
+    memset(buf, '\0', LABEL_BUF_SIZE);
 
     auto settings = this_ptr->get_settings();
     lv_span_t* primary_span;
@@ -559,18 +572,29 @@ static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup
     else {
 
         size_t spanlist_size = lv_spangroup_get_child_cnt(spangroup);
-        char buf[12];
+        if(this_ptr->value_type == CUR_PRESSURE) {
+            LV_LOG_USER("Filling measured buffer. Whole num is %f", measured);
+        }
         // Get the int portion by default, we'll get the decimal portion later for float options
-        snprintf(buf, 12, "%ld", (int32_t) measured);
+        lv_snprintf(buf, LABEL_BUF_SIZE, "%ld", (int32_t) measured);
 
         if (spanlist_size < 1) {
             primary_span = lv_spangroup_new_span(spangroup);
+            if(this_ptr->value_type == CUR_PRESSURE) {
+                LV_LOG_USER("Adding to spanlist");
+            }
         }
         else {
             primary_span = lv_spangroup_get_child(spangroup, 0);
+            if(this_ptr->value_type == CUR_PRESSURE) {
+                LV_LOG_USER("Using existing child");
+            }
         }
 
         lv_span_set_text(primary_span, buf);
+        if(this_ptr->value_type == CUR_PRESSURE) {
+            LV_LOG_USER("Text Set");
+        }
 
         // Make sure to cast if we're trying for an int
         if (strcmp("%d", formatter) == 0 || strcmp("%ld", formatter) == 0 || strcmp("%i", formatter) == 0) {
@@ -582,26 +606,56 @@ static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup
             lv_span_t* decimal_span;
             double decimal_portion = 0;
             if (measured != 0) {
-                decimal_portion = abs(measured - ((int32_t) measured));
+                decimal_portion = measured - ((int32_t) measured);
+                if(decimal_portion < 0) {
+                    decimal_portion *= -1;
+                }
             }
-            snprintf(buf, 12, formatter, decimal_portion);
+            if(this_ptr->value_type == CUR_PRESSURE) {
+                LV_LOG_USER("Decimal is %.2f, filling buffer for %s", decimal_portion, formatter);
+                LV_LOG_USER("Buffer: %s", buf);
+            }
+            memset(buf, '\0', LABEL_BUF_SIZE);
+            int ret = lv_snprintf(buf, LABEL_BUF_SIZE, "%.2f", (float) decimal_portion);
+            Serial.println(ret);
+            if(this_ptr->value_type == CUR_PRESSURE) {
+                LV_LOG_USER("Filled buffer %f", decimal_portion);
+            }
 
             if (spanlist_size == 1) {
                 decimal_span = lv_spangroup_new_span(spangroup);
                 lv_style_set_text_font(&decimal_span->style, &lv_font_montserrat_28);
                 border_span(decimal_span);
+                if(this_ptr->value_type == CUR_PRESSURE) {
+                    LV_LOG_USER("Creating new decimal span");
+                }
             }
             else {
                 trim_spans_to_size(spangroup, 2);
                 decimal_span = lv_spangroup_get_child(spangroup, 1);
+                if(this_ptr->value_type == CUR_PRESSURE) {
+                    LV_LOG_USER("Using old decimal span");
+                }
             }
 
+            if(this_ptr->value_type == CUR_PRESSURE) {
+                LV_LOG_USER("Setting text");
+            }
             // The formatter will give 0.xxxx, we need to cut off the 0 to attach to the large portion
             lv_span_set_text(decimal_span, &buf[1]);
         }
     }
 
+    if(this_ptr->value_type == CUR_PRESSURE) {
+        LV_LOG_USER("Refreshing");
+    }
+
     lv_spangroup_refr_mode(spangroup);
+
+    if(this_ptr->value_type == CUR_PRESSURE) {
+        LV_LOG_USER("Refresh Complete");
+        LV_LOG_USER("");
+    }
 }
 
 static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
@@ -619,6 +673,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
     }
 
     update_readout_labels(this_ptr, value_amount_spangroup);
+    printMem();
 }
 
 /************************************************/

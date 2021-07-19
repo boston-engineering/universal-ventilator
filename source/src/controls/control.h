@@ -1,12 +1,13 @@
 #ifndef UVENT_CONTROL_H
 #define UVENT_CONTROL_H
 
+#include <display/screens/screen.h>
 #include "controls/machine.h"
 #include "interface/interface.h"
 
 void init_adjustable_values();
 
-void loop_test_readout(lv_timer_t* timer);
+void loop_test_readout(lv_timer_t*);
 /**
  * Timer function to poll sensors and update values accordingly.
  * This should not be called manually under normal circumstances
