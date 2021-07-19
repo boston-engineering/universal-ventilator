@@ -33,62 +33,62 @@ Machine machine(States::ST_STARTUP, &actuator, &waveform);
 void loop_test_readout(lv_timer_t* timer)
 {
 
-    static uint32_t timing_step_counter = 0;
-    static uint32_t timing_refresh_counter = 0;
-
-    if (has_time_elapsed(&timing_step_counter, TEST_READOUT_STEP_INTERVAL)) {
-        for (auto& adjustable_value : adjustable_values) {
-            if (adjustable_value.value_type == IE_RATIO_LEFT || adjustable_value.value_type == IE_RATIO_RIGHT)
-                continue;
-            AdjValueParams settings = adjustable_value.get_settings();
-            long add_val = random(0, long(settings.step) + 1);
-            double new_val = *adjustable_value.get_value_measured() + add_val;
-            if (new_val > settings.max_value) {
-                new_val = settings.min_value;
-            }
-            adjustable_value.set_value_measured(new_val);
-        }
-    }
-
-    if (has_time_elapsed(&timing_refresh_counter, TEST_READOUT_REFRESH_INTERVAL)) {
-        for (auto& adjustable_value : adjustable_values) {
-            adjustable_value.refresh_readout();
-        }
-    }
-}
-
-void loop_update_readouts(lv_timer_t* timer)
-{
     static bool timer_delay_complete = false;
+
+    // Internal timers, components might have different refresh times
     static uint32_t last_readout_refresh = 0;
-    static uint32_t gauge_chart_refresh = 0;
-    static uint32_t vt_chart_refresh = 0;
+
+    // Don't poll the sensors before we're sure everything's had a chance to init
     if (!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
     }
     if (!timer_delay_complete) {
-        LV_LOG_USER("Timer is not ready yet, returning (%d)", millis());
+        LV_LOG_TRACE("Timer is not ready yet, returning (%d)", millis());
         return;
     }
 
+    // If verbose data polling is off, polling / updates won't be done if the state machine is off
+    // If in debug screen mode, it won't be done if we're in startup state either
 #if VERBOSE_DATA_POLLING == 0
-    if (control_get_state() == States::ST_OFF) {
+    States cur_state = control_get_state();
+    if (cur_state == States::ST_OFF || (!ENABLE_CONTROL && cur_state == States::ST_STARTUP)) {
         return;
     }
 #endif
 
+    // Main screen, passed through via user data in main.cpp
     auto* screen = static_cast<MainScreen*>(timer->user_data);
 
-    // Add gauge pressure points
-    double cur_pressure = control_get_gauge_pressure();
-    screen->add_gauge_pressure_chart_point(cur_pressure);
+    // Poll gauge sensor, add point to graph and update readout obj.
+    // Will not refresh until explicitly told
+    static double cur_pressure = -2;
+    screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
     set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
+    cur_pressure += 1;
+    cur_pressure += random(100) / 100.0;
+    if(cur_pressure > 40) {
+        cur_pressure -= 42;
+    }
 
-    // Add tidal volume points
-    double cur_tidal_volume = control_get_degrees_to_volume_ml();
-    screen->add_vt_chart_point(cur_tidal_volume);
+    // Poll vT sensor, add point to graph and update readout obj.
+    // Will not refresh until explicitly told
+    static int16_t test2 = 0;
+    double cur_tidal_volume = test2;
+    screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
+    test2 += 50;
+    if(test2 > 1000) {
+        test2 -= 1002;
+    }
 
+    set_readout(RESPIRATION_RATE, 30);
+    set_readout(IE_RATIO_LEFT, 1.8);
+    set_readout(IE_RATIO_RIGHT, 1.8);
+
+    set_readout(PEEP, 30);
+    set_readout(PIP, 30);
+
+    // Check to see if it's time to refresh the readout boxes
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
         for (auto& value : adjustable_values) {
@@ -96,13 +96,58 @@ void loop_update_readouts(lv_timer_t* timer)
         }
     }
 
-    if (has_time_elapsed(&gauge_chart_refresh, GAUGE_PRESSURE_CHART_REFRESH_TIME)) {
-        screen->refresh_gauge_pressure_chart();
+    screen->try_refresh_charts();
+}
+
+void loop_update_readouts(lv_timer_t* timer)
+{
+    static bool timer_delay_complete = false;
+
+    // Internal timers, components might have different refresh times
+    static uint32_t last_readout_refresh = 0;
+
+    // Don't poll the sensors before we're sure everything's had a chance to init
+    if (!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
+        timer_delay_complete = true;
+    }
+    if (!timer_delay_complete) {
+        LV_LOG_TRACE("Timer is not ready yet, returning (%d)", millis());
+        return;
     }
 
-    if (has_time_elapsed(&vt_chart_refresh, VT_CHART_REFRESH_TIME)) {
-        screen->refresh_vt_chart();
+    // If verbose data polling is off, polling / updates won't be done if the state machine is off
+    // If in debug screen mode, it won't be done if we're in startup state either
+#if VERBOSE_DATA_POLLING == 0
+    States cur_state = control_get_state();
+    if (cur_state == States::ST_OFF || (!ENABLE_CONTROL && cur_state == States::ST_STARTUP)) {
+        return;
     }
+#endif
+
+    // Main screen, passed through via user data in main.cpp
+    auto* screen = static_cast<MainScreen*>(timer->user_data);
+
+    // Poll gauge sensor, add point to graph and update readout obj.
+    // Will not refresh until explicitly told
+    double cur_pressure = control_get_gauge_pressure();
+    screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
+    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
+
+    // Poll vT sensor, add point to graph and update readout obj.
+    // Will not refresh until explicitly told
+    double cur_tidal_volume = control_get_degrees_to_volume_ml();
+    screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
+    set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
+
+    // Check to see if it's time to refresh the readout boxes
+    if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
+        // Refresh all of the readout labels
+        for (auto& value : adjustable_values) {
+            value.refresh_readout();
+        }
+    }
+
+    screen->try_refresh_charts();
 }
 
 void control_update_waveform_param(AdjValueType type, float new_value)

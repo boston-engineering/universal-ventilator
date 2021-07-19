@@ -155,29 +155,40 @@
 #define IE_MIN 0.1
 #define IE_MAX 4.0
 
+// The 'None' value for a readout.
+// Setting any adjustable value to this constant (or below) will force the label to show "--" as the value
+// Set below your lowest known value, within the range of `double`
+#define READOUT_VALUE_NONE (-1e3)
+#define READOUT_VALUE_DEFAULT (READOUT_VALUE_NONE - 1)
+
 // How long to wait in between steps of the readout (ms). Debug only
 #define TEST_READOUT_STEP_INTERVAL 1322
 
 // How often to refresh the readouts (ms). Debug only
 #define TEST_READOUT_REFRESH_INTERVAL 2000
-#define READOUT_REFRESH_INTERVAL 500
+// How often to refresh the readouts on the left side of the screen
+#define READOUT_REFRESH_INTERVAL 1250
 
 // How often to poll sensors for readouts (ms)
-#define SENSOR_POLL_INTERVAL 2000
+// Chart & Readout values will be updated every time the sensor polls
+// These changes will not be visible until the next chart refresh time or
+// READOUT_REFRESH_INTERVAL
+#define SENSOR_POLL_INTERVAL 100
+// How long to delay before polling data. Allows for startup time of hardware components
 #define SENSOR_POLL_STARTUP_DELAY 5000
 
 // Always display polled data, even if the state machine isn't running
-#define VERBOSE_DATA_POLLING 0
+#define VERBOSE_DATA_POLLING 1
 
 // Chart Configuration
 #define GAUGE_PRESSURE_CHART_MIN_VALUE (-2)
-#define GAUGE_PRESSURE_CHART_MAX_VALUE 30
+#define GAUGE_PRESSURE_CHART_MAX_VALUE 40
 #define GAUGE_PRESSURE_CHART_MAX_POINTS 100
-#define GAUGE_PRESSURE_CHART_REFRESH_TIME 1000
+#define GAUGE_PRESSURE_CHART_REFRESH_TIME 100
 
 #define VT_CHART_MIN_VALUE (-2)
 #define VT_CHART_MAX_VALUE 1200
 #define VT_CHART_MAX_POINTS 100
-#define VT_CHART_REFRESH_TIME 1000
+#define VT_CHART_REFRESH_TIME 200
 
 #endif

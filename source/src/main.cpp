@@ -29,7 +29,6 @@ void setup()
 {
     Serial.begin(SERIAL_BAUD_RATE);
 
-
     if (!tft_display.init()) {
         while (1);
     }
@@ -50,7 +49,11 @@ void setup()
     parser.init(command_get_array(), command_get_array_size());
 
     // LVGL Timer to poll sensors and update screen data
+#if ENABLE_CONTROL
     update_readout_timer = lv_timer_create(loop_update_readouts, SENSOR_POLL_INTERVAL, &screen);
+#else
+    update_readout_timer = lv_timer_create(loop_test_readout, SENSOR_POLL_INTERVAL, &screen);
+#endif
 }
 
 void loop()

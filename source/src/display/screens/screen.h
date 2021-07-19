@@ -2,6 +2,9 @@
 #define UVENT_SCREEN_H
 
 #include <lvgl.h>
+#include <controls/interface/charts.h>
+
+#define MAIN_SCREEN_CHART_COUNT 2
 
 class Screen {
 public:
@@ -23,17 +26,11 @@ public:
 
     void open_config();
     void attach_settings_cb();
-
-    void add_gauge_pressure_chart_point(double data);
-    void refresh_gauge_pressure_chart();
-    void add_vt_chart_point(double data);
-    void refresh_vt_chart();
+    const SensorChart* get_chart(uint8_t idx);
+    void try_refresh_charts();
 private:
-    void add_gauge_chart();
-    void add_vt_chart();
-
-    lv_obj_t* gauge_pressure_chart = nullptr;
-    lv_obj_t* vt_chart = nullptr;
+    void generate_charts();
+    SensorChart charts[MAIN_SCREEN_CHART_COUNT]{};
 };
 
 #endif //UVENT_SCREEN_H
