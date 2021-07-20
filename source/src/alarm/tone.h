@@ -9,7 +9,7 @@
 #define UVENT_TONE_H
 
 #include <Arduino.h>
-#include <NewToneLib.h>
+#include "tone_driver.h"
 #include "note.h"
 
 /**
@@ -40,7 +40,7 @@ public:
         }
         tone_step_ %= length_;// Start again if tone finished
         if (millis() > tone_timer_) {
-            mt.tone(*pin_, notes_[tone_step_].note, notes_[tone_step_].duration);
+            tone_rrb(*pin_, notes_[tone_step_].note, notes_[tone_step_].duration);
             tone_timer_ += notes_[tone_step_].duration + notes_[tone_step_].pause;
             tone_step_++;
         }
@@ -56,7 +56,6 @@ private:
     bool playing_ = false;        // Flag to initialize the tone timer once
     int tone_step_;               // Time to pause between each note in a tone sequence
     unsigned long tone_timer_ = 0;// Timer to keep track of each note in a tone sequence
-    MyTone mt;
 };
 
 #endif//UVENT_TONE_H
