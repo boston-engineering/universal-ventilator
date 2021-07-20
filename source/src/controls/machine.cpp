@@ -19,10 +19,11 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-Machine::Machine(States st, Actuator* act, Waveform* wave)
+Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
 {
     p_actuator = act;
     state = st;
+    p_alarm = al;
 
     p_waveform = wave;
     p_waveparams = wave->get_params();

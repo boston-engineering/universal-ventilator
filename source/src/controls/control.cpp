@@ -27,13 +27,14 @@ PressureSensor diff_sensor = {PRESSURE_DIFF_PIN};
 Waveform waveform;
 
 uint32_t cycle_count = 0;
+
 // Alarms
 AlarmManager alarm(SPEAKER_PIN, SNOOZE_PIN, &cycle_count);
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
  */
-Machine machine(States::ST_STARTUP, &actuator, &waveform);
+Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm);
 
 void loop_test_readout(lv_timer_t* timer)
 {
