@@ -52,11 +52,11 @@
 #define EEPROM_TEST_2_MEM_1 63100
 
 // Serial baud rate
-#define SERIAL_BAUD_RATE 250000
+#define SERIAL_BAUD_RATE 115200
 
 #define SPI_CLK_SPEED 22000000L
 
-#define ENABLE_CONTROL 0
+#define ENABLE_CONTROL 1
 
 // Control handler  period in microsec.
 #define CONTROL_HANDLER_PERIOD_US 20000

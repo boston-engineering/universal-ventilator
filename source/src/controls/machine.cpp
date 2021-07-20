@@ -19,11 +19,11 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
+// Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
+Machine::Machine(States st, Actuator* act, Waveform* wave)
 {
     p_actuator = act;
     state = st;
-    p_alarm = al;
 
     p_waveform = wave;
     p_waveparams = wave->get_params();
@@ -58,6 +58,7 @@ void Machine::state_inspiration()
 {
     if (state_first_entry) {
         state_first_entry = false;
+        alarm.badPlateau(true);
 
         // Check if paddle is at home.
         if (!(p_actuator->is_home())) {
@@ -65,6 +66,7 @@ void Machine::state_inspiration()
             state_first_entry = true;
             return;
         }
+        cycle_count++;
 
         // Calculate the waveform parameters
         if (p_waveform->calculate_waveform() == -1) {
@@ -227,6 +229,8 @@ void Machine::run()
     // Increment the soft timer.
     machine_timer++;
 
+    alarm.update();
+
     // State Machine
     switch (state) {
     case States::ST_STARTUP:
@@ -271,6 +275,7 @@ void Machine::setup()
 {
     // Initial state
     state = States::ST_STARTUP;
+    alarm.begin();
 }
 
 const char* Machine::get_current_state_string()

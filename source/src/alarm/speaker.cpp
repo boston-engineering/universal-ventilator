@@ -32,19 +32,20 @@ void Speaker::stop()
 
 void Speaker::update(const AlarmLevel& alarm_level)
 {
-    if (snoozeButtonPressed()) {
-        toggleSnooze();
-    }
-    // check if snooze time is up
-    if (snoozed_ && millis() - snooze_time_ > kSnoozeTime) {
-        snoozed_ = false;
-    }
-    if (snoozed_) {
-        stop();
-    }
-    else {
-        play(alarm_level);
-    }
+    // if (snoozeButtonPressed()) {
+    //     toggleSnooze();
+    // }
+    // // check if snooze time is up
+    // if (snoozed_ && millis() - snooze_time_ > kSnoozeTime) {
+    //     snoozed_ = false;
+    // }
+    // if (snoozed_) {
+    //     stop();
+    // }
+    // else {
+    //     play(alarm_level);
+    // }
+    play(alarm_level);
 }
 
 bool Speaker::snoozeButtonPressed()
