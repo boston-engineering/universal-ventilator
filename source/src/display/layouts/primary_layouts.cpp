@@ -220,7 +220,7 @@ void setup_adjustable_control(AdjValueType type)
     lv_obj_add_style(value_label, STYLE_PTR_CM(CONTROL_TEXT_VALUE), LV_PART_MAIN);
     const char* formatter = settings.target_formatter;
     // Make sure to cast if we're trying for an int
-    if (strcmp("%d", formatter) == 0 || strcmp("%i", formatter) == 0) {
+    if (strcmp("%d", formatter) == 0 || strcmp("%ld", formatter) == 0 || strcmp("%i", formatter) == 0) {
         lv_label_set_text_fmt(value_label, formatter, (int32_t) *value_class->get_value_target());
     }
     else {
@@ -594,8 +594,7 @@ static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup
             }
 
             memset(buf, '\0', LABEL_BUF_SIZE);
-            int ret = lv_snprintf(buf, LABEL_BUF_SIZE, "%.2f", (float) decimal_portion);
-            Serial.println(ret);
+            lv_snprintf(buf, LABEL_BUF_SIZE, "%.2f", (float) decimal_portion);
 
             if (spanlist_size == 1) {
                 decimal_span = lv_spangroup_new_span(spangroup);
@@ -695,7 +694,7 @@ static void update_normal_label(AdjustableValue* this_ptr)
 
     const char* formatter = settings.target_formatter;
     // Make sure to cast if we're trying for an int
-    if (strcmp("%d", formatter) == 0 || strcmp("%i", formatter) == 0) {
+    if (strcmp("%d", formatter) == 0 || strcmp("%ld", formatter) == 0 || strcmp("%i", formatter) == 0) {
         lv_label_set_text_fmt(quantity_label, formatter, (int32_t) *this_ptr->get_value_target());
     }
     else {
