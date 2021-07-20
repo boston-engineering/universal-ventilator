@@ -14,9 +14,13 @@ struct SensorChart {
     uint32_t chart_points{};
     uint32_t refresh_time{};
     uint32_t last_refreshed = 0;
+    bool use_dots = false;
+    lv_coord_t dot_size;
+    lv_coord_t line_width;
 
     SensorChart() = default;
-    SensorChart(const char* name, int32_t min_val, int32_t max_val, uint32_t chart_points, uint32_t refresh_time);
+    SensorChart(const char* name, int32_t min_val, int32_t max_val, uint32_t chart_points, uint32_t refresh_time,
+            bool use_dots, lv_coord_t dot_size, lv_coord_t line_width);
 
     void generate_chart(lv_obj_t* parent);
     void add_data_point(double data) const;

@@ -2,8 +2,11 @@
 #include <display/main_display.h>
 #include "charts.h"
 
-SensorChart::SensorChart(const char* name, int32_t min_val, int32_t max_val, uint32_t chart_points, uint32_t refresh_time)
-        : name(name), range_min(min_val), range_max(max_val), chart_points(chart_points), refresh_time(refresh_time) { }
+SensorChart::SensorChart(const char* name, int32_t min_val, int32_t max_val, uint32_t chart_points,
+        uint32_t refresh_time,
+        bool use_dots, lv_coord_t dot_size, lv_coord_t line_width)
+        : name(name), range_min(min_val), range_max(max_val), chart_points(chart_points), refresh_time(refresh_time),
+          use_dots(use_dots), dot_size(dot_size), line_width(line_width) { }
 
 void SensorChart::generate_chart(lv_obj_t* parent)
 {
@@ -23,6 +26,16 @@ void SensorChart::generate_chart(lv_obj_t* parent)
     lv_obj_set_style_border_width(chart, 2 px, LV_PART_MAIN);
     lv_obj_set_style_border_color(chart, lv_color_black(), LV_PART_MAIN);
 
+    if (!use_dots) {
+        /*Do not display points on the data*/
+        lv_obj_set_style_size(chart, 0 px, LV_PART_INDICATOR);
+    }
+    else {
+        lv_obj_set_style_size(chart, dot_size, LV_PART_INDICATOR);
+    }
+
+    lv_obj_set_style_line_width(chart, line_width, LV_PART_ITEMS);
+
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, range_min, range_max);
 
@@ -34,7 +47,7 @@ void SensorChart::generate_chart(lv_obj_t* parent)
 
 void SensorChart::add_data_point(double data) const
 {
-    if(!chart) {
+    if (!chart) {
         return;
     }
     lv_chart_series_t* series = lv_chart_get_series_next(chart, nullptr);
@@ -49,7 +62,7 @@ bool SensorChart::should_refresh()
 
 void SensorChart::refresh_chart() const
 {
-    if(!chart) {
+    if (!chart) {
         return;
     }
     lv_chart_refresh(chart);

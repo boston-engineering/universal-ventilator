@@ -63,9 +63,9 @@ void loop_test_readout(lv_timer_t* timer)
     // Will not refresh until explicitly told
     static double cur_pressure = -2;
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
-    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure + .23);
+    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
     cur_pressure += 1;
-    //cur_pressure += random(100) / 100.0;
+    cur_pressure += random(100) / 100.0;
     if(cur_pressure > 40) {
         cur_pressure -= 42;
     }
@@ -93,7 +93,6 @@ void loop_test_readout(lv_timer_t* timer)
             if(!value.is_dirty()) {
                 continue;
             }
-            Serial.print("Value: "); Serial.println(value.value_type);
             value.refresh_readout();
             value.clear_dirty();
         }
@@ -149,7 +148,6 @@ void loop_update_readouts(lv_timer_t* timer)
             if(!value.is_dirty()) {
                 continue;
             }
-            Serial.print("Refreshing readout: "); Serial.println(value.value_type);
             value.refresh_readout();
             value.clear_dirty();
         }
@@ -238,9 +236,10 @@ void init_adjustable_values()
 
 double get_control_target(AdjValueType type) {
     if (type >= AdjValueType::ADJ_VALUE_COUNT) {
-        //TODO add defaults
-        return -1;
+
+        return adjustable_values[type].get_settings().default_value;
     }
+
     return *adjustable_values[type].get_value_target();
 }
 

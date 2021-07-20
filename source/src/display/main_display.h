@@ -66,7 +66,6 @@
  * Blank, adds no code.
  */
 #define px
-#define FLEX_SHRINK 0
 #define FLEX_GROW 1
 
 // The default font for config buttons to check if we need to shrink it
@@ -112,7 +111,7 @@ typedef enum ComponentType {
     PAGINATION_GROUP_HOLDER,        /**< Holder for the buttongroup part of pagination*/
     PAGINATION_BUTTON_ITEM,         /**< Individual pagination button*/
     CHART_HOLDER,                   /**< Holder for all the charts in VISUAL_AREA_2*/
-    BLANK,
+    BLANK __attribute__((unused)),
     COMPONENT_COUNT,
 } ComponentType;
 
@@ -120,7 +119,7 @@ typedef enum ButtonType {
     DECREMENT = 0,
     INCREMENT,
     START,
-    MUTE,
+    MUTE __attribute__((unused)),
     SETTINGS,
     BUTTON_TYPE_COUNT
 } ButtonType;
@@ -129,8 +128,8 @@ typedef struct ButtonData {
     ButtonType type;
 } ButtonData;
 
-extern lv_color_t palette_color_1;
-extern lv_color_t palette_color_2;
+extern const lv_color_t palette_color_1;
+extern const lv_color_t palette_color_2;
 extern lv_color_t color_start_button;
 extern lv_color_t color_button_alert;
 extern lv_color_t color_text_disabled;
@@ -155,7 +154,7 @@ static void setup_styles();
 /**
  * Main function to add items to the containers.
  */
-void populate_items();
+__attribute__((unused)) void populate_items();
 
 /**
  * Adds the two main dividers to the screen.

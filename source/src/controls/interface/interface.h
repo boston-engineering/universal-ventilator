@@ -25,11 +25,11 @@ typedef enum AdjValueType {
 
 typedef struct AdjValueParams {
     AdjValueParams(const char* title, const char* control_title, const char* measured_formatter,
-            const char* target_formatter, const char* unit,
-            double min_val, double max_val, float step, lv_color_t main_color)
+            const char* target_formatter, const char* unit, double min_val, double max_val, double default_value,
+            float step, lv_color_t main_color)
             : title(title), control_title(control_title), measured_formatter(measured_formatter),
               target_formatter(target_formatter), unit(unit),
-              min_value(min_val), max_value(max_val), step(step),
+              min_value(min_val), max_value(max_val), default_value(default_value), step(step),
               main_color(main_color) { }
 
     const char* title;
@@ -39,6 +39,7 @@ typedef struct AdjValueParams {
     const char* unit;
     double min_value;
     double max_value;
+    double default_value;
     double step;
     lv_color_t main_color;
 } AdjValueParams;
@@ -113,11 +114,13 @@ public:
         set_selected(!selected);
     }
 
-    inline bool is_dirty() {
+    inline bool is_dirty()
+    {
         return dirty;
     }
 
-    inline void clear_dirty() {
+    inline void clear_dirty()
+    {
         dirty = false;
     };
 

@@ -4,7 +4,6 @@
 #include "TftDisplay.h"
 #include "../../config/uvent_conf.h"
 
-uint32_t chart_update_timer = 0;
 uint32_t debug_toggle_timer = 0;
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p)

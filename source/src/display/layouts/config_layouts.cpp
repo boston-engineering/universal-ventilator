@@ -38,16 +38,6 @@ static void register_button(ButtonCreateFunc func);
 
 /************************************************/
 /*               Button Creation                */
-/************************************************/
-
-static uint32_t get_config_button_count()
-{
-    lv_obj_t* control_area = SCR_C(CONTROL_AREA_1);
-    if (!control_area) {
-        return 0;
-    }
-    return lv_obj_get_child_cnt(control_area);
-}
 
 static lv_obj_t* add_config_button(const char* title)
 {

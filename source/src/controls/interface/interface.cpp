@@ -7,15 +7,15 @@ static const char* cmh20 = "cmH2O";
  */
 AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
-extern const AdjValueParams adj_value_settings[] = {
-        {"Tidal Volume",        "vT",         "%ld",     "%ld",     "mL",    100, 900, 50,  palette_color_1},
-        {"Respiration Rate",    "Resp. Rate", "%ld",     "%ld",     "/min",  8,   30,  2,   palette_color_1},
-        {"PEEP Limit (Floor)",  "PEEP",       "%ld",     "%ld",     cmh20,   5,   20,  1,   palette_color_1},
-        {"PIP Limit (Ceiling)", "PIP",        "%ld",     "%ld",     cmh20,   15,  40,  1,   palette_color_1},
-        {"Plateau Time",        "Plateau",    "%ld",     "%ld",     "ms",    200, 800, 50,  palette_color_1},
-        {"Pressure",            nullptr,      "%.2f", "%.2f", cmh20,   5,   40,  1,   palette_color_2},
-        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   0.1, palette_color_1},
-        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   0.1, palette_color_1},
+const AdjValueParams adj_value_settings[] = {
+        {"Tidal Volume",        "vT",         "%ld",  "%ld",  "mL",    100, 900, 100, 50,  palette_color_1},
+        {"Respiration Rate",    "Resp. Rate", "%ld",  "%ld",  "/min",  8,   30,  8,   2,   palette_color_1},
+        {"PEEP Limit (Floor)",  "PEEP",       "%ld",  "%ld",  cmh20,   5,   20,  5,   1,   palette_color_1},
+        {"PIP Limit (Ceiling)", "PIP",        "%ld",  "%ld",  cmh20,   15,  40,  15,  1,   palette_color_1},
+        {"Plateau Time",        "Plateau",    "%ld",  "%ld",  "ms",    200, 800, 200, 50,  palette_color_1},
+        {"Pressure",            nullptr,      "%.2f", "%.2f", cmh20,   5,   40,  5,   1,   palette_color_2},
+        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   1,   0.1, palette_color_1},
+        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   1,   0.1, palette_color_1},
 };
 
 void AdjustableValue::on_control_button_press(lv_event_t* evt)

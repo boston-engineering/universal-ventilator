@@ -9,7 +9,10 @@ MainScreen::MainScreen()
             GAUGE_PRESSURE_CHART_MIN_VALUE,
             GAUGE_PRESSURE_CHART_MAX_VALUE,
             GAUGE_PRESSURE_CHART_MAX_POINTS,
-            GAUGE_PRESSURE_CHART_REFRESH_TIME
+            GAUGE_PRESSURE_CHART_REFRESH_TIME,
+            GAUGE_PRESSURE_CHART_LINE_MODE,
+            GAUGE_PRESSURE_CHART_DOT_SIZE,
+            GAUGE_PRESSURE_CHART_LINE_WIDTH
     );
 
     charts[1] = SensorChart(
@@ -17,7 +20,10 @@ MainScreen::MainScreen()
             VT_CHART_MIN_VALUE,
             VT_CHART_MAX_VALUE,
             VT_CHART_MAX_POINTS,
-            VT_CHART_REFRESH_TIME
+            VT_CHART_REFRESH_TIME,
+            VT_CHART_LINE_MODE,
+            VT_CHART_DOT_SIZE,
+            VT_CHART_LINE_WIDTH
     );
 }
 
@@ -88,7 +94,7 @@ void MainScreen::generate_charts()
 
 const SensorChart* MainScreen::get_chart(uint8_t idx)
 {
-    if(idx >= MAIN_SCREEN_CHART_COUNT) {
+    if (idx >= MAIN_SCREEN_CHART_COUNT) {
         return nullptr;
     }
     return &charts[idx];
@@ -96,11 +102,11 @@ const SensorChart* MainScreen::get_chart(uint8_t idx)
 
 void MainScreen::try_refresh_charts()
 {
-    for(auto& chart : charts) {
+    for (auto& chart : charts) {
 
         // Chart operations have their own timers as well,
         // refreshing the large portions of the screen can be expensive
-        if(chart.should_refresh()) {
+        if (chart.should_refresh()) {
             chart.refresh_chart();
         }
     }

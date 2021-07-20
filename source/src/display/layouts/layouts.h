@@ -44,8 +44,4 @@ extern lv_obj_t* active_floating_window;
 lv_obj_t* get_config_button_container();
 void setup_config_window();
 
-// Config Windows
-void config_window_diff_pressure_select();
-void config_window_home_stepper();
-
 #endif //UVENT_LAYOUTS_H
