@@ -6,6 +6,7 @@
 #include "eeprom/storage.h"
 #include "sensors/pressure_sensor.h"
 #include "waveform.h"
+#include "alarm/alarm.h"
 #include <AccelStepper.h>
 #include <DueTimer.h>
 #include <ams_as5048b.h>
@@ -24,6 +25,10 @@ PressureSensor gauge_sensor = {PRESSURE_GAUGE_PIN};
 PressureSensor diff_sensor = {PRESSURE_DIFF_PIN};
 // Waveform instance
 Waveform waveform;
+
+uint32_t cycle_count = 0;
+// Alarms
+AlarmManager alarm(SPEAKER_PIN, SNOOZE_PIN, &cycle_count);
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.

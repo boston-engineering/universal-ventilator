@@ -19,6 +19,10 @@
 #define TFT_CS 10 // 4
 #define TFT_RST 26 // 3
 
+// Speaker and snooze pins
+#define SPEAKER_PIN 40
+#define SNOOZE_PIN 48
+
 // Display testing
 #define ENABLE_TEST_DISPLAY 0
 
