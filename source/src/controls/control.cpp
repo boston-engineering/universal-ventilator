@@ -491,3 +491,8 @@ double control_get_diff_pressure()
 {
     return diff_sensor.get_pressure(units_pressure::cmH20);
 }
+
+void control_alarm_snooze()
+{
+    alarm_manager.snooze();
+}

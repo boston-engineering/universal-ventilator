@@ -168,6 +168,8 @@ public:
     inline const bool& getUnconfirmedChange() { return alarms_[NOT_CONFIRM].isON(); }
     inline const bool& getTurningOFF() { return alarms_[TURNING_OFF].isON(); }
 
+    void snooze();
+
 private:
     // Display* displ_;
     Speaker speaker_;

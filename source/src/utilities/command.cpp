@@ -18,6 +18,7 @@ static void command_state(int argc, char** argv);
 static void command_eeprom(int argc, char** argv);
 static void command_waveform(int argc, char** argv);
 static void command_pressure(int argc, char** argv);
+static void command_alarm(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -72,7 +73,8 @@ command_type commands[] =
                 {"state", command_state, "\t\tState related commands.\r\n"},
                 {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
                 {"wave", command_waveform, "\t\tWaveform related commands.\r\n"},
-                {"press", command_pressure, "\t\tPressure related commands.\r\n"}};
+                {"press", command_pressure, "\t\tPressure related commands.\r\n"},
+                {"alarm", command_alarm, "\t\\Alarm related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
 
@@ -533,4 +535,15 @@ command_type* command_get_array(void)
 uint16_t command_get_array_size()
 {
     return command_array_size;
+}
+
+/* Alarm function. */
+static void
+command_alarm(int argc, char** argv)
+{
+    if (!(strcmp(argv[1], "snooze"))) {
+        control_alarm_snooze();
+        print_response(Error_Codes::ER_NONE);
+        return;
+    }
 }

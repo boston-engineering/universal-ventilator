@@ -43,4 +43,5 @@ void control_calculate_waveform();
 void control_waveform_display_details();
 double control_get_gauge_pressure();
 double control_get_diff_pressure();
+void control_alarm_snooze();
 #endif

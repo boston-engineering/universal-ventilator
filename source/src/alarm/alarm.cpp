@@ -79,3 +79,7 @@ AlarmLevel AlarmManager::getHighestLevel() const
     }
     return alarm_level;
 }
+
+void AlarmManager::snooze()
+{
+}
