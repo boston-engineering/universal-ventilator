@@ -29,13 +29,13 @@ Waveform waveform;
 uint32_t cycle_count = 0;
 
 // Alarms
-// AlarmManager alarm(SPEAKER_PIN, SNOOZE_PIN, &cycle_count);
+AlarmManager alarm_manager{SPEAKER_PIN, SNOOZE_PIN, &cycle_count};
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
  */
 // Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm);
-Machine machine(States::ST_STARTUP, &actuator, &waveform);
+Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm_manager, &cycle_count);
 
 void loop_test_readout(lv_timer_t* timer)
 {
@@ -362,7 +362,6 @@ void control_init()
  */
 void control_service()
 {
-    machine.handle_errors();
 }
 
 /* Get the current angular position of the actuator
