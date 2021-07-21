@@ -362,6 +362,7 @@ void control_init()
  */
 void control_service()
 {
+    machine.handle_errors();
 }
 
 /* Get the current angular position of the actuator

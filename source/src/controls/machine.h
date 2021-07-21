@@ -36,6 +36,7 @@ public:
     const char** get_state_list(uint8_t* size);
     States get_current_state();
     void change_state(States);
+    void handle_errors();
 
 private:
     // Current state of the state machine.

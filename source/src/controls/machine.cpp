@@ -58,7 +58,6 @@ void Machine::state_inspiration()
 {
     if (state_first_entry) {
         state_first_entry = false;
-        alarm.badPlateau(true);
 
         // Check if paddle is at home.
         if (!(p_actuator->is_home())) {
@@ -229,8 +228,6 @@ void Machine::run()
     // Increment the soft timer.
     machine_timer++;
 
-    alarm.update();
-
     // State Machine
     switch (state) {
     case States::ST_STARTUP:
@@ -298,4 +295,16 @@ void Machine::change_state(States st)
 {
     // Change the state.
     set_state(st);
+}
+
+void Machine::handle_errors()
+{
+    // These pressure alarms only make sense after homing
+    if (state_first_entry && state == States::ST_INSPR) {
+        alarm.badPlateau(false);
+        alarm.lowPressure(false);
+        alarm.noTidalPres(false);
+    }
+
+    alarm.update();
 }
