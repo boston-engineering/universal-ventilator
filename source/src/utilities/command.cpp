@@ -128,7 +128,12 @@ command_actuator(int argc, char** argv)
         return;
     }
     else if (!(strcmp(argv[1], "pos_raw"))) {
-        Serial.println(control_get_actuator_position_raw(), DEC);
+        double angle;
+        int8_t ret = control_get_actuator_position_raw(angle);
+        if (ret != -1) {
+            Serial.println(angle, DEC);
+        }
+
         return;
     }
     else if (!(strcmp(argv[1], "mv_deg"))) {

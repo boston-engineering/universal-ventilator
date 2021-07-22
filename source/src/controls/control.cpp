@@ -130,9 +130,9 @@ double control_get_actuator_position()
 /* Get the current raw register value of the angle sensor.
  * This is a debug stub used to get the offset to set home.
  */
-double control_get_actuator_position_raw()
+int8_t control_get_actuator_position_raw(double& angle)
 {
-    return actuator.get_position_raw();
+    return actuator.get_position_raw(angle);
 }
 
 /* Set the current angular position of the actuator as home
