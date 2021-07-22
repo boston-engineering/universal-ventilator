@@ -29,7 +29,7 @@ Waveform waveform;
 uint32_t cycle_count = 0;
 
 // Alarms
-AlarmManager alarm_manager{SPEAKER_PIN, SNOOZE_PIN, &cycle_count};
+AlarmManager alarm_manager{SPEAKER_PIN, &cycle_count};
 
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.

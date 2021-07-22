@@ -14,14 +14,13 @@
 #define DEBUG_LED 13
 
 // Display and touch pins
-#define TOUCH_INT 23 // 19
-#define TOUCH_RST 22 // 2
-#define TFT_CS 10 // 4
-#define TFT_RST 26 // 3
+#define TOUCH_INT 23// 19
+#define TOUCH_RST 22// 2
+#define TFT_CS 10   // 4
+#define TFT_RST 26  // 3
 
 // Speaker and snooze pins
 #define SPEAKER_PIN 40
-#define SNOOZE_PIN 48
 
 // Display testing
 #define ENABLE_TEST_DISPLAY 0

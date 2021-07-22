@@ -9,7 +9,7 @@
 
 void Speaker::begin()
 {
-    snooze_button_.begin();
+    // snooze_button_.begin();
     pinMode(speaker_pin_, OUTPUT);
 }
 
@@ -32,34 +32,44 @@ void Speaker::stop()
 
 void Speaker::update(const AlarmLevel& alarm_level)
 {
-    // if (snoozeButtonPressed()) {
-    //     toggleSnooze();
-    // }
-    // // check if snooze time is up
-    // if (snoozed_ && millis() - snooze_time_ > kSnoozeTime) {
-    //     snoozed_ = false;
-    // }
-    // if (snoozed_) {
-    //     stop();
-    // }
-    // else {
-    //     play(alarm_level);
-    // }
+    if (snoozeButtonPressed()) {
+        toggleSnooze();
+    }
+    // check if snooze time is up
+    if (snoozed_ && millis() - snooze_time_ > kSnoozeTime) {
+        snoozed_ = false;
+    }
+    if (snoozed_) {
+        stop();
+    }
+    else {
+        play(alarm_level);
+    }
     play(alarm_level);
 }
 
 bool Speaker::snoozeButtonPressed()
 {
-    return snooze_button_.is_LOW();
+    return snooze_button_;
 }
 
 void Speaker::toggleSnooze()
 {
+    snooze_button_ = false;
     if (snoozed_) {
         snoozed_ = false;
+
+        Serial.println("Snooze false");
     }
     else {
         snoozed_ = true;
+
         snooze_time_ = millis();
+        Serial.println("Snooze true");
     }
+}
+
+void Speaker::snooze_set(bool status)
+{
+    snooze_button_ = status;
 }

@@ -77,8 +77,8 @@ class AlarmManager {
     };
 
 public:
-    AlarmManager(const int& speaker_pin, const int& snooze_pin,
-                 unsigned long const* cycle_count) : speaker_(speaker_pin, snooze_pin),
+    AlarmManager(const int& speaker_pin,
+                 unsigned long const* cycle_count) : speaker_(speaker_pin),
                                                      cycle_count_(cycle_count)
     {
         alarms_[HIGH_PRESSU] = Alarm("   HIGH PRESSURE    ", 1, 2, EMERGENCY);

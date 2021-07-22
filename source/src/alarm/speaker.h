@@ -9,7 +9,6 @@
 
 #include <Arduino.h>
 #include "tone.h"
-#include "utilities/buttons.h"
 
 // Alarm levels in order of increasing priority
 enum AlarmLevel {
@@ -23,11 +22,11 @@ enum AlarmLevel {
 class Speaker {
 
     // Time during which alarms are silenced, in milliseconds
-    static const unsigned long kSnoozeTime = 2 * 60 * 1000UL;
+    // static const unsigned long kSnoozeTime = 2 * 60 * 1000UL;
+    static const unsigned long kSnoozeTime = 30 * 1000UL;
 
 public:
-    Speaker(const int& speaker_pin, const int& snooze_pin) : speaker_pin_(speaker_pin),
-                                                             snooze_button_(snooze_pin)
+    Speaker(const int& speaker_pin) : speaker_pin_(speaker_pin)
     {
         const int notify_notes_length = sizeof(kNotifyNotes) / sizeof(kNotifyNotes[0]);
         tones_[NOTIFY] = Tone(kNotifyNotes, notify_notes_length, &speaker_pin_);
@@ -45,9 +44,12 @@ public:
     // Update during arduino loop()
     void update(const AlarmLevel& alarm_level);
 
+    // Snooze control
+    void snooze_set(bool status);
+
 private:
     const int speaker_pin_;
-    buttons::DebouncedButton snooze_button_;
+    bool snooze_button_;
     Tone tones_[NUM_LEVELS];
 
     unsigned long snooze_time_ = 0;

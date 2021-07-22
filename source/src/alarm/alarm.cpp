@@ -82,4 +82,5 @@ AlarmLevel AlarmManager::getHighestLevel() const
 
 void AlarmManager::snooze()
 {
+    speaker_.snooze_set(true);
 }
