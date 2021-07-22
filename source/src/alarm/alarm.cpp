@@ -14,7 +14,7 @@ Alarm::Alarm(const String& default_text, const int& min_bad_to_trigger,
 
 void Alarm::reset()
 {
-    // *this = Alarm::Alarm(text_, min_bad_to_trigger_, min_good_to_clear_, alarm_level_);
+    *this = Alarm(text_, min_bad_to_trigger_, min_good_to_clear_, alarm_level_);
 }
 
 void Alarm::setCondition(const bool& bad, const unsigned long& seq)
@@ -35,6 +35,26 @@ void Alarm::setCondition(const bool& bad, const unsigned long& seq)
         }
         consecutive_bad_ = 0;
     }
+}
+
+String AlarmManager::getText() const
+{
+    const int num_on = numON();
+    String text = "";
+    if (num_on > 0) {
+        // determine which of the on alarms to display
+        const int index = millis() % (num_on * kDisplayTime) / kDisplayTime;
+        int count_on = 0;
+        int i;
+        for (i = 0; i < NUM_ALARMS; i++) {
+            if (alarms_[i].isON()) {
+                if (count_on++ == index)
+                    break;
+            }
+        }
+        text = alarms_[i].text();
+    }
+    return text;
 }
 
 void Alarm::setText(const String& text)

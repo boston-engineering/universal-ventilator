@@ -378,6 +378,8 @@ command_waveform(int argc, char** argv)
         Serial.println("Format: state command");
         Serial.println("dump      - Dumps waveform details.");
         Serial.println("bpm       - Breaths per minute");
+        Serial.println("vt        - Tidal volume.");
+        Serial.println("ie        - IE ratio.");
     }
     else if (!(strcmp(argv[1], "dump"))) {
         serial_printf("----Waveform Details----\n");
@@ -541,8 +543,34 @@ uint16_t command_get_array_size()
 static void
 command_alarm(int argc, char** argv)
 {
-    if (!(strcmp(argv[1], "snooze"))) {
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: state command");
+        Serial.println("snooze   - Snoozes alarm. Can be used to toggle.");
+        Serial.println("count    - Displays no. of current alarms.");
+        Serial.println("text     - Displays text of current alarm.");
+        Serial.println("alloff   - Turns off all alarms.");
+    }
+    else if (!(strcmp(argv[1], "snooze"))) {
         control_alarm_snooze();
+        print_response(Error_Codes::ER_NONE);
+        return;
+    }
+    else if (!(strcmp(argv[1], "count"))) {
+        Serial.println(control_get_alarm_count());
+        return;
+    }
+    else if (!(strcmp(argv[1], "text"))) {
+        String a_text = control_get_alarm_text();
+        if (a_text) {
+            Serial.println(a_text);
+        }
+        else {
+            Serial.println("No alarms");
+        }
+        return;
+    }
+    else if (!(strcmp(argv[1], "alloff"))) {
+        control_set_alarm_all_off();
         print_response(Error_Codes::ER_NONE);
         return;
     }

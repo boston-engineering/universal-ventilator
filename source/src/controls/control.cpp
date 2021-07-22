@@ -496,3 +496,18 @@ void control_alarm_snooze()
 {
     alarm_manager.snooze();
 }
+
+int16_t control_get_alarm_count()
+{
+    return alarm_manager.numON();
+}
+
+String control_get_alarm_text()
+{
+    return (alarm_manager.getText());
+}
+
+void control_set_alarm_all_off()
+{
+    alarm_manager.allOff();
+}

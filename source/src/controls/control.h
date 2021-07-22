@@ -44,4 +44,7 @@ void control_waveform_display_details();
 double control_get_gauge_pressure();
 double control_get_diff_pressure();
 void control_alarm_snooze();
+String control_get_alarm_text();
+int16_t control_get_alarm_count();
+void control_set_alarm_all_off();
 #endif

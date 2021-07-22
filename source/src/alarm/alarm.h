@@ -170,6 +170,12 @@ public:
 
     void snooze();
 
+    // Get text to display
+    String getText() const;
+
+    // Get number of alarms that are ON
+    int numON() const;
+
 private:
     // Display* displ_;
     Speaker speaker_;
@@ -177,12 +183,6 @@ private:
     // utils::Pulse led_pulse_;
     Alarm alarms_[NUM_ALARMS];
     unsigned long const* cycle_count_;
-
-    // Get number of alarms that are ON
-    int numON() const;
-
-    // Get text to display
-    String getText() const;
 
     // Get highest priority level of the alarms that are ON
     AlarmLevel getHighestLevel() const;
