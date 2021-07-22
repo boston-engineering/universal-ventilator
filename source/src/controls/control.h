@@ -6,7 +6,7 @@
 void control_init();
 void control_service();
 double control_get_actuator_position();
-double control_get_actuator_position_raw();
+int8_t control_get_actuator_position_raw(double& angle);
 void control_zero_actuator_position();
 void control_change_state(States);
 void control_actuator_manual_move(Tick_Type tt, double angle, double speed);
