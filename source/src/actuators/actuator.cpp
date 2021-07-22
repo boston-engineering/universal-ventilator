@@ -145,11 +145,16 @@ float Actuator::get_current_speed()
 double Actuator::get_position()
 {
     double angle;
+
+    //Guard position query with noInterrupt/Interrupt() guards as the touch interrupt may interfered with position capture. They are on the same bus.
+    noInterrupts();
     if (stepper_fb.angleR(angle, U_DEG, true) != -1) {
         // No I2C error
+        interrupts();
         return angle;
     }
     else {
+        interrupts();
         return 0;
     }
 }
