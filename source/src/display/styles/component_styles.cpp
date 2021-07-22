@@ -303,7 +303,7 @@ STYLE_INIT_FUNC(POPUP_WINDOW)
 
     // Colors & Borders
     lv_style_set_max_width(style, 500 px);
-    lv_style_set_max_height(style, 300 px);
+    lv_style_set_max_height(style, 250 px);
     //lv_style_set_min_height(style, 100 px);
     //lv_style_set_height(style, LV_SIZE_CONTENT);
     lv_style_set_outline_width(style, 4);
@@ -358,7 +358,7 @@ STYLE_INIT_FUNC(PAGINATION_BUTTON_ITEM)
     lv_style_t* style = STYLE_PTR_CM(PAGINATION_BUTTON_ITEM);
 
     // Colors & Borders
-    lv_style_set_text_font(style, &lv_font_montserrat_22);
+    lv_style_set_text_font(style, &lv_font_montserrat_20);
     lv_style_set_border_width(style, 1);
     lv_style_set_border_opa(style, LV_OPA_50);
     lv_style_set_border_color(style, lv_palette_main(LV_PALETTE_GREY));
@@ -373,18 +373,73 @@ STYLE_INIT_FUNC(CHART_HOLDER)
 {
     lv_style_t* style = STYLE_PTR_CM(CHART_HOLDER);
 
+    lv_coord_t min_max_height = 250 px;
+
     // Size
-    lv_style_set_max_height(style, 280 px);
-    lv_style_set_height(style, LV_PCT(100));
+    lv_style_set_pad_left(style, 10 px);
+    lv_style_set_pad_right(style, 10 px);
+    lv_style_set_pad_top(style, 10 px);
+    lv_style_set_max_height(style, min_max_height);
+    lv_style_set_min_height(style, min_max_height);
+    lv_style_set_width(style, LV_PCT(100));
     // Colors & Borders
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     //lv_style_set_border_width(style, 1 px);
     // Flexbox
     lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
-    lv_style_set_pad_all(style, 4 px);
     lv_style_set_pad_row(style, 4 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
     // Inside Flex
     lv_style_set_flex_grow(style, FLEX_GROW);
+}
+
+/**
+* ComponentType::ALERT_BOX
+*/
+STYLE_INIT_FUNC(ALERT_BOX)
+{
+    lv_style_t* style = STYLE_PTR_CM(ALERT_BOX);
+
+    // Size
+    lv_style_set_max_height(style, 60 px);
+    lv_style_set_width(style, LV_PCT(100));
+    // Colors & Borders
+    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    lv_style_set_border_width(style, 1 px);
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
+    lv_style_set_pad_all(style, 0 px);
+    lv_style_set_pad_row(style, 4 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    // Inside Flex
+//    lv_style_set_flex_grow(style, FLEX_GROW);
+}
+
+/**
+* ComponentType::ALERT_BOX
+*/
+STYLE_INIT_FUNC(SPACER)
+{
+    lv_style_t* style = STYLE_PTR_CM(SPACER);
+
+    // Size
+    lv_style_set_width(style, LV_PCT(100));
+
+    // Colors & Borders
+
+    // Debug in case we need to visualize the spacers
+    // lv_style_set_bg_color(style, LV_COLOR_MAKE(0x00, 0xff, 0xaa));
+    // lv_style_set_border_width(style, 1 px);
+
+    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
+    lv_style_set_pad_all(style, 0 px);
+    lv_style_set_pad_row(style, 4 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    // Inside Flex
+    lv_style_set_flex_grow(style, 2);
 }

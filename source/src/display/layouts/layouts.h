@@ -10,6 +10,9 @@
 // abs does some weird stuff when defined by arduino
 #undef abs
 
+LV_IMG_DECLARE(be_tm_tagline_logo);
+
+
 typedef void (* ButtonCreateFunc)();
 typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
 typedef void (* LabelConfigCb)(lv_obj_t* label, uint8_t label_idx);
@@ -30,6 +33,8 @@ void setup_adjustable_control(AdjValueType type);
 // I:E Ratio is special
 void setup_ie_readout();
 void setup_ie_controls();
+// Alert Box
+void setup_alert_box();
 // Button functions
 void add_start_button();
 void add_mute_button();

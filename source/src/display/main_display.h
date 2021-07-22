@@ -111,6 +111,8 @@ typedef enum ComponentType {
     PAGINATION_GROUP_HOLDER,        /**< Holder for the buttongroup part of pagination*/
     PAGINATION_BUTTON_ITEM,         /**< Individual pagination button*/
     CHART_HOLDER,                   /**< Holder for all the charts in VISUAL_AREA_2*/
+    ALERT_BOX,                      /**< Box that holds alert messages` */
+    SPACER,                         /**< Spacer to take up room in flex box containers */
     BLANK __attribute__((unused)),
     COMPONENT_COUNT,
 } ComponentType;
@@ -231,6 +233,8 @@ static inline void setup_styles()
     STYLE_DECL(PAGINATION_GROUP_HOLDER);
     STYLE_DECL(PAGINATION_BUTTON_ITEM);
     STYLE_DECL(CHART_HOLDER);
+    STYLE_DECL(ALERT_BOX);
+    STYLE_DECL(SPACER);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H

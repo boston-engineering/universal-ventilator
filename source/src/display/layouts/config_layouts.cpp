@@ -3,12 +3,13 @@
 #include "layouts.h"
 
 #define CONFIG_BUTTONS_PER_PAGE     4
-#define CONFIG_BUTTON_COUNT         6
-#define CONFIG_PAGES                (CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE) + 1
+#define CONFIG_BUTTON_COUNT         7
+#define CONFIG_PAGES                ((CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE) + 1)
 #define ACTUATOR_TEXT_ENABLED       "Disable Actuator"
 #define ACTUATOR_TEXT_DISABLED      "Enable Actuator"
 
 lv_obj_t* active_floating_window = nullptr;
+lv_point_t divider_line_points[2];
 /************************************************/
 /*       Button Registry for Pagination         */
 /************************************************/
@@ -33,6 +34,7 @@ static void
 open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb = nullptr);
 
 static void open_sensor_select_dialog(lv_event_t* evt);
+static void open_about_dialog(lv_event_t* evt);
 
 static void register_button(ButtonCreateFunc func);
 
@@ -195,12 +197,18 @@ static void add_display_waveform_button()
     lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
 }
 
+static void add_about_button()
+{
+    lv_obj_t* button = add_config_button("About");
+    lv_obj_add_event_cb(button, open_about_dialog, LV_EVENT_RELEASED, nullptr);
+}
+
 /************************************************/
 /*      Helper functions for Config Styles      */
 /*                                              */
 /************************************************/
 
-static void quick_flex_obj(lv_obj_t* obj, lv_flex_flow_t flow = LV_FLEX_FLOW_COLUMN, bool allow_grow = true)
+static void quick_flex_obj(lv_obj_t* obj, lv_flex_flow_t flow = LV_FLEX_FLOW_COLUMN, uint8_t grow = 1)
 {
     lv_obj_set_style_flex_flow(obj, flow, LV_PART_MAIN);
     lv_obj_set_style_flex_cross_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN);
@@ -211,17 +219,18 @@ static void quick_flex_obj(lv_obj_t* obj, lv_flex_flow_t flow = LV_FLEX_FLOW_COL
         lv_obj_set_style_pad_column(obj, 4 px, LV_PART_MAIN);
     }
     lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN);
-    if (allow_grow) {
-        lv_obj_set_style_flex_grow(obj, FLEX_GROW, LV_PART_MAIN);
+    if (grow) {
+        lv_obj_set_style_flex_grow(obj, grow, LV_PART_MAIN);
     }
 }
 
 static void default_window_container_styles(lv_obj_t* obj)
 {
-    lv_obj_set_style_pad_all(obj, 0, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(obj, 0 px, LV_PART_MAIN);
     lv_obj_set_style_radius(obj, 0 px, LV_PART_MAIN);
     lv_obj_set_style_bg_opa(obj, LV_OPA_TRANSP, LV_PART_MAIN);
     lv_obj_set_style_border_width(obj, 0 px, LV_PART_MAIN);
+    lv_obj_set_style_border_color(obj, lv_color_black(), LV_PART_MAIN);
     lv_obj_set_width(obj, LV_PCT(100));
 }
 
@@ -362,6 +371,78 @@ static void open_sensor_select_dialog(lv_event_t* evt)
     }
 }
 
+static void open_about_dialog(lv_event_t* evt) {
+    lv_obj_t* window = open_option_dialog("About [WIP]", true);
+    lv_obj_set_style_max_width(window, 425 px, LV_PART_MAIN);
+    lv_obj_set_style_max_height(window, 250 px, LV_PART_MAIN);
+
+    lv_obj_invalidate(window);
+    lv_obj_align_to(window, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+
+    lv_obj_t* main_area = lv_win_get_content(window);
+    lv_obj_set_style_pad_left(main_area, 2 px, LV_PART_MAIN);
+    lv_obj_set_style_pad_right(main_area, 4 px, LV_PART_MAIN);
+    lv_obj_set_style_pad_top(main_area, 8 px, LV_PART_MAIN);
+    lv_obj_set_style_pad_bottom(main_area, 4 px, LV_PART_MAIN);
+    quick_flex_obj(main_area, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_column(main_area, 12 px, LV_PART_MAIN);
+
+    lv_obj_t* img_holder = lv_obj_create(main_area);
+    default_window_container_styles(img_holder);
+    quick_flex_obj(img_holder, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_size(img_holder, LV_SIZE_CONTENT, LV_PCT(100));
+    lv_obj_set_style_flex_main_place(img_holder, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_flex_track_place(img_holder, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN);
+
+    lv_obj_t* img = lv_img_create(img_holder);
+    lv_img_set_src(img, &be_tm_tagline_logo);
+    lv_obj_t* be_label = lv_label_create(img_holder);
+    lv_label_set_text(be_label, "Boston\nEngineering");
+    lv_obj_set_style_text_font(be_label, &lv_font_montserrat_18, LV_PART_MAIN);
+    lv_obj_set_style_text_align(be_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_center(be_label);
+
+    lv_obj_t* be_website = lv_label_create(img_holder);
+    lv_label_set_text(be_website, "boston-engineering.com");
+    lv_obj_set_style_text_font(be_website, &lv_font_montserrat_14, LV_PART_MAIN);
+    lv_obj_set_style_text_align(be_website, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_center(be_website);
+
+    lv_coord_t line_x = lv_obj_get_x2(img_holder);
+    lv_coord_t area_height = lv_obj_get_height(main_area);
+    Serial.println(area_height);
+    divider_line_points[0] = {line_x, 0};
+    divider_line_points[1] = {line_x, 150};
+
+    lv_obj_t* line = lv_line_create(main_area);
+    lv_line_set_points(line, divider_line_points, 2);
+    lv_obj_set_style_line_width(line, 2 px, LV_PART_MAIN);
+    lv_obj_set_style_line_color(line, lv_color_black(), LV_PART_MAIN);
+
+    lv_obj_t* text_holder = lv_obj_create(main_area);
+    default_window_container_styles(text_holder);
+    quick_flex_obj(text_holder, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_size(text_holder, LV_SIZE_CONTENT, LV_PCT(100));
+    lv_obj_set_style_flex_track_place(text_holder, LV_FLEX_ALIGN_START, LV_PART_MAIN);
+
+    lv_obj_t* spangroup = lv_spangroup_create(text_holder);
+    default_window_container_styles(spangroup);
+    lv_spangroup_set_indent(spangroup, 0);
+    lv_obj_set_style_text_font(spangroup, &lv_font_montserrat_28, LV_PART_MAIN);
+    lv_spangroup_set_mode(spangroup, LV_SPAN_MODE_EXPAND);
+    lv_spangroup_set_align(spangroup, LV_TEXT_ALIGN_LEFT);
+    char buf[10];
+    lv_span_t* version_title = lv_spangroup_new_span(spangroup);
+    lv_span_set_text(version_title, "Version: ");
+    lv_snprintf(buf, 10, "%d.%d.%d", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
+    lv_span_t* version_number = lv_spangroup_new_span(spangroup);
+    lv_span_set_text(version_number, buf);
+    lv_style_set_text_font(&version_number->style, &lv_font_montserrat_24);
+    //lv_style_set_text_decor(&version_number->style, );
+
+    lv_spangroup_refr_mode(spangroup);
+}
+
 lv_obj_t* open_option_dialog(const char* title, bool enable_close_button)
 {
     lv_obj_t* window = lv_win_create(lv_scr_act(), 60);
@@ -486,6 +567,7 @@ void setup_config_window()
     register_button(add_disable_actuator_button);
     register_button(add_dump_eeprom_button);
     register_button(add_display_waveform_button);
+    register_button(add_about_button);
 
     create_pagination();
 

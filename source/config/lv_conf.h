@@ -215,7 +215,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #endif /*LV_ENABLE_GC*/
 
 /*1: Enable API to take snapshot for object*/
-#define LV_USE_SNAPSHOT         1
+#define LV_USE_SNAPSHOT         0
 
 /*=====================
  *  COMPILER SETTINGS
@@ -272,7 +272,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_FONT_MONTSERRAT_16    1
 #define LV_FONT_MONTSERRAT_18    1
 #define LV_FONT_MONTSERRAT_20    1
-#define LV_FONT_MONTSERRAT_22    1
+#define LV_FONT_MONTSERRAT_22    0
 #define LV_FONT_MONTSERRAT_24    1
 #define LV_FONT_MONTSERRAT_26    0
 #define LV_FONT_MONTSERRAT_28    1
@@ -281,7 +281,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_FONT_MONTSERRAT_34    0
 #define LV_FONT_MONTSERRAT_36    0
 #define LV_FONT_MONTSERRAT_38    1
-#define LV_FONT_MONTSERRAT_40    1
+#define LV_FONT_MONTSERRAT_40    0
 #define LV_FONT_MONTSERRAT_42    0
 #define LV_FONT_MONTSERRAT_44    0
 #define LV_FONT_MONTSERRAT_46    0
@@ -372,9 +372,9 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 /*Documentation of the widgets: https://docs.lvgl.io/latest/en/html/widgets/index.html*/
 
-#define LV_USE_ARC          1
+#define LV_USE_ARC          0
 
-#define LV_USE_ANIMIMG	    1
+#define LV_USE_ANIMIMG	    0
 
 #define LV_USE_BAR          1
 
@@ -387,7 +387,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_CHECKBOX     1
 
 
-#define LV_USE_DROPDOWN     1   /*Requires: lv_label*/
+#define LV_USE_DROPDOWN     0   /*Requires: lv_label*/
 
 #define LV_USE_IMG          1   /*Requires: lv_label*/
 
@@ -446,17 +446,17 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_LED          0
 
-#define LV_USE_LIST         1
+#define LV_USE_LIST         0
 
-#define LV_USE_METER        1
+#define LV_USE_METER        0
 
 #define LV_USE_MSGBOX       0
 
 #define LV_USE_SPINBOX      0
 
-#define LV_USE_SPINNER      1
+#define LV_USE_SPINNER      0
 
-#define LV_USE_TABVIEW      1
+#define LV_USE_TABVIEW      0
 
 #define LV_USE_TILEVIEW     0
 
@@ -499,7 +499,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_FLEX     1
 
 /*A layout similar to Grid in CSS.*/
-#define LV_USE_GRID     1
+#define LV_USE_GRID     0
 
 /*==================
 * EXAMPLES

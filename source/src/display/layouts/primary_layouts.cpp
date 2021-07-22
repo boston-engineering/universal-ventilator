@@ -31,7 +31,6 @@ static void trim_spans_to_size(lv_obj_t* spangroup, size_t final_size);
 
 char buf[LABEL_BUF_SIZE];
 
-
 /***************************************************************/
 /*      Functions to generate & fill entire screen areas       */
 /***************************************************************/
@@ -93,6 +92,12 @@ void setup_visual_2()
 
     lv_obj_t* chart_holder = lv_obj_create(visual_area_2);
     lv_obj_add_style(chart_holder, STYLE_PTR_CM(CHART_HOLDER), LV_PART_MAIN);
+//    lv_obj_set_style_pad_all(chart_holder, 10 px, LV_PART_MAIN);
+
+    lv_obj_t* spacer = lv_obj_create(visual_area_2);
+    lv_obj_add_style(spacer, STYLE_PTR_CM(SPACER), LV_PART_MAIN);
+
+    setup_alert_box();
 }
 
 /*******************************************************************/
@@ -142,8 +147,7 @@ void setup_adjustable_readout(AdjValueType type, const char* override_str)
     lv_obj_t* name_label = lv_label_create(name_container);
     lv_obj_set_width(name_label, LV_PCT(100));
     lv_obj_add_style(name_label, STYLE_PTR_CM(READOUT_NAME_TEXT), LV_PART_MAIN);
-    lv_label_set_text_fmt(name_label, settings.title);
-    //
+    lv_label_set_text_fmt(name_label, "%s", settings.title);
 
     lv_obj_t* value_amount_spangroup = lv_spangroup_create(value_container);
     lv_obj_t* value_unit_label;
@@ -238,7 +242,7 @@ void setup_adjustable_control(AdjValueType type)
     lv_obj_t* name_label = lv_label_create(text_container);
     lv_obj_set_width(name_label, LV_PCT(100));
     lv_obj_add_style(name_label, STYLE_PTR_CM(CONTROL_TEXT_NAME), LV_PART_MAIN);
-    lv_label_set_text_fmt(name_label, settings.control_title);
+    lv_label_set_text_fmt(name_label, "%s", settings.control_title);
 
     lv_obj_t* increase_button = lv_btn_create(obj);
     lv_obj_add_event_cb(increase_button, on_control_button_press, LV_EVENT_ALL, value_class);
@@ -410,6 +414,13 @@ void setup_ie_controls()
 
     lv_obj_set_style_border_width(name_label, 1, LV_PART_MAIN);
 #endif
+}
+
+void setup_alert_box() {
+    lv_obj_t* alert_box = lv_obj_create(SCR_C(VISUAL_AREA_2));
+    lv_obj_add_style(alert_box, STYLE_PTR_CM(ALERT_BOX), LV_PART_MAIN);
+
+
 }
 
 /************************************************/
