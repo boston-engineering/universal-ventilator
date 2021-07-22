@@ -144,12 +144,19 @@ float Actuator::get_current_speed()
 
 double Actuator::get_position()
 {
-    return stepper_fb.angleR(U_DEG, true);
+    double angle;
+    if (stepper_fb.angleR(angle, U_DEG, true) != -1) {
+        // No I2C error
+        return angle;
+    }
+    else {
+        return 0;
+    }
 }
 
-double Actuator::get_position_raw()
+int8_t Actuator::get_position_raw(double& angle)
 {
-    return stepper_fb.angleR(U_RAW, true);
+    return (stepper_fb.angleR(angle, U_RAW, true));
 }
 
 double Actuator::degrees_to_volume(C_Stat compliance)
@@ -164,18 +171,18 @@ double Actuator::degrees_to_volume(C_Stat compliance)
     double volume = 0.0;
 
     switch (compliance) {
-    case C_Stat::NONE:
-        volume = D2V_COEF_A_NO_LUNG * pow(position, 4) + D2V_COEF_B_NO_LUNG * pow(position, 3) + D2V_COEF_C_NO_LUNG * pow(position, 2) + D2V_COEF_D_NO_LUNG * position;
-        break;
-    case C_Stat::TWENTY:
-        volume = D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
-        break;
-    case C_Stat::FIFTY:
-        volume = D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
-        break;
-    default:
-        // Unknown complaince.
-        return -1;
+        case C_Stat::NONE:
+            volume = D2V_COEF_A_NO_LUNG * pow(position, 4) + D2V_COEF_B_NO_LUNG * pow(position, 3) + D2V_COEF_C_NO_LUNG * pow(position, 2) + D2V_COEF_D_NO_LUNG * position;
+            break;
+        case C_Stat::TWENTY:
+            volume = D2V_COEF_A_COMP_20 * pow(position, 4) + D2V_COEF_B_COMP_20 * pow(position, 3) + D2V_COEF_C_COMP_20 * pow(position, 2) + D2V_COEF_D_COMP_20 * position;
+            break;
+        case C_Stat::FIFTY:
+            volume = D2V_COEF_A_COMP_50 * pow(position, 4) + D2V_COEF_B_COMP_50 * pow(position, 3) + D2V_COEF_C_COMP_50 * pow(position, 2) + D2V_COEF_D_COMP_50 * position;
+            break;
+        default:
+            // Unknown complaince.
+            return -1;
     }
 
     // Cage to max volume.
@@ -196,18 +203,18 @@ double Actuator::volume_to_degrees(C_Stat compliance, double volume)
     }
 
     switch (compliance) {
-    case C_Stat::NONE:
-        degrees = (V2D_COEF_A_NO_LUNG * pow(volume, 3)) + (V2D_COEF_B_NO_LUNG * pow(volume, 2)) + (V2D_COEF_C_NO_LUNG * volume) + V2D_COEF_D_NO_LUNG;
-        break;
-    case C_Stat::TWENTY:
-        degrees = (V2D_COEF_A_COMP_20 * pow(volume, 3)) + (V2D_COEF_B_COMP_20 * pow(volume, 2)) + (V2D_COEF_C_COMP_20 * volume) + V2D_COEF_D_COMP_20;
-        break;
-    case C_Stat::FIFTY:
-        degrees = (V2D_COEF_A_COMP_50 * pow(volume, 3)) + (V2D_COEF_B_COMP_50 * pow(volume, 2)) + (V2D_COEF_C_COMP_50 * volume) + V2D_COEF_D_COMP_50;
-        break;
-    default:
-        // Unknown compliance
-        return -1;
+        case C_Stat::NONE:
+            degrees = (V2D_COEF_A_NO_LUNG * pow(volume, 3)) + (V2D_COEF_B_NO_LUNG * pow(volume, 2)) + (V2D_COEF_C_NO_LUNG * volume) + V2D_COEF_D_NO_LUNG;
+            break;
+        case C_Stat::TWENTY:
+            degrees = (V2D_COEF_A_COMP_20 * pow(volume, 3)) + (V2D_COEF_B_COMP_20 * pow(volume, 2)) + (V2D_COEF_C_COMP_20 * volume) + V2D_COEF_D_COMP_20;
+            break;
+        case C_Stat::FIFTY:
+            degrees = (V2D_COEF_A_COMP_50 * pow(volume, 3)) + (V2D_COEF_B_COMP_50 * pow(volume, 2)) + (V2D_COEF_C_COMP_50 * volume) + V2D_COEF_D_COMP_50;
+            break;
+        default:
+            // Unknown compliance
+            return -1;
     }
 
     // The actuator can only move to MAX_ACT_POS_DEG, before going back. Limit it here.

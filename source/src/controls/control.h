@@ -24,7 +24,7 @@ void control_update_waveform_param(AdjValueType type, float new_value);
 void control_init();
 void control_service();
 double control_get_actuator_position();
-double control_get_actuator_position_raw();
+int8_t control_get_actuator_position_raw(double& angle);
 void control_zero_actuator_position();
 void control_write_ventilator_params();
 void control_change_state(States);

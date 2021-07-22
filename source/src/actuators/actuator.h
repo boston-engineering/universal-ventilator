@@ -48,7 +48,7 @@ public:
     bool is_home();
     bool is_moving();
     double get_position();
-    double get_position_raw();
+    int8_t get_position_raw(double&);
     double degrees_to_volume(C_Stat compliance);
     uint16_t set_current_position_as_zero();
     void set_zero_position(uint16_t new_zero);
