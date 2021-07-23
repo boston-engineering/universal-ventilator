@@ -78,19 +78,7 @@ void loop_test_readout(lv_timer_t* timer)
     auto* screen = static_cast<MainScreen*>(timer->user_data);
 
     // Check for errors
-
-    uint16_t alarm_count = control_get_alarm_count();
-    if (alarm_count <= 0 && alert_box_already_visible) {
-        alert_box_already_visible = false;
-        set_alert_box_visible(false);
-    }
-
-    if (alarm_count > 0 && !alert_box_already_visible) {
-        alert_box_already_visible = true;
-        set_alert_count_visual(alarm_count);
-        set_alert_text(control_get_alarm_text().c_str());
-        set_alert_box_visible(true);
-    }
+    handle_alerts();
 
     // Poll gauge sensor, add point to graph and update readout obj.
     // Will not refresh until explicitly told
@@ -163,19 +151,7 @@ void loop_update_readouts(lv_timer_t* timer)
     auto* screen = static_cast<MainScreen*>(timer->user_data);
 
     // Check for errors
-
-    uint16_t alarm_count = control_get_alarm_count();
-    if (alarm_count <= 0 && alert_box_already_visible) {
-        alert_box_already_visible = false;
-        set_alert_box_visible(false);
-    }
-
-    if (alarm_count > 0 && !alert_box_already_visible) {
-        alert_box_already_visible = true;
-        set_alert_count_visual(alarm_count);
-        set_alert_text(control_get_alarm_text().c_str());
-        set_alert_box_visible(true);
-    }
+    handle_alerts();
 
     // Poll gauge sensor, add point to graph and update readout obj.
     // Will not refresh until explicitly told
@@ -202,6 +178,41 @@ void loop_update_readouts(lv_timer_t* timer)
     }
 
     screen->try_refresh_charts();
+}
+
+void handle_alerts()
+{
+    static uint16_t last_alarm_count = 0;
+    uint16_t alarm_count = control_get_alarm_count();
+    if (alarm_count <= 0 && alert_box_already_visible) {
+        alert_box_already_visible = false;
+        set_alert_box_visible(false);
+    }
+
+    if (alarm_count > 0 && !alert_box_already_visible) {
+        alert_box_already_visible = true;
+        set_alert_count_visual(alarm_count);
+        set_alert_box_visible(true);
+    }
+
+    if (last_alarm_count != alarm_count) {
+        last_alarm_count = alarm_count;
+
+        Alarm* alarm_arr = control_get_alarm_list();
+        String alarm_strings[NUM_ALARMS];
+        uint16_t buf_size = 0;
+        uint16_t alarm_list_idx = 0;
+        for (uint16_t i = 0; i < NUM_ALARMS; i++) {
+            Alarm* a = &alarm_arr[i];
+            if (!a->isON()) {
+                continue;
+            }
+            buf_size += a->text().length();
+            alarm_strings[alarm_list_idx++] = a->text();
+        }
+
+        set_alert_text(alarm_strings, alarm_count, buf_size);
+    }
 }
 
 void control_update_waveform_param(AdjValueType type, float new_value)

@@ -15,6 +15,8 @@ void loop_test_readout(lv_timer_t*);
  */
 void loop_update_readouts(lv_timer_t* timer);
 
+void handle_alerts();
+
 double get_control_target(AdjValueType type);
 void set_readout(AdjValueType type, double val);
 double get_readout(AdjValueType type);

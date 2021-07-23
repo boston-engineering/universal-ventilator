@@ -39,6 +39,7 @@ lv_obj_t* get_alert_box();
 void set_alert_box_visible(bool visible);
 void set_alert_count_visual(uint16_t alert_count);
 void set_alert_text(const char* message);
+void set_alert_text(String* messages, uint16_t count, uint16_t buf_size);
 // Button functions
 void add_start_button();
 void add_mute_button();

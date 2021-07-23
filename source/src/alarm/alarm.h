@@ -190,9 +190,10 @@ public:
     // Get number of alarms that are ON
     int numON() const;
 
-    Alarm alarm_list[NUM_ALARMS];
-
-    Alarm* getAlarmList();
+    inline Alarm* getAlarmList()
+    {
+        return alarms_;
+    }
 
 private:
     // Display* displ_;

@@ -512,6 +512,37 @@ void set_alert_text(const char* message)
     lv_label_set_text_fmt(label, "%s", message);
 }
 
+void set_alert_text(String* messages, uint16_t count, uint16_t buf_size)
+{
+    lv_obj_t* box = get_alert_box();
+    if (!box) {
+        return;
+    }
+
+    lv_obj_t* label = lv_obj_get_child(box, 1);
+    if (!label) {
+        return;
+    }
+
+    uint16_t total_buffer_size = buf_size + (4 * count);
+    char label_buffer[total_buffer_size];
+    const char* spacer = " -- ";
+    uint16_t spacer_len = strlen(spacer);
+
+    uint16_t buffer_pos = 0;
+
+    for (uint16_t i = 0; i < count; i++) {
+        String str = messages[i];
+        lv_snprintf((label_buffer + buffer_pos), (total_buffer_size - buffer_pos), "%s", str.c_str());
+        buffer_pos += str.length();
+        // Add the spacer
+        lv_snprintf((label_buffer + buffer_pos), (total_buffer_size - buffer_pos), "%s", spacer);
+        buffer_pos += spacer_len;
+    }
+
+    lv_label_set_text_fmt(label, "%s", label_buffer);
+}
+
 /************************************************/
 /*          Functions to generate buttons       */
 /************************************************/
