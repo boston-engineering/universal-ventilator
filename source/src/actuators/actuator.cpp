@@ -4,7 +4,9 @@
 
 void Actuator::init()
 {
+#if USE_AMS_FEEDBACK
     stepper_fb.begin();
+#endif
     stepper.init();
 
     // Enable the drive
@@ -144,6 +146,7 @@ float Actuator::get_current_speed()
 
 double Actuator::get_position()
 {
+#if USE_AMS_FEEDBACK
     double angle;
 
     //Guard position query with noInterrupt/Interrupt() guards as the touch interrupt may interfered with position capture. They are on the same bus.
@@ -157,6 +160,8 @@ double Actuator::get_position()
         interrupts();
         return 0;
     }
+#endif
+    return (TIMING_PULLEY_STEPS_TO_DEGREES(stepper.get_current_position()));
 }
 
 int8_t Actuator::get_position_raw(double& angle)
