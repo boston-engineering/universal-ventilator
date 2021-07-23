@@ -160,8 +160,12 @@ double Actuator::get_position()
         interrupts();
         return 0;
     }
+#else
+    double current_pos_deg = TIMING_PULLEY_STEPS_TO_DEGREES(stepper.get_current_position());
+    if (current_pos_deg > 360.0)
+        return (current_pos_deg - 360.0);
+    return current_pos_deg;
 #endif
-    return (TIMING_PULLEY_STEPS_TO_DEGREES(stepper.get_current_position()));
 }
 
 int8_t Actuator::get_position_raw(double& angle)
