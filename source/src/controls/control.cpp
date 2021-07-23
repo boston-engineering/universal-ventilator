@@ -186,7 +186,11 @@ void handle_alerts()
     uint16_t alarm_count = control_get_alarm_count();
     if (alarm_count <= 0 && alert_box_already_visible) {
         alert_box_already_visible = false;
+        last_alarm_count = 0;
+        set_alert_count_visual(0);
+        set_alert_text("");
         set_alert_box_visible(false);
+        return;
     }
 
     if (alarm_count > 0 && !alert_box_already_visible) {
