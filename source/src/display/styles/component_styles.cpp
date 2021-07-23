@@ -405,7 +405,8 @@ STYLE_INIT_FUNC(ALERT_BOX)
     lv_style_set_max_height(style, 60 px);
     lv_style_set_width(style, LV_PCT(100));
     // Colors & Borders
-    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    lv_style_set_bg_color(style, lv_color_white());
+//    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     lv_style_set_border_width(style, 1 px);
     // Flexbox
     lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);

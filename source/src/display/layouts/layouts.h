@@ -42,6 +42,7 @@ void set_alert_text(const char* message);
 // Button functions
 void add_start_button();
 void add_mute_button();
+lv_obj_t* get_mute_button();
 lv_obj_t* add_settings_button(const char* title, lv_obj_t* parent = SCR_C(CONTROL_AREA_2));
 lv_obj_t* add_settings_toggle_button(const char* title, lv_obj_t* parent = SCR_C(CONTROL_AREA_2));
 

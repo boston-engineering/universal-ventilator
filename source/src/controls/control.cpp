@@ -516,9 +516,26 @@ double control_get_diff_pressure()
     return diff_sensor.get_pressure(units_pressure::cmH20);
 }
 
+void control_setup_alarm_cb()
+{
+    alarm_manager.set_snooze_cb([]() {
+        lv_obj_t* mute_button = get_mute_button();
+        if (!mute_button) {
+            return;
+        }
+
+        lv_obj_clear_state(mute_button, LV_STATE_CHECKED);
+    });
+}
+
 void control_alarm_snooze()
 {
     alarm_manager.snooze();
+}
+
+void control_toggle_alarm_snooze()
+{
+    alarm_manager.toggle_snooze();
 }
 
 int16_t control_get_alarm_count()

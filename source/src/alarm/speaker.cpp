@@ -38,6 +38,9 @@ void Speaker::update(const AlarmLevel& alarm_level)
     // check if snooze time is up
     if (snoozed_ && millis() - snooze_time_ > kSnoozeTime) {
         snoozed_ = false;
+        if (snooze_complete_cb) {
+            snooze_complete_cb();
+        }
     }
     if (snoozed_) {
         stop();

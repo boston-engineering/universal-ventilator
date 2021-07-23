@@ -72,10 +72,10 @@ void setup_controls()
 void setup_buttons()
 {
     // Wipe areas
-    lv_obj_t* visual_area_3 = SCR_C(VISUAL_AREA_3);
-    lv_obj_clean(visual_area_3);
     lv_obj_t* control_area_2 = SCR_C(CONTROL_AREA_2);
     lv_obj_clean(control_area_2);
+    lv_obj_t* visual_area_3 = SCR_C(VISUAL_AREA_3);
+    lv_obj_clean(visual_area_3);
 
     // VISUAL_AREA_3
     add_start_button();
@@ -342,7 +342,7 @@ void setup_ie_controls()
     lv_obj_t* text_container = lv_obj_create(obj);
     auto change_selected_cb = [](lv_event_t* evt) {
         if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-              || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+                || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
             return;
         }
         toggle_ie_select();
@@ -572,6 +572,23 @@ void add_mute_button()
     lv_label_set_text_fmt(label, "Mute\nAlarms");
     lv_obj_align_to(label, button, LV_ALIGN_CENTER, 0, 0);
     lv_obj_center(label);
+
+    lv_obj_add_event_cb(
+            button,
+            [](lv_event_t* evt) {
+                control_toggle_alarm_snooze();
+            },
+            LV_EVENT_VALUE_CHANGED,
+            nullptr
+    );
+}
+
+lv_obj_t* get_mute_button()
+{
+    lv_obj_t* visual_3 = SCR_C(VISUAL_AREA_3);
+    lv_obj_t* button = lv_obj_get_child(visual_3, 1);
+
+    return button;
 }
 
 lv_obj_t* add_settings_button(const char* title, lv_obj_t* parent)
@@ -743,7 +760,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 static void control_press_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
     if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-          || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+            || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
         return;
     }
 

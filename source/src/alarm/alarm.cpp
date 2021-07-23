@@ -100,7 +100,17 @@ AlarmLevel AlarmManager::getHighestLevel() const
     return alarm_level;
 }
 
+void AlarmManager::toggle_snooze()
+{
+    speaker_.toggleSnooze();
+}
+
 void AlarmManager::snooze()
 {
     speaker_.snooze_set(true);
+}
+
+void AlarmManager::disable_snooze()
+{
+    speaker_.snooze_set(false);
 }

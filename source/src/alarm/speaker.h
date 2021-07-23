@@ -26,7 +26,8 @@ class Speaker {
     static const unsigned long kSnoozeTime = 30 * 1000UL;
 
 public:
-    Speaker(const int& speaker_pin) : speaker_pin_(speaker_pin)
+    Speaker(const int& speaker_pin)
+            : speaker_pin_(speaker_pin)
     {
         const int notify_notes_length = sizeof(kNotifyNotes) / sizeof(kNotifyNotes[0]);
         tones_[NOTIFY] = Tone(kNotifyNotes, notify_notes_length, &speaker_pin_);
@@ -47,6 +48,10 @@ public:
     // Snooze control
     void snooze_set(bool status);
 
+    // Callback for snooze complete
+    void (* snooze_complete_cb)();
+
+    void toggleSnooze();
 private:
     const int speaker_pin_;
     bool snooze_button_;
@@ -57,11 +62,10 @@ private:
 
     bool snoozeButtonPressed();
 
-    void toggleSnooze();
-
     void play(const AlarmLevel& alarm_level);
 
     void stop();
+
 };
 
 #endif//SPEAKER_H_

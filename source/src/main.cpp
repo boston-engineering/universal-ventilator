@@ -44,6 +44,7 @@ void setup()
     screen.select_screen();
     init_main_display();
     screen.setup();
+    control_setup_alarm_cb();
 #endif
 
     // Initialize the parser, with the command array and command array size

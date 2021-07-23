@@ -159,16 +159,31 @@ public:
 
     // Get current state of each alarm
     inline const bool& getHighPressure() { return alarms_[HIGH_PRESSU].isON(); }
+
     inline const bool& getLowPressure() { return alarms_[LOW_PRESSUR].isON(); }
+
     inline const bool& getBadPlateau() { return alarms_[BAD_PLATEAU].isON(); }
+
     inline const bool& getUnmetVolume() { return alarms_[UNMET_VOLUM].isON(); }
+
     inline const bool& getNoTidalPres() { return alarms_[NO_TIDAL_PR].isON(); }
+
     inline const bool& getOverCurrent() { return alarms_[OVER_CURREN].isON(); }
+
     inline const bool& getMechanicalFailure() { return alarms_[MECH_FAILUR].isON(); }
+
     inline const bool& getUnconfirmedChange() { return alarms_[NOT_CONFIRM].isON(); }
+
     inline const bool& getTurningOFF() { return alarms_[TURNING_OFF].isON(); }
 
+    inline void set_snooze_cb(void (* snooze_cb)())
+    {
+        speaker_.snooze_complete_cb = snooze_cb;
+    }
+
+    void toggle_snooze();
     void snooze();
+    void disable_snooze();
 
     // Get text to display
     String getText() const;
