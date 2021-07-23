@@ -81,15 +81,15 @@ public:
                  unsigned long const* cycle_count) : speaker_(speaker_pin),
                                                      cycle_count_(cycle_count)
     {
-        alarms_[HIGH_PRESSU] = Alarm("   HIGH PRESSURE    ", 1, 2, EMERGENCY);
+        alarms_[HIGH_PRESSU] = Alarm("HIGH PRESSURE", 1, 2, EMERGENCY);
         alarms_[LOW_PRESSUR] = Alarm("LOW PRES DISCONNECT?", 1, 1, EMERGENCY);
-        alarms_[BAD_PLATEAU] = Alarm("  HIGH RESIST PRES  ", 1, 1, NOTIFY);
-        alarms_[UNMET_VOLUM] = Alarm(" UNMET TIDAL VOLUME ", 1, 1, EMERGENCY);
-        alarms_[NO_TIDAL_PR] = Alarm(" NO TIDAL PRESSURE  ", 2, 1, EMERGENCY);
-        alarms_[OVER_CURREN] = Alarm(" OVER CURRENT FAULT ", 1, 2, EMERGENCY);
-        alarms_[MECH_FAILUR] = Alarm(" MECHANICAL FAILURE ", 1, 1, EMERGENCY);
-        alarms_[NOT_CONFIRM] = Alarm("      CONFIRM?      ", 1, 1, NOTIFY);
-        alarms_[TURNING_OFF] = Alarm("    TURNING OFF     ", 1, 1, OFF_LEVEL);
+        alarms_[BAD_PLATEAU] = Alarm("HIGH RESIST PRES", 1, 1, NOTIFY);
+        alarms_[UNMET_VOLUM] = Alarm("UNMET TIDAL VOLUME", 1, 1, EMERGENCY);
+        alarms_[NO_TIDAL_PR] = Alarm("NO TIDAL PRESSURE", 2, 1, EMERGENCY);
+        alarms_[OVER_CURREN] = Alarm("OVER CURRENT FAULT", 1, 2, EMERGENCY);
+        alarms_[MECH_FAILUR] = Alarm("MECHANICAL FAILURE", 1, 1, EMERGENCY);
+        alarms_[NOT_CONFIRM] = Alarm("CONFIRM?", 1, 1, NOTIFY);
+        alarms_[TURNING_OFF] = Alarm("TURNING OFF", 1, 1, OFF_LEVEL);
     }
 
     // Setup during arduino setup()

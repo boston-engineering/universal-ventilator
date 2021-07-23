@@ -35,6 +35,10 @@ void setup_ie_readout();
 void setup_ie_controls();
 // Alert Box
 void setup_alert_box();
+lv_obj_t* get_alert_box();
+void set_alert_box_visible(bool visible);
+void set_alert_count_visual(uint16_t alert_count);
+void set_alert_text(const char* message);
 // Button functions
 void add_start_button();
 void add_mute_button();

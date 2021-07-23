@@ -55,7 +55,7 @@
 
 #define SPI_CLK_SPEED 22000000L
 
-#define ENABLE_CONTROL 1
+#define ENABLE_CONTROL 0
 
 // Control handler  period in microsec.
 #define CONTROL_HANDLER_PERIOD_US 20000
@@ -192,7 +192,7 @@
 #define GAUGE_PRESSURE_CHART_MIN_VALUE (-2)
 #define GAUGE_PRESSURE_CHART_MAX_VALUE 40
 #define GAUGE_PRESSURE_CHART_MAX_POINTS 100
-#define GAUGE_PRESSURE_CHART_REFRESH_TIME 100
+#define GAUGE_PRESSURE_CHART_REFRESH_TIME 150
 #define GAUGE_PRESSURE_CHART_LINE_MODE 1        /**< 0: No dots, only display line. 1: Use dots as data points */
 #define GAUGE_PRESSURE_CHART_DOT_SIZE 5         /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
 #define GAUGE_PRESSURE_CHART_LINE_WIDTH 2      /**< Changes the width of the line on the graph (Default: 2)*/

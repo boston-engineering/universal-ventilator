@@ -11,6 +11,7 @@
 #include <DueTimer.h>
 #include <ams_as5048b.h>
 #include <display/screens/screen.h>
+#include <display/layouts/layouts.h>
 
 // Instance to control the paddle
 Actuator actuator;
@@ -40,6 +41,7 @@ Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm_manager, &cycle
 void loop_test_readout(lv_timer_t* timer)
 {
 
+    static bool alert_box_already_visible = false;
     static bool timer_delay_complete = false;
 
     // Internal timers, components might have different refresh times
@@ -48,6 +50,13 @@ void loop_test_readout(lv_timer_t* timer)
     // Don't poll the sensors before we're sure everything's had a chance to init
     if (!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
+
+        cycle_count++;
+
+        alarm_manager.badPlateau(true);
+        alarm_manager.lowPressure(true);
+        alarm_manager.noTidalPres(true);
+        alarm_manager.update();
     }
     if (!timer_delay_complete) {
         LV_LOG_TRACE("Timer is not ready yet, returning (%d)", millis());
@@ -65,6 +74,21 @@ void loop_test_readout(lv_timer_t* timer)
 
     // Main screen, passed through via user data in main.cpp
     auto* screen = static_cast<MainScreen*>(timer->user_data);
+
+    // Check for errors
+
+    uint16_t alarm_count = control_get_alarm_count();
+    if (alarm_count <= 0 && alert_box_already_visible) {
+        alert_box_already_visible = false;
+        set_alert_box_visible(false);
+    }
+
+    if (alarm_count > 0 && !alert_box_already_visible) {
+        alert_box_already_visible = true;
+        set_alert_count_visual(alarm_count);
+        set_alert_text(control_get_alarm_text().c_str());
+        set_alert_box_visible(true);
+    }
 
     // Poll gauge sensor, add point to graph and update readout obj.
     // Will not refresh until explicitly told

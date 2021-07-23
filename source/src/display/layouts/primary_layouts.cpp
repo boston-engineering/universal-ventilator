@@ -12,6 +12,7 @@
 static void on_readout_update(lv_event_t*);
 static void update_readout_labels(AdjustableValue* this_ptr, lv_obj_t* spangroup);
 static void readout_update_cb(AdjustableValue*, lv_event_t*);
+void clear_top_alert_cb(lv_event_t* evt);
 
 static void on_control_button_press(lv_event_t*);
 static void control_press_cb(AdjustableValue*, lv_event_t*);
@@ -415,11 +416,100 @@ void setup_ie_controls()
 #endif
 }
 
-void setup_alert_box() {
+void setup_alert_box()
+{
     lv_obj_t* alert_box = lv_obj_create(SCR_C(VISUAL_AREA_2));
     lv_obj_add_style(alert_box, STYLE_PTR_CM(ALERT_BOX), LV_PART_MAIN);
 
+    lv_obj_t* alert_label = lv_label_create(alert_box);
+    lv_obj_set_style_border_color(alert_label, lv_color_black(), LV_PART_MAIN);
+    //lv_obj_set_style_border_width(alert_label, 1 px, LV_PART_MAIN);
+    lv_obj_set_style_text_font(alert_label, &lv_font_montserrat_24, LV_PART_MAIN);
+    lv_obj_set_style_text_decor(alert_label, LV_TEXT_DECOR_UNDERLINE, LV_PART_MAIN);
+    lv_label_set_text(alert_label, "Alert:");
 
+    lv_obj_t* alert_message_text_label = lv_label_create(alert_box);
+    lv_obj_set_style_border_color(alert_message_text_label, lv_color_black(), LV_PART_MAIN);
+    //lv_obj_set_style_border_width(alert_message_text_label, 1 px, LV_PART_MAIN);
+    lv_obj_set_style_text_font(alert_message_text_label, &lv_font_montserrat_20, LV_PART_MAIN);
+    lv_obj_set_style_flex_grow(alert_message_text_label, FLEX_GROW, LV_PART_MAIN);
+    lv_label_set_long_mode(alert_message_text_label, LV_LABEL_LONG_SCROLL_CIRCULAR);
+    lv_label_set_text(alert_message_text_label, "No errors reported this is a long label...");
+
+    lv_obj_t* spangroup = lv_spangroup_create(alert_box);
+    //lv_obj_set_height(spangroup, LV_PCT(100));
+    lv_obj_set_style_border_color(spangroup, lv_color_black(), LV_PART_MAIN);
+    //lv_obj_set_style_border_width(spangroup, 1 px, LV_PART_MAIN);
+    lv_obj_align(spangroup, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_set_style_text_font(spangroup, &lv_font_montserrat_28, LV_PART_MAIN);
+    lv_spangroup_set_indent(spangroup, 0 px);
+    lv_spangroup_set_align(spangroup, LV_TEXT_ALIGN_CENTER);
+
+    lv_span_t* amount_span = lv_spangroup_new_span(spangroup);
+    lv_span_t* alert_icon = lv_spangroup_new_span(spangroup);
+    lv_span_set_text(amount_span, "0 ");
+    lv_span_set_text(alert_icon, LV_SYMBOL_WARNING);
+
+    lv_obj_add_flag(alert_box, LV_OBJ_FLAG_HIDDEN);
+}
+
+lv_obj_t* get_alert_box()
+{
+    //TODO there's no guard here for if VISUAL_AREA_2 actually contains the alert box
+    lv_obj_t* visual_2 = SCR_C(VISUAL_AREA_2);
+    if (!visual_2) {
+        return nullptr;
+    }
+    lv_obj_t* alert_box = lv_obj_get_child(visual_2, 2);
+    return alert_box;
+}
+
+void set_alert_box_visible(bool visible)
+{
+    lv_obj_t* alert_box = get_alert_box();
+    if (!alert_box) {
+        return;
+    }
+
+    if (visible) {
+        lv_obj_clear_flag(alert_box, LV_OBJ_FLAG_HIDDEN);
+    }
+    else {
+        lv_obj_add_flag(alert_box, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
+void set_alert_count_visual(uint16_t alert_count)
+{
+
+    lv_obj_t* box = get_alert_box();
+    if (!box) {
+        return;
+    }
+
+    lv_obj_t* spangroup = lv_obj_get_child(box, 2);
+    lv_span_t* count = lv_spangroup_get_child(spangroup, 0);
+    if (!count) {
+        return;
+    }
+
+    lv_snprintf(buf, LABEL_BUF_SIZE, "%d ", alert_count);
+    lv_span_set_text(count, buf);
+}
+
+void set_alert_text(const char* message)
+{
+    lv_obj_t* box = get_alert_box();
+    if (!box) {
+        return;
+    }
+
+    lv_obj_t* label = lv_obj_get_child(box, 1);
+    if (!label) {
+        return;
+    }
+
+    lv_label_set_text_fmt(label, "%s", message);
 }
 
 /************************************************/
@@ -528,6 +618,11 @@ static void on_readout_update(lv_event_t* evt)
 {
     auto value_class = static_cast<AdjustableValue*>(evt->user_data);
     value_class->on_readout_update(evt);
+}
+
+void clear_top_alert_cb(lv_event_t* evt)
+{
+
 }
 
 /************************************************/

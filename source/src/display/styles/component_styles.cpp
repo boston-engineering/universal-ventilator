@@ -408,13 +408,13 @@ STYLE_INIT_FUNC(ALERT_BOX)
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     lv_style_set_border_width(style, 1 px);
     // Flexbox
-    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
-    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
-    lv_style_set_pad_all(style, 0 px);
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);
+    lv_style_set_flex_main_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_END);
+    lv_style_set_flex_track_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_pad_all(style, 5 px);
     lv_style_set_pad_row(style, 4 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
-    // Inside Flex
-//    lv_style_set_flex_grow(style, FLEX_GROW);
 }
 
 /**
