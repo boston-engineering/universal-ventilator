@@ -191,7 +191,6 @@ void handle_alerts()
 
     if (alarm_count > 0 && !alert_box_already_visible) {
         alert_box_already_visible = true;
-        set_alert_count_visual(alarm_count);
         set_alert_box_visible(true);
     }
 
@@ -211,6 +210,7 @@ void handle_alerts()
             alarm_strings[alarm_list_idx++] = a->text();
         }
 
+        set_alert_count_visual(alarm_count);
         set_alert_text(alarm_strings, alarm_count, buf_size);
     }
 }

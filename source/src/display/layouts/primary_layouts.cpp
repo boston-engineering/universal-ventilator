@@ -536,8 +536,10 @@ void set_alert_text(String* messages, uint16_t count, uint16_t buf_size)
         lv_snprintf((label_buffer + buffer_pos), (total_buffer_size - buffer_pos), "%s", str.c_str());
         buffer_pos += str.length();
         // Add the spacer
-        lv_snprintf((label_buffer + buffer_pos), (total_buffer_size - buffer_pos), "%s", spacer);
-        buffer_pos += spacer_len;
+        if (count > 1) {
+            lv_snprintf((label_buffer + buffer_pos), (total_buffer_size - buffer_pos), "%s", spacer);
+            buffer_pos += spacer_len;
+        }
     }
 
     lv_label_set_text_fmt(label, "%s", label_buffer);
