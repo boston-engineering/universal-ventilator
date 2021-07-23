@@ -38,10 +38,12 @@ AlarmManager alarm_manager{SPEAKER_PIN, &cycle_count};
 // Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm);
 Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm_manager, &cycle_count);
 
+// Bool to keep track of the alert box
+static bool alert_box_already_visible = false;
+
 void loop_test_readout(lv_timer_t* timer)
 {
 
-    static bool alert_box_already_visible = false;
     static bool timer_delay_complete = false;
 
     // Internal timers, components might have different refresh times
@@ -159,6 +161,21 @@ void loop_update_readouts(lv_timer_t* timer)
 
     // Main screen, passed through via user data in main.cpp
     auto* screen = static_cast<MainScreen*>(timer->user_data);
+
+    // Check for errors
+
+    uint16_t alarm_count = control_get_alarm_count();
+    if (alarm_count <= 0 && alert_box_already_visible) {
+        alert_box_already_visible = false;
+        set_alert_box_visible(false);
+    }
+
+    if (alarm_count > 0 && !alert_box_already_visible) {
+        alert_box_already_visible = true;
+        set_alert_count_visual(alarm_count);
+        set_alert_text(control_get_alarm_text().c_str());
+        set_alert_box_visible(true);
+    }
 
     // Poll gauge sensor, add point to graph and update readout obj.
     // Will not refresh until explicitly told
