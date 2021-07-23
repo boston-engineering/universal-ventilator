@@ -442,7 +442,7 @@ void control_change_state(States new_state)
 
 void control_actuator_manual_move(Tick_Type tt, double angle, double speed)
 {
-    actuator.set_position(tt, angle);
+    actuator.set_position_relative(tt, angle);
     actuator.set_speed(tt, speed);
 }
 
