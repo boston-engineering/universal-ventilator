@@ -3,8 +3,13 @@
 #include "layouts.h"
 
 #define CONFIG_BUTTONS_PER_PAGE     4
-#define CONFIG_BUTTON_COUNT         7
-#define CONFIG_PAGES                ((CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE) + 1)
+#define CONFIG_BUTTON_COUNT         8
+// Don't add an extra page if we're evenly divisible
+#if CONFIG_BUTTON_COUNT % CONFIG_BUTTONS_PER_PAGE == 0
+#define CONFIG_PAGES            (CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE)
+#else
+#define CONFIG_PAGES            ((CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE) + 1)
+#endif
 #define ACTUATOR_TEXT_ENABLED       "Disable Actuator"
 #define ACTUATOR_TEXT_DISABLED      "Enable Actuator"
 
@@ -188,14 +193,27 @@ static void add_display_waveform_button()
     lv_obj_t* button = add_config_button("Dump Waveform");
 
     auto event_cb = [](lv_event_t* evt) {
-        #if ENABLE_CONTROL
-            control_waveform_display_details();
-        #else
-            LV_LOG_USER("Dumping Waveform...");
-        #endif
+#if ENABLE_CONTROL
+        control_waveform_display_details();
+#else
+        LV_LOG_USER("Dumping Waveform...");
+#endif
     };
     lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
 }
+
+static void add_alarm_off_button()
+{
+    lv_obj_t* button = add_config_button("Alarms Off");
+
+    auto event_cb = [](lv_event_t* evt) {
+#if ENABLE_CONTROL
+        control_set_alarm_all_off();
+#endif
+        LV_LOG_USER("Setting all alarms to off...");
+    };
+    lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
+};
 
 static void add_about_button()
 {
@@ -371,7 +389,8 @@ static void open_sensor_select_dialog(lv_event_t* evt)
     }
 }
 
-static void open_about_dialog(lv_event_t* evt) {
+static void open_about_dialog(lv_event_t* evt)
+{
     lv_obj_t* window = open_option_dialog("About [WIP]", true);
     lv_obj_set_style_max_width(window, 425 px, LV_PART_MAIN);
     lv_obj_set_style_max_height(window, 250 px, LV_PART_MAIN);
@@ -567,6 +586,7 @@ void setup_config_window()
     register_button(add_disable_actuator_button);
     register_button(add_dump_eeprom_button);
     register_button(add_display_waveform_button);
+    register_button(add_alarm_off_button);
     register_button(add_about_button);
 
     create_pagination();
