@@ -569,3 +569,8 @@ void control_set_alarm_all_off()
 {
     alarm_manager.allOff();
 }
+
+Alarm* control_get_alarm_list()
+{
+    return alarm_manager.getAlarmList();
+}

@@ -100,6 +100,12 @@ AlarmLevel AlarmManager::getHighestLevel() const
     return alarm_level;
 }
 
+Alarm* AlarmManager::getAlarmList()
+{
+    memcpy(alarm_list, alarms_, sizeof(alarms_));
+    return alarm_list;
+}
+
 void AlarmManager::toggle_snooze()
 {
     speaker_.toggleSnooze();

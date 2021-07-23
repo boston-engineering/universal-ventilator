@@ -51,6 +51,19 @@ private:
     uint8_t last_good_seq_ = 0;
 };
 
+// Indices for the different alarms
+enum Indices {
+    HIGH_PRESSU = 0,
+    LOW_PRESSUR,
+    BAD_PLATEAU,
+    UNMET_VOLUM,
+    NO_TIDAL_PR,
+    OVER_CURREN,
+    MECH_FAILUR,
+    NOT_CONFIRM,
+    TURNING_OFF,
+    NUM_ALARMS
+};
 /**
  * AlarmManager
  * Manages multple alarms on the same screen space.
@@ -61,20 +74,6 @@ class AlarmManager {
 
     // Time each alarm is displayed if multiple, in milliseconds
     static const unsigned long kDisplayTime = 2 * 1000UL;
-
-    // Indices for the different alarms
-    enum Indices {
-        HIGH_PRESSU = 0,
-        LOW_PRESSUR,
-        BAD_PLATEAU,
-        UNMET_VOLUM,
-        NO_TIDAL_PR,
-        OVER_CURREN,
-        MECH_FAILUR,
-        NOT_CONFIRM,
-        TURNING_OFF,
-        NUM_ALARMS
-    };
 
 public:
     AlarmManager(const int& speaker_pin,
@@ -190,6 +189,10 @@ public:
 
     // Get number of alarms that are ON
     int numON() const;
+
+    Alarm alarm_list[NUM_ALARMS];
+
+    Alarm* getAlarmList();
 
 private:
     // Display* displ_;
