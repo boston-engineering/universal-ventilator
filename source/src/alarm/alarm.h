@@ -27,9 +27,6 @@ public:
     // for at least `min_good_to_clear_` consecutive calls with different `seq`.
     void setCondition(const bool& bad, const unsigned long& seq);
 
-    // Set the alarm text (trim or pad to display width)
-    void setText(const String& text);
-
     // Check if this alarm is on
     inline const bool& isON() const { return on_; }
 
@@ -87,8 +84,6 @@ public:
         alarms_[NO_TIDAL_PR] = Alarm("NO TIDAL PRESSURE", 2, 1, EMERGENCY);
         alarms_[OVER_CURREN] = Alarm("OVER CURRENT FAULT", 1, 2, EMERGENCY);
         alarms_[MECH_FAILUR] = Alarm("MECHANICAL FAILURE", 1, 1, EMERGENCY);
-        alarms_[NOT_CONFIRM] = Alarm("CONFIRM?", 1, 1, NOTIFY);
-        alarms_[TURNING_OFF] = Alarm("TURNING OFF", 1, 1, OFF_LEVEL);
     }
 
     // Setup during arduino setup()
@@ -142,14 +137,6 @@ public:
         alarms_[MECH_FAILUR].setCondition(value, *cycle_count_);
     }
 
-    // Setting not confirmed
-    inline void unconfirmedChange(const bool& value, const String& message = "")
-    {
-        if (value) {
-            alarms_[NOT_CONFIRM].setText(message);
-        }
-        alarms_[NOT_CONFIRM].setCondition(value, *cycle_count_);
-    }
 
     inline void turningOFF(const bool& value)
     {
@@ -171,11 +158,8 @@ public:
 
     inline const bool& getMechanicalFailure() { return alarms_[MECH_FAILUR].isON(); }
 
-    inline const bool& getUnconfirmedChange() { return alarms_[NOT_CONFIRM].isON(); }
 
-    inline const bool& getTurningOFF() { return alarms_[TURNING_OFF].isON(); }
-
-    inline void set_snooze_cb(void (* snooze_cb)())
+    inline void set_snooze_cb(void (*snooze_cb)())
     {
         speaker_.snooze_complete_cb = snooze_cb;
     }
@@ -196,10 +180,8 @@ public:
     }
 
 private:
-    // Display* displ_;
     Speaker speaker_;
-    // int led_pin_;
-    // utils::Pulse led_pulse_;
+
     Alarm alarms_[NUM_ALARMS];
     unsigned long const* cycle_count_;
 

@@ -57,10 +57,6 @@ String AlarmManager::getText() const
     return text;
 }
 
-void Alarm::setText(const String& text)
-{
-}
-
 void AlarmManager::begin()
 {
     speaker_.begin();
