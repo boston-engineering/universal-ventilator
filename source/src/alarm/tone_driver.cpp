@@ -1,4 +1,6 @@
-/* Tone files have been added from RedRussianBear, whose
+/* Note that the Arduino due framework does not support the
+ * Arduino tone() function.
+ * Tone driver is implemented with details from RedRussianBear, whose
  * PR(https://github.com/arduino/ArduinoCore-sam/pull/108)
  * is still waiting acceptance. Attributing here.
  *

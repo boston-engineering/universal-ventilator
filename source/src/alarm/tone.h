@@ -14,11 +14,7 @@
 
 /**
  * A Tone is a sequence of notes.
- * Each Note has a note, duration and pause
- * 
- * Note that the Arduino due framework does not support the
- * Arduino tone() function. The NewToneLib library is being
- * used to add that fucntionality.
+ * Each Note has a note, duration and pause.
  */
 class Tone {
 public:
