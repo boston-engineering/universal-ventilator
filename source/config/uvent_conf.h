@@ -1,6 +1,11 @@
 #ifndef UVENT_CONF_H
 #define UVENT_CONF_H
 
+// Define the (default) serial number to compile, if not provided
+#ifndef UVENT_SERIAL_IDENTIFIER
+#define UVENT_SERIAL_IDENTIFIER "210000A0000"
+#endif
+
 // Version numbers
 #define UVENT_VERSION_MAJOR 0
 #define UVENT_VERSION_MINOR 0

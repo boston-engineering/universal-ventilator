@@ -12,7 +12,6 @@
 
 LV_IMG_DECLARE(be_tm_tagline_logo);
 
-
 typedef void (* ButtonCreateFunc)();
 typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
 typedef void (* LabelConfigCb)(lv_obj_t* label, uint8_t label_idx);
@@ -28,7 +27,16 @@ void setup_buttons();
 void setup_visual_2();
 
 // Main screen readout functions
+/**
+ * Adds a readout to the left side of the screen
+ * @param type The adjustable value type this readout will be tied to
+ * @param override_str Any string that should represent the readout value instead of the adjustable value
+ */
 void setup_adjustable_readout(AdjValueType type, const char* override_str = nullptr);
+/**
+ * Sets up an adjustable control on the right side of the screen (unless the config screen is open)
+ * @param type The type of adjustable readout this will control
+ */
 void setup_adjustable_control(AdjValueType type);
 // I:E Ratio is special
 void setup_ie_readout();

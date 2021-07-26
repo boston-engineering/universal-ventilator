@@ -45,6 +45,7 @@ static void register_button(ButtonCreateFunc func);
 
 /************************************************/
 /*               Button Creation                */
+/************************************************/
 
 static lv_obj_t* add_config_button(const char* title)
 {
@@ -57,7 +58,7 @@ static lv_obj_t* add_config_button(const char* title)
     lv_obj_t* label = lv_label_create(button);
     lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
     lv_obj_set_style_border_width(label, 0, LV_PART_MAIN);
-    lv_label_set_text_fmt(label, title);
+    lv_label_set_text_fmt(label, "%s", title);
     lv_obj_set_width(label, LV_PCT(100));
     lv_obj_add_style(label, STYLE_PTR_CM(CONFIG_OPTION_BUTTON_TEXT), LV_PART_MAIN);
 
@@ -104,7 +105,7 @@ static void add_stepper_home_button()
 static void add_actuator_zero_button()
 {
 
-    lv_obj_t* button = add_config_button("Store Actuator Zero");
+    lv_obj_t* button = add_config_button("Zero Actuator");
     auto event_cb = [](lv_event_t* evt) {
 
         LabelConfigCb label_configurator = [](lv_obj_t* label, uint8_t idx) {
@@ -128,8 +129,6 @@ static void add_actuator_zero_button()
                 evt,
                 [](lv_event_t* evt) {
 #if ENABLE_CONTROL
-                    // TODO Might be necessary, check with GDS
-                    // control_change_state(States::ST_OFF);
                     control_zero_actuator_position();
 #endif
                 },

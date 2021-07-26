@@ -41,7 +41,7 @@ private:
 
     // Defaults cal. settings
     uvent_settings def_settings = {
-            .serial = "210000A0000",
+            .serial = UVENT_SERIAL_IDENTIFIER,
             .diff_pressure_type = PRESSURE_SENSOR_TYPE_0,
             .actuator_home_offset_adc_counts = 0,
             .gpressure_offset_adc_counts = 0,

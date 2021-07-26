@@ -32,6 +32,11 @@ void MainScreen::init()
     Screen::init();
 }
 
+/**
+ * Setup loads all of the widgets and elements into the already loaded screen.
+ * Because of the way LVGL handles adding things, this will most likely not go well if run while another screen is loaded.
+ * This is also the place where operations that happen once-per-load can occur. This will be run every time the screen is being set up.
+ */
 void MainScreen::setup()
 {
     Screen::setup();
