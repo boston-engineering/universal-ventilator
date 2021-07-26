@@ -225,6 +225,15 @@ void Machine::state_debug()
 
 void Machine::state_off()
 {
+    if (state_first_entry) {
+        state_first_entry = false;
+
+        // Reset the cycle counter
+        *cycle_count = 0;
+
+        // Reset all alarms.
+        p_alarm_manager->allOff();
+    }
 }
 
 void Machine::run()

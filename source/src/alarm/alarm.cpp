@@ -14,7 +14,12 @@ Alarm::Alarm(const String& default_text, const int& min_bad_to_trigger,
 
 void Alarm::reset()
 {
-    *this = Alarm(text_, min_bad_to_trigger_, min_good_to_clear_, alarm_level_);
+    // Reset all internal alarm parameters.
+    on_ = false;
+    consecutive_bad_ = 0;
+    consecutive_good_ = 0;
+    last_bad_seq_ = 0;
+    last_good_seq_ = 0;
 }
 
 void Alarm::setCondition(const bool& bad, const unsigned long& seq)

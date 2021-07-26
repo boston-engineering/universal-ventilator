@@ -244,12 +244,20 @@ double Actuator::volume_to_degrees(C_Stat compliance, double volume)
  */
 uint16_t Actuator::set_current_position_as_zero()
 {
+#if USE_AMS_FEEDBACK
     // Zero the zero register first, then write the actual value.
     stepper_fb.zeroRegW(0);
     uint16_t new_zero = stepper_fb.angleRegR();
     stepper_fb.zeroRegW(new_zero);
 
     return new_zero;
+#else
+    // Write to stepper position
+    stepper.set_position_as_home(0);
+
+    // No feedback used.
+    return 0;
+#endif
 }
 
 /* Sets the zero offset to the angle sensor.
