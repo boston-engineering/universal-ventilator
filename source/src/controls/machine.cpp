@@ -315,7 +315,7 @@ void Machine::handle_errors()
 {
     // These pressure alarms only make sense after homing
     if (state_first_entry && state == States::ST_INSPR) {
-        p_alarm_manager->badPlateau(true);
+        p_alarm_manager->badPlateau(false);
         p_alarm_manager->lowPressure(false);
         p_alarm_manager->noTidalPres(false);
     }
