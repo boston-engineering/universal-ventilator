@@ -550,6 +550,7 @@ command_alarm(int argc, char** argv)
         Serial.println("text     - Displays text of current alarm.");
         Serial.println("alloff   - Turns off all alarms.");
         Serial.println("list     - Get a list of alarms.");
+        Serial.println("test     - Trigger an emergency Over Current alarm.");
     }
     else if (!(strcmp(argv[1], "snooze"))) {
         control_alarm_snooze();
@@ -584,6 +585,11 @@ command_alarm(int argc, char** argv)
             p_alarm_list++;
         }
 
+        return;
+    }
+    else if (!(strcmp(argv[1], "test"))) {
+        control_alarm_test();
+        print_response(Error_Codes::ER_NONE);
         return;
     }
 }

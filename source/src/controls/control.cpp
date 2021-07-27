@@ -589,3 +589,8 @@ Alarm* control_get_alarm_list()
 {
     return alarm_manager.getAlarmList();
 }
+
+void control_alarm_test()
+{
+    alarm_manager.overCurrent(true);
+}

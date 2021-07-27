@@ -52,4 +52,5 @@ String control_get_alarm_text();
 int16_t control_get_alarm_count();
 void control_set_alarm_all_off();
 Alarm* control_get_alarm_list();
+void control_alarm_test();
 #endif
