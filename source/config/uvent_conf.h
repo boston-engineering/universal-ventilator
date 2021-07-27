@@ -162,28 +162,35 @@
 // Breaths per minute
 #define BPM_MIN 8
 #define BPM_MAX 30
+#define DEF_BPM 8
 
 // AMBU Bag limit, aka vt
 #define MIN_BAG_VOL_L 0.1
 #define MAX_BAG_VOL_L 1.06
+#define DEF_BAG_VOL_L 1.06// Default
 #define MIN_BAG_VOL_ML MIN_BAG_VOL_L * 1000
 #define MAX_BAG_VOL_ML MAX_BAG_VOL_L * 1000
+#define DEF_BAG_VOL_ML DEF_BAG_VOL_L * 1000// Default
 
 // I:E ratio
 #define IE_MIN 0.5
 #define IE_MAX 4.0
+#define DEF_IE 1.0// Default
 
 // PEEP
 #define PEEP_MIN 5
 #define PEEP_MAX 20
+#define DEF_PEEP 5// Default
 
 // PIP
 #define PIP_MIN 15
 #define PIP_MAX 40
+#define DEF_PIP 40// Default
 
 // Plateau
 #define PLATEAU_MIN 200
 #define PLATEAU_MAX 800
+#define DEF_PLATEAU 200// Default
 
 // The 'None' value for a readout.
 // Setting any adjustable value to this constant (or below) will force the label to show "--" as the value
