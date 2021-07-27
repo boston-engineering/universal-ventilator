@@ -1,5 +1,5 @@
 #include "interface.h"
-
+#include "../config/uvent_conf.h"
 static const char* cmh20 = "cmH2O";
 
 /**
@@ -8,14 +8,14 @@ static const char* cmh20 = "cmH2O";
 AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
 const AdjValueParams adj_value_settings[] = {
-        {"Tidal Volume",        "vT",         "%ld",  "%ld",  "mL",    100, 900, 100, 50,  palette_color_1},
-        {"Respiration Rate",    "Resp. Rate", "%ld",  "%ld",  "/min",  8,   30,  8,   2,   palette_color_1},
-        {"PEEP Limit (Floor)",  "PEEP",       "%ld",  "%ld",  cmh20,   5,   20,  5,   1,   palette_color_1},
-        {"PIP Limit (Ceiling)", "PIP",        "%ld",  "%ld",  cmh20,   15,  40,  15,  1,   palette_color_1},
-        {"Plateau Time",        "Plateau",    "%ld",  "%ld",  "ms",    200, 800, 200, 50,  palette_color_1},
-        {"Pressure",            nullptr,      "%.2f", "%.2f", cmh20,   5,   40,  5,   1,   palette_color_2},
-        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   1,   0.1, palette_color_1},
-        {"I:E Ratio",           "",           "%.1f", "%.1f", nullptr, 0.5, 4,   1,   0.1, palette_color_1},
+        {"Tidal Volume", "vT", "%ld", "%ld", "mL", MIN_BAG_VOL_ML, MAX_BAG_VOL_ML, 100, 50, palette_color_1},
+        {"Respiration Rate", "Resp. Rate", "%ld", "%ld", "/min", BPM_MIN, BPM_MAX, 8, 2, palette_color_1},
+        {"PEEP Limit (Floor)", "PEEP", "%ld", "%ld", cmh20, PEEP_MIN, PEEP_MAX, 5, 1, palette_color_1},
+        {"PIP Limit (Ceiling)", "PIP", "%ld", "%ld", cmh20, PIP_MIN, PIP_MAX, 15, 1, palette_color_1},
+        {"Plateau Time", "Plateau", "%ld", "%ld", "ms", PLATEAU_MIN, PLATEAU_MAX, 200, 50, palette_color_1},
+        {"Pressure", nullptr, "%.2f", "%.2f", cmh20, PEEP_MIN, PIP_MAX, 5, 1, palette_color_2},
+        {"I:E Ratio", "", "%.1f", "%.1f", nullptr, IE_MIN, IE_MAX, 1, 0.1, palette_color_1},
+        {"I:E Ratio", "", "%.1f", "%.1f", nullptr, IE_MIN, IE_MAX, 1, 0.1, palette_color_1},
 };
 
 void AdjustableValue::on_control_button_press(lv_event_t* evt)

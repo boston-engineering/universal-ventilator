@@ -60,7 +60,7 @@
 
 #define SPI_CLK_SPEED 22000000L
 
-#define ENABLE_CONTROL 0
+#define ENABLE_CONTROL 1
 
 // Control handler  period in microsec.
 #define CONTROL_HANDLER_PERIOD_US 20000
@@ -85,13 +85,13 @@
 // Differential Pressure sensor max and min pressure values, units psi
 // Differential unit number: 001PD
 // data sheet link: https://sensing.honeywell.com/honeywell-sensing-trustability-ssc-series-standard-accuracy-board-mount-pressure-sensors-50099533-a-en.pdf
-#define PRESSURE_SENSOR_TYPE_0      0
-#define MAX_DIFF_PRESSURE_TYPE_0    0.07
-#define MIN_DIFF_PRESSURE_TYPE_0   -0.07
+#define PRESSURE_SENSOR_TYPE_0 0
+#define MAX_DIFF_PRESSURE_TYPE_0 0.07
+#define MIN_DIFF_PRESSURE_TYPE_0 -0.07
 
-#define PRESSURE_SENSOR_TYPE_1      1
-#define MAX_DIFF_PRESSURE_TYPE_1    0.09
-#define MIN_DIFF_PRESSURE_TYPE_1   -0.09
+#define PRESSURE_SENSOR_TYPE_1 1
+#define MAX_DIFF_PRESSURE_TYPE_1 0.09
+#define MIN_DIFF_PRESSURE_TYPE_1 -0.09
 
 // Stepper: Direction pin
 #define STEPPER_DIRECTION_PIN 8
@@ -160,16 +160,30 @@
 
 // Waveform
 // Breaths per minute
-#define BPM_MIN 2
+#define BPM_MIN 8
 #define BPM_MAX 30
 
 // AMBU Bag limit, aka vt
 #define MIN_BAG_VOL_L 0.1
 #define MAX_BAG_VOL_L 1.06
+#define MIN_BAG_VOL_ML MIN_BAG_VOL_L * 1000
+#define MAX_BAG_VOL_ML MAX_BAG_VOL_L * 1000
 
 // I:E ratio
-#define IE_MIN 0.1
+#define IE_MIN 0.5
 #define IE_MAX 4.0
+
+// PEEP
+#define PEEP_MIN 5
+#define PEEP_MAX 20
+
+// PIP
+#define PIP_MIN 15
+#define PIP_MAX 40
+
+// Plateau
+#define PLATEAU_MIN 200
+#define PLATEAU_MAX 800
 
 // The 'None' value for a readout.
 // Setting any adjustable value to this constant (or below) will force the label to show "--" as the value
@@ -201,16 +215,16 @@
 #define GAUGE_PRESSURE_CHART_MAX_VALUE 40
 #define GAUGE_PRESSURE_CHART_MAX_POINTS 100
 #define GAUGE_PRESSURE_CHART_REFRESH_TIME 150
-#define GAUGE_PRESSURE_CHART_LINE_MODE 1        /**< 0: No dots, only display line. 1: Use dots as data points */
-#define GAUGE_PRESSURE_CHART_DOT_SIZE 5         /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
-#define GAUGE_PRESSURE_CHART_LINE_WIDTH 2      /**< Changes the width of the line on the graph (Default: 2)*/
+#define GAUGE_PRESSURE_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
+#define GAUGE_PRESSURE_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
+#define GAUGE_PRESSURE_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
 
 #define VT_CHART_MIN_VALUE (-2)
 #define VT_CHART_MAX_VALUE 1200
 #define VT_CHART_MAX_POINTS 100
 #define VT_CHART_REFRESH_TIME 250
-#define VT_CHART_LINE_MODE 1                    /**< 0: No dots, only display line. 1: Use dots as data points */
-#define VT_CHART_DOT_SIZE 5                     /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
-#define VT_CHART_LINE_WIDTH 2                   /**< Changes the width of the line on the graph (Default: 2)*/
+#define VT_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
+#define VT_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
+#define VT_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
 
 #endif
