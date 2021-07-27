@@ -50,7 +50,8 @@ bool Waveform::is_peep_pause_done()
     return ((now_s() - params.tCycleTimer) > (params.tEx + MIN_PEEP_PAUSE));
 }
 
-void Waveform::display_details() const {
+void Waveform::display_details() const
+{
     serial_printf("----Waveform Details----\n");
     serial_printf("tPeriod:\t %0.2f\n", params.tPeriod);
     serial_printf("tHoldIn:\t %0.2f\n", params.tHoldIn);
@@ -59,4 +60,6 @@ void Waveform::display_details() const {
     serial_printf("bpm:\t\t %d\n", params.bpm);
     serial_printf("ie:\t\t %0.1f:%0.1f\n", params.ie_i, params.ie_e);
     serial_printf("Vt:\t\t %0.1f\n", params.volume_ml);
+    serial_printf("pip:\t\t %d\n", params.pip);
+    serial_printf("peep:\t\t %d\n", params.peep);
 }

@@ -234,6 +234,14 @@ void control_update_waveform_param(AdjValueType type, float new_value)
             wave_params->bpm = (uint16_t) new_value;
             LV_LOG_USER("Respiration Rate is now %.1f", new_value);
             break;
+        case PIP:
+            wave_params->pip = (uint16_t) new_value;
+            LV_LOG_USER("PIP is now %.1f", new_value);
+            break;
+        case PEEP:
+            wave_params->peep = (uint16_t) new_value;
+            LV_LOG_USER("PEEP is now %.1f", new_value);
+            break;
         case PLATEAU_TIME:
             // TODO
             LV_LOG_USER("TO ADD: PLATEAU TIME");

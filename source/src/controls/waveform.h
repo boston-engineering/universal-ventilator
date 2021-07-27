@@ -42,6 +42,8 @@ private:
             .bpm = DEF_BPM,
             .volume_ml = DEF_BAG_VOL_ML,
             .ie_i = DEF_IE,
-            .ie_e = DEF_IE};
+            .ie_e = DEF_IE,
+            .pip = DEF_PIP,
+            .peep = DEF_PEEP};
 };
 #endif//UVENT_WAVEFORM_H

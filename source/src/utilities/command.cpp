@@ -380,16 +380,12 @@ command_waveform(int argc, char** argv)
         Serial.println("bpm       - Breaths per minute");
         Serial.println("vt        - Tidal volume.");
         Serial.println("ie        - IE ratio.");
+        Serial.println("pip       - Peak inspiratory pressure.");
+        Serial.println("peep      - Peak end expiratory pressure.");
     }
     else if (!(strcmp(argv[1], "dump"))) {
-        serial_printf("----Waveform Details----\n");
-        serial_printf("tPeriod:\t %0.2f\n", p_wave_params->tPeriod);
-        serial_printf("tHoldIn:\t %0.2f\n", p_wave_params->tHoldIn);
-        serial_printf("tIn:\t\t %0.2f\n", p_wave_params->tIn);
-        serial_printf("tEx:\t\t %0.2f\n", p_wave_params->tEx);
-        serial_printf("bpm:\t\t %d\n", p_wave_params->bpm);
-        serial_printf("ie:\t\t %0.1f:%0.1f\n", p_wave_params->ie_i, p_wave_params->ie_e);
-        serial_printf("Vt:\t\t %0.1f\n", p_wave_params->volume_ml);
+
+        control_waveform_display_details();
         return;
     }
     else if (!(strcmp(argv[1], "bpm"))) {
@@ -487,6 +483,68 @@ command_waveform(int argc, char** argv)
         else {
             p_wave_params->ie_i = ie_i;
             p_wave_params->ie_e = ie_e;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
+    else if (!(strcmp(argv[1], "pip"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: pip value");
+            return;
+        }
+
+        int32_t pip;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &pip))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((pip > PIP_MAX) || (pip < PIP_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->pip = pip;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
+    else if (!(strcmp(argv[1], "peep"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: peep value");
+            return;
+        }
+
+        int32_t peep;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &peep))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((peep > PEEP_MAX) || (peep < PEEP_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->peep = peep;
             control_calculate_waveform();
             print_response(Error_Codes::ER_NONE);
         }
