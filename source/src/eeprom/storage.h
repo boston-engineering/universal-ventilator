@@ -46,13 +46,13 @@ private:
             .actuator_home_offset_adc_counts = 0,
             .gpressure_offset_adc_counts = 0,
             .dpressure_offset_adc_counts = 0,
-            .tidal_volume = 100,
-            .respiration_rate = 8,
-            .peep_limit = 5,
-            .pip_limit = 15,
-            .plateau_time = 200,
-            .ie_ratio_left = 1,
-            .ie_ratio_right = 1,
+            .tidal_volume = (int16_t) (DEF_BAG_VOL_ML),
+            .respiration_rate = DEF_BPM,
+            .peep_limit = DEF_PEEP,
+            .pip_limit = DEF_PIP,
+            .plateau_time = DEF_PLATEAU,
+            .ie_ratio_left = DEF_IE,
+            .ie_ratio_right = DEF_IE,
     };
 
     uint32_t crc_calculate();

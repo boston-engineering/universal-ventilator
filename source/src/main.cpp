@@ -3,11 +3,9 @@
 #include <function_timings.h>
 #include <display/screens/screen.h>
 #include <utilities/util.h>
-#include "display/test_display.h"
 #include "../config/uvent_conf.h"
 #include "controls/control.h"
 #include "display/TftDisplay.h"
-#include "display/test_display.h"
 #include "sensors/pressure_sensor.h"
 #include "sensors/test_pressure_sensors.h"
 #include "display/main_display.h"
@@ -34,18 +32,28 @@ void setup()
         while (1);
     }
 
+    // Enable stepper, actuator, etc
+    // Load EEPROM storage
     control_init();
 
-#if ENABLE_TEST_DISPLAY
-    setup_test_display();
-#else
+    /*******************************/
+    /* Setup & arrange the display */
+    /*******************************/
+
+    // Set up classes with controlled values, load defaults.
     init_adjustable_values();
+    // Calculate the waveform from loaded parameters
+    control_calculate_waveform();
+    // Init the screen object (usually just creates an empty screen)
     screen.init();
+    // Tell LVGL this is the currently loaded screen
     screen.select_screen();
+    // Init containers, styles, defaults...
     init_main_display();
+    // Creates all the components that go on the main screen in order for it to function.
     screen.setup();
+    // Arm the speaker so it talks to LVGL on mute/unmute
     control_setup_alarm_cb();
-#endif
 
     // Initialize the parser, with the command array and command array size
     parser.init(command_get_array(), command_get_array_size());
@@ -54,6 +62,7 @@ void setup()
 #if ENABLE_CONTROL
     update_readout_timer = lv_timer_create(loop_update_readouts, SENSOR_POLL_INTERVAL, &screen);
 #else
+    // Setup an LVGL timer to loop/update display. Polls sensors, updates graphs, etc.
     update_readout_timer = lv_timer_create(loop_test_readout, SENSOR_POLL_INTERVAL, &screen);
 #endif
 }
@@ -62,10 +71,6 @@ void loop()
 {
     tft_display.update();
     delay(5);
-
-#if ENABLE_TEST_DISPLAY
-    update_test_display();
-#endif
 
     parser.service();
 

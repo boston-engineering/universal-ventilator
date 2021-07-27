@@ -27,13 +27,9 @@
 // Speaker and snooze pins
 #define SPEAKER_PIN 40
 
-// Display testing
-#define ENABLE_TEST_DISPLAY 0
-
 // Draw borders around flexbox components for debugging
 #define DEBUG_BORDER_READOUTS 0
 #define DEBUG_BORDER_CONTROLS 0
-#define DEBUG_BORDER_CHARTS 1
 
 // Pressure sensor testing
 #define ENABLE_TEST_PRESSURE_SENSORS 0
@@ -198,11 +194,6 @@
 #define READOUT_VALUE_NONE (-1e3)
 #define READOUT_VALUE_DEFAULT (READOUT_VALUE_NONE - 1)
 
-// How long to wait in between steps of the readout (ms). Debug only
-#define TEST_READOUT_STEP_INTERVAL 1322
-
-// How often to refresh the readouts (ms). Debug only
-#define TEST_READOUT_REFRESH_INTERVAL 2000
 // How often to refresh the readouts on the left side of the screen
 #define READOUT_REFRESH_INTERVAL 1250
 
@@ -211,7 +202,7 @@
 // These changes will not be visible until the next chart refresh time or
 // READOUT_REFRESH_INTERVAL
 #define SENSOR_POLL_INTERVAL 100
-// How long to delay before polling data. Allows for startup time of hardware components
+// How long to delay before polling data (ms). Allows for startup time of hardware components
 #define SENSOR_POLL_STARTUP_DELAY 5000
 
 // Always display polled data, even if the state machine isn't running
