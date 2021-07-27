@@ -89,3 +89,8 @@ void Stepper::set_enable(bool en)
 {
     digitalWrite(STEPPER_DISABLE_PIN, !(en));
 }
+
+uint32_t Stepper::get_current_position()
+{
+    return stepper_5718L.currentPosition();
+}

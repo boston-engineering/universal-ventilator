@@ -8,7 +8,7 @@ CONTAINER_INIT_FUNC(CONTROL_MAIN)
     // Style init & bind
     lv_style_t* style_ptr = STYLE_PTR_CT(CONTROL_MAIN);
     // Colors & Borders
-    lv_style_set_border_color(style_ptr, color_black);
+    lv_style_set_border_color(style_ptr, lv_color_black());
     // Flexbox
     lv_style_set_flex_flow(style_ptr, LV_FLEX_FLOW_COLUMN);
     lv_style_set_flex_cross_place(style_ptr, LV_FLEX_ALIGN_CENTER);

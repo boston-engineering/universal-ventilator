@@ -29,7 +29,6 @@
       <option name="WHILE_ON_NEW_LINE" value="true" />
       <option name="CATCH_ON_NEW_LINE" value="true" />
       <option name="ALIGN_MULTILINE_BINARY_OPERATION" value="false" />
-      <option name="SPACE_AROUND_ADDITIVE_OPERATORS" value="false" />
       <option name="BINARY_OPERATION_SIGN_ON_NEXT_LINE" value="true" />
       <option name="FOR_STATEMENT_WRAP" value="5" />
     </codeStyleSettings>

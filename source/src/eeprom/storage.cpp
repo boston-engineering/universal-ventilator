@@ -1,5 +1,6 @@
 #include "../config/uvent_conf.h"
 #include <CRC32.h>
+#include <utilities/logging.h>
 #include "storage.h"
 
 bool Storage::init()
@@ -15,7 +16,12 @@ bool Storage::init()
 
 void Storage::get_settings(uvent_settings& outset)
 {
+#if ENABLE_CONTROL
     external_eeprom.get(EXT_EEPROM_SETTINGS_LOC, outset);
+#else
+    Serial.println("In debug mode, defaults will be copied into the requested obj");
+    memcpy(&outset, &def_settings, sizeof(uvent_settings));
+#endif
 }
 
 void Storage::set_settings(uvent_settings& inset)
@@ -43,6 +49,12 @@ void Storage::display_storage()
     Serial.println(temp_set.gpressure_offset_adc_counts);
     Serial.print("Diff. Pressure offset: ");
     Serial.println(temp_set.dpressure_offset_adc_counts);
+    serial_printf("Tidal Volume: %d\n", temp_set.tidal_volume);
+    serial_printf("Resp. Rate: %d\n", temp_set.respiration_rate);
+    serial_printf("PEEP: %d\n", temp_set.peep_limit);
+    serial_printf("PIP: %d\n", temp_set.pip_limit);
+    serial_printf("Plateau: %d\n", temp_set.plateau_time);
+    serial_printf("IE: %.1f : %.1f\n", temp_set.ie_ratio_left, temp_set.ie_ratio_right);
 }
 
 bool Storage::is_crc_ok()

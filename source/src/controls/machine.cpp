@@ -19,7 +19,8 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-Machine::Machine(States st, Actuator* act, Waveform* wave)
+// Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
+Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al, uint32_t* cc)
 {
     p_actuator = act;
     state = st;
@@ -28,6 +29,9 @@ Machine::Machine(States st, Actuator* act, Waveform* wave)
     p_waveparams = wave->get_params();
     // Calculate the waveform parameters
     p_waveform->calculate_waveform();
+
+    p_alarm_manager = al;
+    cycle_count = cc;
 }
 
 // Set the current state in the state machine
@@ -56,7 +60,6 @@ void Machine::state_startup()
 void Machine::state_inspiration()
 {
     if (state_first_entry) {
-        state_first_entry = false;
 
         // Check if paddle is at home.
         if (!(p_actuator->is_home())) {
@@ -64,6 +67,9 @@ void Machine::state_inspiration()
             state_first_entry = true;
             return;
         }
+        (*cycle_count)++;
+
+        state_first_entry = false;
 
         // Calculate the waveform parameters
         if (p_waveform->calculate_waveform() == -1) {
@@ -219,50 +225,60 @@ void Machine::state_debug()
 
 void Machine::state_off()
 {
+    if (state_first_entry) {
+        state_first_entry = false;
+
+        // Reset the cycle counter
+        *cycle_count = 0;
+
+        // Reset all alarms.
+        p_alarm_manager->allOff();
+    }
 }
 
 void Machine::run()
 {
     // Increment the soft timer.
     machine_timer++;
+    handle_errors();
 
     // State Machine
     switch (state) {
-    case States::ST_STARTUP:
-        state_startup();
-        break;
-    case States::ST_INSPR:
-        state_inspiration();
-        break;
-    case States::ST_INSPR_HOLD:
-        state_inspiration_hold();
-        break;
-    case States::ST_EXPR:
-        state_expiration();
-        break;
-    case States::ST_PEEP_PAUSE:
-        state_peep_pause();
-        break;
-    case States::ST_EXPR_HOLD:
-        state_expiration_hold();
-        break;
-    case States::ST_ACTUATOR_HOME:
-        state_actuator_home();
-        break;
-    case States::ST_ACTUATOR_JOG:
-        state_actuator_jog();
-        break;
-    case States::ST_FAULT:
-        state_fault();
-        break;
-    case States::ST_DEBUG:
-        state_debug();
-        break;
-    case States::ST_OFF:
-        state_off();
-        break;
-    default:
-        break;
+        case States::ST_STARTUP:
+            state_startup();
+            break;
+        case States::ST_INSPR:
+            state_inspiration();
+            break;
+        case States::ST_INSPR_HOLD:
+            state_inspiration_hold();
+            break;
+        case States::ST_EXPR:
+            state_expiration();
+            break;
+        case States::ST_PEEP_PAUSE:
+            state_peep_pause();
+            break;
+        case States::ST_EXPR_HOLD:
+            state_expiration_hold();
+            break;
+        case States::ST_ACTUATOR_HOME:
+            state_actuator_home();
+            break;
+        case States::ST_ACTUATOR_JOG:
+            state_actuator_jog();
+            break;
+        case States::ST_FAULT:
+            state_fault();
+            break;
+        case States::ST_DEBUG:
+            state_debug();
+            break;
+        case States::ST_OFF:
+            state_off();
+            break;
+        default:
+            break;
     }
 }
 
@@ -270,6 +286,7 @@ void Machine::setup()
 {
     // Initial state
     state = States::ST_STARTUP;
+    p_alarm_manager->begin();
 }
 
 const char* Machine::get_current_state_string()
@@ -292,4 +309,16 @@ void Machine::change_state(States st)
 {
     // Change the state.
     set_state(st);
+}
+
+void Machine::handle_errors()
+{
+    // These pressure alarms only make sense after homing
+    if (state_first_entry && state == States::ST_INSPR) {
+        p_alarm_manager->badPlateau(false);
+        p_alarm_manager->lowPressure(false);
+        p_alarm_manager->noTidalPres(false);
+    }
+
+    p_alarm_manager->update();
 }

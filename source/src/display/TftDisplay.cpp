@@ -1,5 +1,10 @@
+#include <utilities/util.h>
+#include <function_timings.h>
+#include <utilities/logging.h>
 #include "TftDisplay.h"
 #include "../../config/uvent_conf.h"
+
+uint32_t debug_toggle_timer = 0;
 
 void wrapped_flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
@@ -11,7 +16,8 @@ void wrapped_read_inputs(struct _lv_indev_drv_t* lv_indev_drv, lv_indev_data_t* 
     static_cast<TftDisplay*>(lv_indev_drv->user_data)->read_inputs(lv_indev_drv, data);
 }
 
-TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin) : tft_display (cs_pin, rst_pin, true)
+TftDisplay::TftDisplay(uint8_t cs_pin, uint8_t rst_pin, uint8_t touch_int_pin, uint8_t touch_rst_pin)
+        : tft_display(cs_pin, rst_pin, true)
 {
     touch_driver = TftTouch(touch_int_pin, touch_rst_pin);
 }
@@ -20,6 +26,11 @@ bool TftDisplay::init()
 {
 
     Serial.println("Initializing...");
+
+#if USE_DMA_INTERRUPT
+    NVIC_EnableIRQ(DMAC_IRQn);
+#endif
+
     if (!tft_display.begin(RA8875_800x480)) {
         Serial.println("Failed to init display, RA8875 did not setup correctly");
         return false;
@@ -39,11 +50,21 @@ bool TftDisplay::init()
     Serial.println("Touchscreen init finished, starting LVGL...");
     lv_init();
 
+#if USE_DMA_INTERRUPT
+    Serial.println("Compiled with DMA & Interrupts, allocating second pixel buffer...");
     lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer_1, pixel_buffer_2, BUFFER_SIZE);
     lv_screen_buffer.buf1 = pixel_buffer_1;
     lv_screen_buffer.buf2 = pixel_buffer_2;
     lv_screen_buffer.buf_act = lv_screen_buffer.buf1;
     lv_screen_buffer.size = BUFFER_SIZE;
+#else
+    Serial.println("Compiled without DMA & Interrupts, no additional buffer required...");
+    lv_disp_draw_buf_init(&lv_screen_buffer, pixel_buffer_1, nullptr, BUFFER_SIZE);
+    lv_screen_buffer.buf1 = pixel_buffer_1;
+    lv_screen_buffer.buf2 = nullptr;
+    lv_screen_buffer.buf_act = lv_screen_buffer.buf1;
+    lv_screen_buffer.size = BUFFER_SIZE;
+#endif
 
     lv_disp_drv_init(&lv_display_driver);                 // Initialize the display
     lv_display_driver.user_data = this;                   // Save `this` for callback functions
@@ -60,6 +81,8 @@ bool TftDisplay::init()
     lv_input_driver.type = LV_INDEV_TYPE_POINTER;
     lv_input_driver.user_data = this;
     lv_input_driver.read_cb = wrapped_read_inputs;
+    lv_input_driver.long_press_time = 750;
+    lv_input_driver.long_press_repeat_time = 250;
     lv_indev_drv_register(&lv_input_driver);
 
     Serial.println("DONE.");
@@ -73,11 +96,20 @@ void TftDisplay::flush_display(struct _lv_disp_drv_t* lv_disp_drv, const lv_area
     lv_coord_t width = lv_area_get_width(area);
     lv_coord_t height = lv_area_get_height(area);
 
+#if USE_DMA_INTERRUPT
+
     tft_display.drawPixelsAreaDMA((uint16_t*) color_p, width * height, area->x1, area->y1, width,
             &lv_display_driver,
             [](void* cb_data) {
                 lv_disp_flush_ready((lv_disp_drv_t*) cb_data);
             });
+
+#else
+
+    tft_display.drawPixelsArea((uint16_t*) color_p, width * height, area->x1, area->y1, width);
+    flush_display_complete();
+
+#endif
 
 }
 
@@ -88,7 +120,9 @@ void TftDisplay::flush_display_complete()
 
 void TftDisplay::onDMAInterrupt()
 {
+#if USE_DMA_INTERRUPT
     tft_display.onDMAInterrupt();
+#endif
 }
 
 void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t* data)
@@ -121,5 +155,8 @@ void TftDisplay::read_inputs(struct _lv_indev_drv_t* lvIndevDrv, lv_indev_data_t
 void TftDisplay::update()
 {
     //TODO add sleep handler code
+    if (!RA_GET_DEBUG_STATE() && has_time_elapsed(&debug_toggle_timer, 10000)) {
+        RA_SET_DEBUG(true);
+    }
     lv_task_handler();
 }

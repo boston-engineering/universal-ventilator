@@ -18,6 +18,7 @@ static void command_state(int argc, char** argv);
 static void command_eeprom(int argc, char** argv);
 static void command_waveform(int argc, char** argv);
 static void command_pressure(int argc, char** argv);
+static void command_alarm(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -72,7 +73,8 @@ command_type commands[] =
                 {"state", command_state, "\t\tState related commands.\r\n"},
                 {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
                 {"wave", command_waveform, "\t\tWaveform related commands.\r\n"},
-                {"press", command_pressure, "\t\tPressure related commands.\r\n"}};
+                {"press", command_pressure, "\t\tPressure related commands.\r\n"},
+                {"alarm", command_alarm, "\t\\Alarm related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
 
@@ -376,16 +378,14 @@ command_waveform(int argc, char** argv)
         Serial.println("Format: state command");
         Serial.println("dump      - Dumps waveform details.");
         Serial.println("bpm       - Breaths per minute");
+        Serial.println("vt        - Tidal volume.");
+        Serial.println("ie        - IE ratio.");
+        Serial.println("pip       - Peak inspiratory pressure.");
+        Serial.println("peep      - Peak end expiratory pressure.");
     }
     else if (!(strcmp(argv[1], "dump"))) {
-        serial_printf("----Waveform Details----\n");
-        serial_printf("tPeriod:\t %0.2f\n", p_wave_params->tPeriod);
-        serial_printf("tHoldIn:\t %0.2f\n", p_wave_params->tHoldIn);
-        serial_printf("tIn:\t\t %0.2f\n", p_wave_params->tIn);
-        serial_printf("tEx:\t\t %0.2f\n", p_wave_params->tEx);
-        serial_printf("bpm:\t\t %d\n", p_wave_params->bpm);
-        serial_printf("ie:\t\t %0.1f:%0.1f\n", p_wave_params->ie_i, p_wave_params->ie_e);
-        serial_printf("Vt:\t\t %0.1f\n", p_wave_params->volume_ml);
+
+        control_waveform_display_details();
         return;
     }
     else if (!(strcmp(argv[1], "bpm"))) {
@@ -487,6 +487,68 @@ command_waveform(int argc, char** argv)
             print_response(Error_Codes::ER_NONE);
         }
     }
+    else if (!(strcmp(argv[1], "pip"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: pip value");
+            return;
+        }
+
+        int32_t pip;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &pip))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((pip > PIP_MAX) || (pip < PIP_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->pip = pip;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
+    else if (!(strcmp(argv[1], "peep"))) {
+        if (argc < 3) {// Not enough arguments.
+            print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+            return;
+        }
+
+        if (!(strcmp(argv[2], "help"))) {
+            Serial.println("Format: peep value");
+            return;
+        }
+
+        int32_t peep;
+
+        // Check if the strings can be parsed. If False, abort.
+        if (!(sanitize_input(argv[2], &peep))) {
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+
+        // Sanitize
+        if ((peep > PEEP_MAX) || (peep < PEEP_MIN)) {
+            // Invalid request
+            print_response(Error_Codes::ER_INVALID_ARG);
+            return;
+        }
+        else {
+            p_wave_params->peep = peep;
+            control_calculate_waveform();
+            print_response(Error_Codes::ER_NONE);
+        }
+    }
 }
 
 /* Pressure function. */
@@ -533,4 +595,59 @@ command_type* command_get_array(void)
 uint16_t command_get_array_size()
 {
     return command_array_size;
+}
+
+/* Alarm function. */
+static void
+command_alarm(int argc, char** argv)
+{
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: state command");
+        Serial.println("snooze   - Snoozes alarm. Can be used to toggle.");
+        Serial.println("count    - Displays no. of current alarms.");
+        Serial.println("text     - Displays text of current alarm.");
+        Serial.println("alloff   - Turns off all alarms.");
+        Serial.println("list     - Get a list of alarms.");
+        Serial.println("test     - Trigger an emergency Over Current alarm.");
+    }
+    else if (!(strcmp(argv[1], "snooze"))) {
+        control_alarm_snooze();
+        print_response(Error_Codes::ER_NONE);
+        return;
+    }
+    else if (!(strcmp(argv[1], "count"))) {
+        Serial.println(control_get_alarm_count());
+        return;
+    }
+    else if (!(strcmp(argv[1], "text"))) {
+        String a_text = control_get_alarm_text();
+        if (a_text) {
+            Serial.println(a_text);
+        }
+        else {
+            Serial.println("No alarms");
+        }
+        return;
+    }
+    else if (!(strcmp(argv[1], "alloff"))) {
+        control_set_alarm_all_off();
+        print_response(Error_Codes::ER_NONE);
+        return;
+    }
+    else if (!(strcmp(argv[1], "list"))) {
+        Alarm* p_alarm_list = control_get_alarm_list();
+
+        for (int i = 0; i < NUM_ALARMS; i++) {
+            Serial.print(p_alarm_list->isON());
+            Serial.println(p_alarm_list->text());
+            p_alarm_list++;
+        }
+
+        return;
+    }
+    else if (!(strcmp(argv[1], "test"))) {
+        control_alarm_test();
+        print_response(Error_Codes::ER_NONE);
+        return;
+    }
 }

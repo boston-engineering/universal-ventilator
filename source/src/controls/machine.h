@@ -5,6 +5,7 @@
 #include "controls/fault.h"
 #include "../config/uvent_conf.h"
 #include "waveform.h"
+#include "alarm/alarm.h"
 
 #define stringify(name) #name
 
@@ -26,7 +27,8 @@ enum class States {
 class Machine {
 public:
     // Constructor
-    Machine(States, Actuator*, Waveform*);
+    // Machine(States, Actuator*, Waveform*, AlarmManager*);
+    Machine(States, Actuator*, Waveform*, AlarmManager*, uint32_t* cycle_count);
 
     void setup();
     void run();
@@ -34,6 +36,7 @@ public:
     const char** get_state_list(uint8_t* size);
     States get_current_state();
     void change_state(States);
+    void handle_errors();
 
 private:
     // Current state of the state machine.
@@ -47,6 +50,7 @@ private:
      * and resets before change of state.
      */
     uint32_t machine_timer;
+    uint32_t* cycle_count;
 
     //State transistion times
     const uint32_t start_home_in_ms = 2000;// Start to home after startup
@@ -62,6 +66,8 @@ private:
 
     Waveform* p_waveform;
     waveform_params* p_waveparams;
+
+    AlarmManager* p_alarm_manager;
 
     // Set the current state in the state machine
     void set_state(States);

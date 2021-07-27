@@ -1,6 +1,8 @@
 #ifndef UVENT_WAVEFORM_H
 #define UVENT_WAVEFORM_H
 
+#include "../config/uvent_conf.h"
+
 struct waveform_params {
     float tCycleTimer;// Absolute time (s) at start of each breathing cycle
     float tIn;        // Calculated time (s) since tCycleTimer for end of IN_STATE
@@ -12,6 +14,8 @@ struct waveform_params {
     float volume_ml;// Tidal volume
     float ie_i;     // Inspiration of IE ratio
     float ie_e;     // Expiration of IE ratio
+    uint16_t pip;   // Peak inspiratory pressure (cmH2O)
+    uint16_t peep;  // Peak end expiratory pressure (cmH2O)
 };
 
 class Waveform {
@@ -22,7 +26,7 @@ public:
     bool is_inspiration_hold_done();
     bool is_expiration_done();
     bool is_peep_pause_done();
-    void display_details();
+    void display_details() const;
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
@@ -35,9 +39,11 @@ private:
             .tHoldIn = 0.0,
             .tEx = 0.0,
             .tPeriod = 0.0,
-            .bpm = 15,
-            .volume_ml = 1060,
-            .ie_i = 1.0,
-            .ie_e = 1.0};
+            .bpm = DEF_BPM,
+            .volume_ml = DEF_BAG_VOL_ML,
+            .ie_i = DEF_IE,
+            .ie_e = DEF_IE,
+            .pip = DEF_PIP,
+            .peep = DEF_PEEP};
 };
 #endif//UVENT_WAVEFORM_H

@@ -1,6 +1,6 @@
 /**
  * @file lv_conf.h
- * Configuration file for v8.0.0-dev
+ * Configuration file for v8.1.0-dev
  */
 
 /*
@@ -27,7 +27,7 @@
 #define LV_COLOR_16_SWAP   1
 
 /*Enable more complex drawing routines to manage screens transparency.
- *Can be used if the UI is above an other layer, e.g. an OSD menu or video player.
+ *Can be used if the UI is above another layer, e.g. an OSD menu or video player.
  *Requires `LV_COLOR_DEPTH = 32` colors and the screen's `bg_opa` should be set to non LV_OPA_COVER value*/
 #define LV_COLOR_SCREEN_TRANSP    0
 
@@ -40,9 +40,9 @@
 
 /*1: use custom malloc/free, 0: use the built-in `lv_mem_alloc()` and `lv_mem_free()`*/
 #define LV_MEM_CUSTOM      0
-#if LV_MEM_CUSTOM==0
+#if LV_MEM_CUSTOM == 0
 /*Size of the memory available for `lv_mem_alloc()` in bytes (>= 2kB)*/
-#  define LV_MEM_SIZE    (32U * 1024U)          /*[bytes]*/
+#  define LV_MEM_SIZE    (31U * 1024U)          /*[bytes]*/
 
 /*Set an address for the memory pool instead of allocating it as a normal array. Can be in external SRAM too.*/
 #  define LV_MEM_ADR          0     /*0: unused*/
@@ -89,7 +89,7 @@
 /*Enable complex draw engine.
  *Required to draw shadow, gradient, rounded corners, circles, arc, skew lines, image transformations or any masks*/
 #define LV_DRAW_COMPLEX 1
-#if LV_DRAW_COMPLEX!=0
+#if LV_DRAW_COMPLEX != 0
 
 /*Allow buffering some shadow calculation.
  *LV_SHADOW_CACHE_SIZE is the max. shadow size to buffer, where shadow size is `shadow_width + radius`
@@ -122,7 +122,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_GPU_NXP_PXP      0
 #if LV_USE_GPU_NXP_PXP
 /*1: Add default bare metal and FreeRTOS interrupt handling routines for PXP (lv_gpu_nxp_pxp_osa.c)
- *   and call lv_gpu_nxp_pxp_init() automatically during lv_init(). Note that symbol FSL_RTOS_FREE_RTOS
+ *   and call lv_gpu_nxp_pxp_init() automatically during lv_init(). Note that symbol SDK_OS_FREE_RTOS
  *   has to be defined in order to use FreeRTOS OSA, otherwise bare-metal implementation is selected.
  *0: lv_gpu_nxp_pxp_init() has to be called manually before lv_init()
  */
@@ -186,7 +186,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
  *-----------*/
 
 /*1: Show CPU usage and FPS count in the right bottom corner*/
-#define LV_USE_PERF_MONITOR     1
+#define LV_USE_PERF_MONITOR     0
 
 /*1: Show the used memory and the memory fragmentation  in the left bottom corner
  * Requires LV_MEM_CUSTOM = 0*/
@@ -202,7 +202,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #  define lv_snprintf     snprintf
 #  define lv_vsnprintf    vsnprintf
 #else   /*LV_SPRINTF_CUSTOM*/
-#  define LV_SPRINTF_USE_FLOAT 0
+#  define LV_SPRINTF_USE_FLOAT 1
 #endif  /*LV_SPRINTF_CUSTOM*/
 
 #define LV_USE_USER_DATA      1
@@ -210,9 +210,12 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 /*Garbage Collector settings
  *Used if lvgl is binded to higher level language and the memory is managed by that language*/
 #define LV_ENABLE_GC 0
-#if LV_ENABLE_GC!=0
+#if LV_ENABLE_GC != 0
 #  define LV_GC_INCLUDE "gc.h"                           /*Include Garbage Collector related things*/
 #endif /*LV_ENABLE_GC*/
+
+/*1: Enable API to take snapshot for object*/
+#define LV_USE_SNAPSHOT         0
 
 /*=====================
  *  COMPILER SETTINGS
@@ -268,7 +271,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_FONT_MONTSERRAT_14    1
 #define LV_FONT_MONTSERRAT_16    1
 #define LV_FONT_MONTSERRAT_18    1
-#define LV_FONT_MONTSERRAT_20    0
+#define LV_FONT_MONTSERRAT_20    1
 #define LV_FONT_MONTSERRAT_22    0
 #define LV_FONT_MONTSERRAT_24    1
 #define LV_FONT_MONTSERRAT_26    0
@@ -277,8 +280,8 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_FONT_MONTSERRAT_32    0
 #define LV_FONT_MONTSERRAT_34    0
 #define LV_FONT_MONTSERRAT_36    0
-#define LV_FONT_MONTSERRAT_38    0
-#define LV_FONT_MONTSERRAT_40    1
+#define LV_FONT_MONTSERRAT_38    1
+#define LV_FONT_MONTSERRAT_40    0
 #define LV_FONT_MONTSERRAT_42    0
 #define LV_FONT_MONTSERRAT_44    0
 #define LV_FONT_MONTSERRAT_46    0
@@ -329,7 +332,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
  */
 #define LV_TXT_ENC LV_TXT_ENC_UTF8
 
-/*Can break (wrap) texts on these chars*/
+ /*Can break (wrap) texts on these chars*/
 #define LV_TXT_BREAK_CHARS                  " ,.;:-_"
 
 /*If a word is at least this long, will break wherever "prettiest"
@@ -353,10 +356,10 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_BIDI         0
 #if LV_USE_BIDI
 /*Set the default direction. Supported values:
- *`LV_BIDI_DIR_LTR` Left-to-Right
- *`LV_BIDI_DIR_RTL` Right-to-Left
- *`LV_BIDI_DIR_AUTO` detect texts base direction*/
-#define LV_BIDI_BASE_DIR_DEF  LV_BIDI_DIR_AUTO
+ *`LV_BASE_DIR_LTR` Left-to-Right
+ *`LV_BASE_DIR_RTL` Right-to-Left
+ *`LV_BASE_DIR_AUTO` detect texts base direction*/
+#define LV_BIDI_BASE_DIR_DEF  LV_BASE_DIR_AUTO
 #endif
 
 /*Enable Arabic/Persian processing
@@ -369,7 +372,9 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 /*Documentation of the widgets: https://docs.lvgl.io/latest/en/html/widgets/index.html*/
 
-#define LV_USE_ARC          1
+#define LV_USE_ARC          0
+
+#define LV_USE_ANIMIMG	    0
 
 #define LV_USE_BAR          1
 
@@ -381,21 +386,18 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_CHECKBOX     1
 
-#define LV_USE_CHART        1
 
-#define LV_USE_DROPDOWN     1   /*Requires: lv_label*/
+#define LV_USE_DROPDOWN     0   /*Requires: lv_label*/
 
 #define LV_USE_IMG          1   /*Requires: lv_label*/
 
 #define LV_USE_LABEL        1
 #if LV_USE_LABEL
-#  define LV_LABEL_TEXT_SEL         0   /*Enable selecting text of the label*/
+#  define LV_LABEL_TEXT_SELECTION         0   /*Enable selecting text of the label*/
 #  define LV_LABEL_LONG_TXT_HINT    1   /*Store some extra info in labels to speed up drawing of very long texts*/
 #endif
 
 #define LV_USE_LINE         1
-
-#define LV_USE_METER        1
 
 #define LV_USE_ROLLER       0   /*Requires: lv_label*/
 #if LV_USE_ROLLER
@@ -407,7 +409,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_SWITCH    1
 
 #define LV_USE_TEXTAREA   0     /*Requires: lv_label*/
-#if LV_USE_TEXTAREA!=0
+#if LV_USE_TEXTAREA != 0
 #  define LV_TEXTAREA_DEF_PWD_SHOW_TIME     1500    /*ms*/
 #endif
 
@@ -434,6 +436,8 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 # define LV_USE_CALENDAR_HEADER_DROPDOWN    1
 #endif  /*LV_USE_CALENDAR*/
 
+#define LV_USE_CHART        1
+
 #define LV_USE_COLORWHEEL   0
 
 #define LV_USE_IMGBTN       0
@@ -442,19 +446,27 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 
 #define LV_USE_LED          0
 
-#define LV_USE_LIST         1
+#define LV_USE_LIST         0
+
+#define LV_USE_METER        0
 
 #define LV_USE_MSGBOX       0
 
 #define LV_USE_SPINBOX      0
 
-#define LV_USE_SPINNER      1
+#define LV_USE_SPINNER      0
 
-#define LV_USE_TABVIEW      1
+#define LV_USE_TABVIEW      0
 
 #define LV_USE_TILEVIEW     0
 
-#define LV_USE_WIN          0
+#define LV_USE_WIN          1
+
+#define LV_USE_SPAN         1
+#if LV_USE_SPAN
+/*A line text can contain maximum num of span descriptor */
+#  define LV_SPAN_SNIPPET_STACK_SIZE   32
+#endif
 
 /*-----------
  * Themes
@@ -476,6 +488,9 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 /*An very simple them that is a good starting point for a custom theme*/
 #define LV_USE_THEME_BASIC    1
 
+/*A theme designed for monochrome displays*/
+#define LV_USE_THEME_MONO       1
+
 /*-----------
  * Layouts
  *----------*/
@@ -484,7 +499,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h"*/
 #define LV_USE_FLEX     1
 
 /*A layout similar to Grid in CSS.*/
-#define LV_USE_GRID     1
+#define LV_USE_GRID     0
 
 /*==================
 * EXAMPLES

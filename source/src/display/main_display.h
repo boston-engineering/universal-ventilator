@@ -68,6 +68,9 @@
 #define px
 #define FLEX_GROW 1
 
+// The default font for config buttons to check if we need to shrink it
+#define DEFAULT_CONFIG_BUTTON_FONT &lv_font_montserrat_24
+
 typedef enum DisplayContainer {
     VISUAL_MAIN = 0,    /**< Left 600x480. Contains VISUAL_AREA_1 and VISUAL_G_C*/
     VISUAL_AREA_1,      /**< Left 200x480. Responsible for data readout boxes.*/
@@ -82,33 +85,57 @@ typedef enum DisplayContainer {
 
 typedef enum ComponentType {
     // Readouts and Displayed Values
-    READOUT = 0,                /**< Readout container for for a ventilator value*/
-    READOUT_NAME_CONTAINER,     /**< Container for the name of a readout*/
-    READOUT_NAME_TEXT,          /**< Text for the name of a readout*/
-    READOUT_VALUE_CONTAINER,    /**< Container for the value/unit of a readout*/
-    READOUT_VALUE_UNIT_TEXT,    /**< Unit text of a readout*/
-    READOUT_VALUE_AMOUNT_TEXT,  /**< Quantity text of a readout*/
+    READOUT = 0,                    /**< Readout container for for a ventilator value*/
+    READOUT_NAME_CONTAINER,         /**< Container for the name of a readout*/
+    READOUT_NAME_TEXT,              /**< Text for the name of a readout*/
+    READOUT_VALUE_CONTAINER,        /**< Container for the value/unit of a readout*/
+    READOUT_VALUE_UNIT_TEXT,        /**< Unit text of a readout*/
+    READOUT_VALUE_AMOUNT_TEXT,      /**< Quantity text of a readout*/
     // Start/Stop Buttons, Mute Button, Settings, Configuration
-    OPTION_BUTTON,              /**< Action Button*/
-    OPTION_BUTTON_TEXT,         /**< Action Button Text*/
+    OPTION_BUTTON,                  /**< Action Button*/
+    OPTION_BUTTON_TEXT,             /**< Action Button Text*/
+    CONFIG_OPTION_BUTTON_TEXT,      /**< Action Button Text for config buttons. May change size*/
     // Value Adjustment Controls
     CONTROL,
-    CONTROL_TEXT_CONTAINER,     /**< Holder for configuration readout*/
-    CONTROL_TEXT_CONTAINER_TOP, /**< Holder for value & quantity texts*/
-    CONTROL_TEXT_VALUE,         /**< Value text*/
-    CONTROL_TEXT_NAME,          /**< Name text*/
-    CONTROL_BUTTON,             /**< Value Adjuster Button*/
-    CONTROL_BUTTON_TEXT,        /**< Value Adjuster Button Text*/
+    CONTROL_TEXT_CONTAINER,         /**< Holder for configuration readout*/
+    CONTROL_TEXT_CONTAINER_TOP,     /**< Holder for value & quantity texts*/
+    CONTROL_TEXT_CONTAINER_IE_TOP,  /**< Specific container for the I:E Ratio display*/
+    CONTROL_TEXT_VALUE,             /**< Value text*/
+    CONTROL_TEXT_NAME,              /**< Name text*/
+    CONTROL_BUTTON,                 /**< Value Adjuster Button*/
+    CONTROL_BUTTON_TEXT,            /**< Value Adjuster Button Text*/
     // Purely Visual Elements
-    DIVIDER,                    /**< Divider*/
-    BLANK,
+    DIVIDER,                        /**< Divider*/
+    POPUP_WINDOW,                   /**< Main Styles for popup windows*/
+    CONFIG_BUTTON_HOLDER,           /**< Sits inside CONTROL_AREA_1, helps position config buttons*/
+    PAGINATION_GROUP_HOLDER,        /**< Holder for the buttongroup part of pagination*/
+    PAGINATION_BUTTON_ITEM,         /**< Individual pagination button*/
+    CHART_HOLDER,                   /**< Holder for all the charts in VISUAL_AREA_2*/
+    ALERT_BOX,                      /**< Box that holds alert messages` */
+    SPACER,                         /**< Spacer to take up room in flex box containers */
+    BLANK __attribute__((unused)),
     COMPONENT_COUNT,
 } ComponentType;
 
-static lv_color_t palette_color_1 = LV_COLOR_MAKE(109, 68, 197);
-static lv_color_t palette_color_2 = LV_COLOR_MAKE(59, 125, 185);
-static lv_color_t color_black = LV_COLOR_MAKE(0, 0, 0);
-static lv_color_t color_gray = LV_COLOR_MAKE(248, 248, 248);
+typedef enum ButtonType {
+    DECREMENT = 0,
+    INCREMENT,
+    START,
+    MUTE __attribute__((unused)),
+    SETTINGS,
+    BUTTON_TYPE_COUNT
+} ButtonType;
+
+typedef struct ButtonData {
+    ButtonType type;
+} ButtonData;
+
+extern const lv_color_t palette_color_1;
+extern const lv_color_t palette_color_2;
+extern lv_color_t color_start_button;
+extern lv_color_t color_button_alert;
+extern lv_color_t color_text_disabled;
+extern lv_color_t color_gray;
 
 extern lv_obj_t* containers[];
 extern lv_style_t container_styles[];
@@ -117,6 +144,11 @@ extern lv_style_t component_styles[];
 extern lv_point_t divider_1_points[];
 extern lv_point_t divider_2_points[];
 
+extern ButtonData button_type_data[ButtonType::BUTTON_TYPE_COUNT];
+
+/**
+ * Initializes Style pointers with lv_style_init and sets various default values for each
+ */
 void init_styles();
 
 static void setup_styles();
@@ -124,59 +156,13 @@ static void setup_styles();
 /**
  * Main function to add items to the containers.
  */
-void populate_items();
+__attribute__((unused)) void populate_items();
 
 /**
  * Adds the two main dividers to the screen.
  * Positioned floating so they don't get in the way of the main layout.
  */
 void add_dividers();
-
-void add_dummy_items();
-
-/**
- * Adds an item that displays a value on the left side of the screen. (vT, RR, etc)
- *
- * @param title The name of the readout
- * @param qty The amount measured
- * @param unit The unit being measured (Nullable)
- * @param bg_color The background color of the box
- * @param parent_cont The parent screen of the container
- */
-void add_readout_item(const char*, const char*, const char*, lv_color_t bg_color = palette_color_1,
-        lv_obj_t* parent_cont = SCR_C(VISUAL_AREA_1));
-
-/**
- * Adds a simple chart to the screen.
- * Currently a dummy function
- */
-void add_chart();
-
-/**
- * Adds a control unit to the right side of the screen.
- * Includes +/- buttons, nametags, unit, etc.
- * @param unit The unit of the readout
- * @param button_color The color the button's background should be
- * @param parent_cont The parent of the control unit
- */
-void add_control_item(const char*, const char*, const char* unit, lv_color_t button_color = palette_color_1,
-        lv_obj_t* parent_cont = SCR_C(CONTROL_AREA_1));
-
-/**
- * Adds the start button
- */
-void add_start_button();
-
-/**
- * Adds the mute button
- */
-void add_mute_button();
-
-/**
- * Adds the settings/config button
- * @param title Name of the container for easy changing
- */
-void add_settings_button(const char* title);
 
 /**
  * Sets up all containers for the main display
@@ -206,7 +192,12 @@ inline void init_main_display()
     CONTAINER_DECL(CONTROL_AREA_1, CONTROL_MAIN);
     CONTAINER_DECL(CONTROL_AREA_2, CONTROL_MAIN);
 
-    populate_items();
+    /**
+     * Set up button data to attach to components
+     */
+    for (uint8_t i = 0; i < ButtonType::BUTTON_TYPE_COUNT; i++) {
+        button_type_data[i].type = (ButtonType) i;
+    }
 }
 
 /**
@@ -227,14 +218,23 @@ static inline void setup_styles()
     STYLE_DECL(READOUT_VALUE_AMOUNT_TEXT);
     STYLE_DECL(OPTION_BUTTON);
     STYLE_DECL(OPTION_BUTTON_TEXT);
+    STYLE_DECL(CONFIG_OPTION_BUTTON_TEXT);
     STYLE_DECL(CONTROL);
     STYLE_DECL(CONTROL_TEXT_CONTAINER);
     STYLE_DECL(CONTROL_TEXT_CONTAINER_TOP);
+    STYLE_DECL(CONTROL_TEXT_CONTAINER_IE_TOP);
     STYLE_DECL(CONTROL_TEXT_VALUE);
     STYLE_DECL(CONTROL_TEXT_NAME);
     STYLE_DECL(CONTROL_BUTTON);
     STYLE_DECL(CONTROL_BUTTON_TEXT);
     STYLE_DECL(DIVIDER);
+    STYLE_DECL(POPUP_WINDOW);
+    STYLE_DECL(CONFIG_BUTTON_HOLDER);
+    STYLE_DECL(PAGINATION_GROUP_HOLDER);
+    STYLE_DECL(PAGINATION_BUTTON_ITEM);
+    STYLE_DECL(CHART_HOLDER);
+    STYLE_DECL(ALERT_BOX);
+    STYLE_DECL(SPACER);
 }
 
 #endif //UVENT_MAIN_DISPLAY_H

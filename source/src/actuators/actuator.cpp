@@ -4,7 +4,9 @@
 
 void Actuator::init()
 {
+#if USE_AMS_FEEDBACK
     stepper_fb.begin();
+#endif
     stepper.init();
 
     // Enable the drive
@@ -144,14 +146,26 @@ float Actuator::get_current_speed()
 
 double Actuator::get_position()
 {
+#if USE_AMS_FEEDBACK
     double angle;
+
+    //Guard position query with noInterrupt/Interrupt() guards as the touch interrupt may interfered with position capture. They are on the same bus.
+    noInterrupts();
     if (stepper_fb.angleR(angle, U_DEG, true) != -1) {
         // No I2C error
+        interrupts();
         return angle;
     }
     else {
+        interrupts();
         return 0;
     }
+#else
+    double current_pos_deg = TIMING_PULLEY_STEPS_TO_DEGREES(stepper.get_current_position());
+    if (current_pos_deg > 360.0)
+        return (current_pos_deg - 360.0);
+    return current_pos_deg;
+#endif
 }
 
 int8_t Actuator::get_position_raw(double& angle)
@@ -230,12 +244,20 @@ double Actuator::volume_to_degrees(C_Stat compliance, double volume)
  */
 uint16_t Actuator::set_current_position_as_zero()
 {
+#if USE_AMS_FEEDBACK
     // Zero the zero register first, then write the actual value.
     stepper_fb.zeroRegW(0);
     uint16_t new_zero = stepper_fb.angleRegR();
     stepper_fb.zeroRegW(new_zero);
 
     return new_zero;
+#else
+    // Write to stepper position
+    stepper.set_position_as_home(0);
+
+    // No feedback used.
+    return 0;
+#endif
 }
 
 /* Sets the zero offset to the angle sensor.
