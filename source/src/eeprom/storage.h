@@ -46,7 +46,7 @@ private:
             .actuator_home_offset_adc_counts = 0,
             .gpressure_offset_adc_counts = 0,
             .dpressure_offset_adc_counts = 0,
-            .tidal_volume = (int16_t) (DEF_BAG_VOL_ML),
+            .tidal_volume = (uint16_t) (DEF_BAG_VOL_ML),
             .respiration_rate = DEF_BPM,
             .peep_limit = DEF_PEEP,
             .pip_limit = DEF_PIP,

@@ -281,6 +281,7 @@ static void load_stored_target(AdjustableValue* value, uvent_settings& settings)
             break;
     }
     value->set_value_target(val);
+    control_update_waveform_param(value->value_type, (float) val);
 }
 
 void init_adjustable_values()

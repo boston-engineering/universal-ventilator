@@ -42,8 +42,6 @@ void setup()
 
     // Set up classes with controlled values, load defaults.
     init_adjustable_values();
-    // Calculate the waveform from loaded parameters
-    control_calculate_waveform();
     // Init the screen object (usually just creates an empty screen)
     screen.init();
     // Tell LVGL this is the currently loaded screen

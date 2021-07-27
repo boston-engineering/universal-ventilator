@@ -56,7 +56,9 @@
 
 #define SPI_CLK_SPEED 22000000L
 
+#ifndef ENABLE_CONTROL
 #define ENABLE_CONTROL 1
+#endif
 
 // Control handler  period in microsec.
 #define CONTROL_HANDLER_PERIOD_US 20000
