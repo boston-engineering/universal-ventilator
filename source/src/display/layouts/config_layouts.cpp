@@ -31,12 +31,6 @@ const char* pagination_button_map[] = {LV_SYMBOL_LEFT, "00000000", LV_SYMBOL_RIG
 /************************************************/
 /*              Static Prototypes               */
 /************************************************/
-static lv_obj_t*
-open_yes_no_dialog(const char* title, bool enable_close_button, const char* confirm_text, const char* decline_text,
-        ConfirmChoiceCb confirm_cb);
-
-static void
-open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb = nullptr);
 
 static void open_sensor_select_dialog(lv_event_t* evt);
 static void open_about_dialog(lv_event_t* evt);
@@ -274,7 +268,7 @@ static void close_floating_window_evt_cb(lv_event_t* evt)
 /*                                              */
 /************************************************/
 
-static lv_obj_t*
+lv_obj_t*
 open_yes_no_dialog(const char* title, bool enable_close_button, const char* confirm_text, const char* decline_text,
         ConfirmChoiceCb confirm_cb)
 {
@@ -304,41 +298,45 @@ open_yes_no_dialog(const char* title, bool enable_close_button, const char* conf
     lv_obj_set_style_pad_left(button_container, 4 px, LV_PART_MAIN);
     lv_obj_set_style_pad_right(button_container, 4 px, LV_PART_MAIN);
 
-    lv_obj_t* no_button = lv_btn_create(button_container);
-    lv_obj_set_style_bg_color(no_button, LV_COLOR_MAKE(215, 215, 215), LV_PART_MAIN);
-    lv_obj_set_width(no_button, LV_SIZE_CONTENT);
-    lv_obj_set_style_flex_grow(no_button, FLEX_GROW, LV_PART_MAIN);
-    lv_obj_add_event_cb(no_button, close_floating_window_evt_cb, LV_EVENT_CLICKED, window);
-    lv_obj_t* no_label = lv_label_create(no_button);
-    lv_label_set_text(no_label, decline_text);
-    lv_obj_add_style(no_label, STYLE_PTR_CM(OPTION_BUTTON_TEXT), LV_PART_MAIN);
-    lv_obj_align_to(no_label, no_button, LV_ALIGN_RIGHT_MID, 0, 0);
-    lv_obj_center(no_label);
-
-    lv_obj_t* yes_button = lv_btn_create(button_container);
-    lv_obj_set_width(yes_button, LV_SIZE_CONTENT);
-    lv_obj_set_style_flex_grow(yes_button, FLEX_GROW, LV_PART_MAIN);
-    if (confirm_cb != nullptr) {
-        lv_obj_add_event_cb(
-                yes_button,
-                confirm_cb,
-                LV_EVENT_CLICKED,
-                window
-        );
+    if (decline_text) {
+        lv_obj_t* no_button = lv_btn_create(button_container);
+        lv_obj_set_style_bg_color(no_button, LV_COLOR_MAKE(215, 215, 215), LV_PART_MAIN);
+        lv_obj_set_width(no_button, LV_SIZE_CONTENT);
+        lv_obj_set_style_flex_grow(no_button, FLEX_GROW, LV_PART_MAIN);
+        lv_obj_add_event_cb(no_button, close_floating_window_evt_cb, LV_EVENT_CLICKED, window);
+        lv_obj_t* no_label = lv_label_create(no_button);
+        lv_label_set_text(no_label, decline_text);
+        lv_obj_add_style(no_label, STYLE_PTR_CM(OPTION_BUTTON_TEXT), LV_PART_MAIN);
+        lv_obj_align_to(no_label, no_button, LV_ALIGN_RIGHT_MID, 0, 0);
+        lv_obj_center(no_label);
     }
-    lv_obj_add_event_cb(yes_button, close_floating_window_evt_cb, LV_EVENT_CLICKED, window);
 
-    lv_obj_t* yes_label = lv_label_create(yes_button);
-    lv_label_set_text(yes_label, confirm_text);
-    lv_obj_set_style_text_align(yes_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
-    lv_obj_set_style_text_font(yes_label, &lv_font_montserrat_24, LV_PART_MAIN);
-    lv_obj_align_to(yes_label, yes_button, LV_ALIGN_CENTER, 0, 0);
-    lv_obj_center(yes_label);
+    if (confirm_text) {
+        lv_obj_t* yes_button = lv_btn_create(button_container);
+        lv_obj_set_width(yes_button, LV_SIZE_CONTENT);
+        lv_obj_set_style_flex_grow(yes_button, FLEX_GROW, LV_PART_MAIN);
+        if (confirm_cb != nullptr) {
+            lv_obj_add_event_cb(
+                    yes_button,
+                    confirm_cb,
+                    LV_EVENT_CLICKED,
+                    window
+            );
+        }
+        lv_obj_add_event_cb(yes_button, close_floating_window_evt_cb, LV_EVENT_CLICKED, window);
+
+        lv_obj_t* yes_label = lv_label_create(yes_button);
+        lv_label_set_text(yes_label, confirm_text);
+        lv_obj_set_style_text_align(yes_label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+        lv_obj_set_style_text_font(yes_label, &lv_font_montserrat_24, LV_PART_MAIN);
+        lv_obj_align_to(yes_label, yes_button, LV_ALIGN_CENTER, 0, 0);
+        lv_obj_center(yes_label);
+    }
 
     return content_container;
 }
 
-static void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb)
+void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb)
 {
     lv_obj_t* label_container = open_yes_no_dialog("Confirm Action", true, "Yes", "No", confirm_cb);
     if (!label_container) {

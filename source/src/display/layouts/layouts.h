@@ -59,6 +59,15 @@ lv_obj_t* add_settings_toggle_button(const char* title, lv_obj_t* parent = SCR_C
 
 extern lv_obj_t* active_floating_window;
 
+/************************************************/
+/*            Prototypes for Windows            */
+/************************************************/
+lv_obj_t*
+open_yes_no_dialog(const char* title, bool enable_close_button, const char* confirm_text, const char* decline_text,
+        ConfirmChoiceCb confirm_cb);
+
+void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb = nullptr);
+
 // Config Screen
 lv_obj_t* get_config_button_container();
 void setup_config_window();

@@ -5,22 +5,47 @@
 #include "controls/machine.h"
 #include "interface/interface.h"
 
+/**
+ * Set all the adjustable values to their last target, or load defaults if no last target exists.
+ * This function will recalculate the waveform.
+ */
 void init_adjustable_values();
 
-void loop_test_readout(lv_timer_t*);
+/**
+ * Dummy timer function to be used in testing.
+ * Functionally should do the same thing as loop_update_readouts, but prints dummy values to the screen.
+ * @param timer The LVGL timer that controls this loop. Contains user data with a screen pointer for the cur screen.
+ */
+void loop_test_readout(lv_timer_t* timer);
 /**
  * Timer function to poll sensors and update values accordingly.
  * This should not be called manually under normal circumstances
- * @param timer
+ * @param timer The LVGL timer that controls this loop. Contains user data with a screen pointer for the cur screen.
  */
 void loop_update_readouts(lv_timer_t* timer);
 
+/**
+ * Handles showing/hiding the alert box.
+ * If the alarm count has changed, calculate the alarms which are now active and use them to set the alarm text.
+ * If alarms are zero, set the box display to false
+ */
 void handle_alerts();
 
+/**
+ * Get the target value for a parameter
+ * @param type The type of parameter we're searching for
+ * @return The target value
+ */
 double get_control_target(AdjValueType type);
 void set_readout(AdjValueType type, double val);
 double get_readout(AdjValueType type);
 
+/**
+ * Translate a button press on a control to a change in the vent waveform.
+ * This function will recalculate the waveform when complete, no other action needs to be taken.
+ * @param type The type being adjusted
+ * @param new_value The new value to be set
+ */
 void control_update_waveform_param(AdjValueType type, float new_value);
 
 void control_init();

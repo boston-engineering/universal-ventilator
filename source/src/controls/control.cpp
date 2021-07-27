@@ -53,6 +53,7 @@ void loop_test_readout(lv_timer_t* timer)
     if (!timer_delay_complete && (millis() >= SENSOR_POLL_STARTUP_DELAY)) {
         timer_delay_complete = true;
 
+        // Set some dummy alarms
         cycle_count++;
 
         alarm_manager.badPlateau(true);
@@ -260,6 +261,12 @@ void control_update_waveform_param(AdjValueType type, float new_value)
     control_calculate_waveform();
 }
 
+/**
+ * Loads a target value from EEPROM at startup and sets it to its interface class.
+ * This function will recalculate the waveform itself, no other action is needed.
+ * @param value The value we're loading.
+ * @param settings Pre-Loaded settings object to retrieve from.
+ */
 static void load_stored_target(AdjustableValue* value, uvent_settings& settings)
 {
     double val = 0;

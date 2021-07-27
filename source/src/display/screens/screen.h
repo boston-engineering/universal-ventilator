@@ -33,4 +33,13 @@ private:
     SensorChart charts[MAIN_SCREEN_CHART_COUNT]{};
 };
 
+class StartupScreen : public Screen {
+public:
+    StartupScreen();
+    void init() override;
+    void setup() override;
+
+    void (* on_complete)(lv_event_t* event);
+};
+
 #endif //UVENT_SCREEN_H
