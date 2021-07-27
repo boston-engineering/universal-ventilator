@@ -3,7 +3,7 @@
 #include "layouts.h"
 
 #define CONFIG_BUTTONS_PER_PAGE     4
-#define CONFIG_BUTTON_COUNT         9
+#define CONFIG_BUTTON_COUNT         8
 // Don't add an extra page if we're evenly divisible
 #if CONFIG_BUTTON_COUNT % CONFIG_BUTTONS_PER_PAGE == 0
 #define CONFIG_PAGES            (CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE)
@@ -649,7 +649,7 @@ void setup_config_window()
 
     create_config_button_container();
 
-    register_button(add_pressure_select_button);
+    // register_button(add_pressure_select_button);
     register_button(add_stepper_home_button);
     register_button(add_actuator_zero_button);
     register_button(add_disable_actuator_button);
