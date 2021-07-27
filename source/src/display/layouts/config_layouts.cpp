@@ -451,8 +451,6 @@ static void open_about_dialog(lv_event_t* evt)
     lv_obj_center(be_website);
 
     lv_coord_t line_x = lv_obj_get_x2(img_holder);
-    lv_coord_t area_height = lv_obj_get_height(main_area);
-    Serial.println(area_height);
     divider_line_points[0] = {line_x, 0};
     divider_line_points[1] = {line_x, 150};
 
