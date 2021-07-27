@@ -481,6 +481,14 @@ void control_write_ventilator_params()
     storage.set_settings(settings);
 }
 
+void control_get_serial(char* serial_buffer)
+{
+    uvent_settings settings{};
+    storage.get_settings(settings);
+
+    memcpy(serial_buffer, settings.serial, 12);
+}
+
 /* Request to switch the state of the state machine.
  */
 void control_change_state(States new_state)

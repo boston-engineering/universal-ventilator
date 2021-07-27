@@ -444,17 +444,24 @@ static void open_about_dialog(lv_event_t* evt)
     lv_obj_t* spangroup = lv_spangroup_create(text_holder);
     default_window_container_styles(spangroup);
     lv_spangroup_set_indent(spangroup, 0);
-    lv_obj_set_style_text_font(spangroup, &lv_font_montserrat_28, LV_PART_MAIN);
-    lv_spangroup_set_mode(spangroup, LV_SPAN_MODE_EXPAND);
+    lv_obj_set_style_text_font(spangroup, &lv_font_montserrat_24, LV_PART_MAIN);
+    lv_spangroup_set_mode(spangroup, LV_SPAN_MODE_BREAK);
     lv_spangroup_set_align(spangroup, LV_TEXT_ALIGN_LEFT);
-    char buf[10];
+
+    char buf[12];
     lv_span_t* version_title = lv_spangroup_new_span(spangroup);
     lv_span_set_text(version_title, "Version: ");
-    lv_snprintf(buf, 10, "%d.%d.%d", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
+    lv_snprintf(buf, 12, "%d.%d.%d\n", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
     lv_span_t* version_number = lv_spangroup_new_span(spangroup);
     lv_span_set_text(version_number, buf);
-    lv_style_set_text_font(&version_number->style, &lv_font_montserrat_24);
-    //lv_style_set_text_decor(&version_number->style, );
+    lv_style_set_text_font(&version_number->style, &lv_font_montserrat_20);
+
+    lv_span_t* serial_title = lv_spangroup_new_span(spangroup);
+    lv_span_set_text(serial_title, "Serial Number: ");
+    control_get_serial(buf);
+    lv_span_t* serial_number = lv_spangroup_new_span(spangroup);
+    lv_span_set_text(serial_number, buf);
+    lv_style_set_text_font(&serial_number->style, &lv_font_montserrat_20);
 
     lv_spangroup_refr_mode(spangroup);
 }

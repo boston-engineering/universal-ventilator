@@ -54,6 +54,7 @@ double control_get_actuator_position();
 int8_t control_get_actuator_position_raw(double& angle);
 void control_zero_actuator_position();
 void control_write_ventilator_params();
+void control_get_serial(char* serial_buffer);
 void control_change_state(States);
 void control_actuator_manual_move(Tick_Type tt, double angle, double speed);
 States control_get_state();
