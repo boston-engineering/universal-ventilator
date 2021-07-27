@@ -33,13 +33,13 @@ void StartupScreen::setup()
     lv_obj_set_style_text_align(label_1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
     lv_obj_set_style_text_font(label_1, &lv_font_montserrat_28, LV_PART_MAIN);
 
-    lv_label_set_text(label_1, "Welcome");
+    lv_label_set_text(label_1, "Welcome\n");
 
     lv_obj_t* label_2 = lv_label_create(container);
     lv_label_set_long_mode(label_2, LV_LABEL_LONG_WRAP);
 
     lv_label_set_text(label_2,
-            "To ensure best function of this unit, please perform the following actions before continuing.\n\n");
+            "To ensure best function of this unit, please perform the following actions before continuing.\n");
 
     lv_obj_set_style_text_align(label_2, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
     lv_obj_set_style_text_font(label_2, &lv_font_montserrat_24, LV_PART_MAIN);
@@ -62,7 +62,7 @@ void StartupScreen::setup()
 
     lv_label_set_text(
             label_4,
-            "Press continue when all startup steps have been completed..."
+            "Press continue when all startup steps have been completed."
     );
 
     lv_obj_set_style_text_align(label_4, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
