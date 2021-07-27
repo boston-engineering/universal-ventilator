@@ -573,7 +573,7 @@ void add_start_button()
             bool enabled = (strcmp(lv_label_get_text(btn_label), "Standby") == 0);
             if (enabled) {
                 lv_label_set_text_fmt(btn_label, "Start");
-                control_change_state(States::ST_OFF);
+                control_change_state(States::ST_ACTUATOR_HOME);
             }
             else {
                 lv_label_set_text_fmt(btn_label, "Standby");
