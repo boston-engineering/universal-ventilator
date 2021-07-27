@@ -10,7 +10,7 @@ struct __attribute__((packed)) uvent_settings {
      * Lot:         L: A,B,C...
      * Serial:      XXXX
      */
-    char serial[12];            // YYMMDDLXXXX
+    char serial[13];            // YYMMDDLXXXX
     uint16_t diff_pressure_type;// 0: ±0.07, 1: ±0.09
     uint16_t actuator_home_offset_adc_counts;
     int32_t gpressure_offset_adc_counts;

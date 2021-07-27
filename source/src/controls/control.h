@@ -52,6 +52,7 @@ void control_init();
 void control_service();
 double control_get_actuator_position();
 int8_t control_get_actuator_position_raw(double& angle);
+void control_eeprom_write_default();
 void control_zero_actuator_position();
 void control_write_ventilator_params();
 void control_get_serial(char* serial_buffer);

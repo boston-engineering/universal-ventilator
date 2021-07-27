@@ -14,6 +14,7 @@ LV_IMG_DECLARE(be_tm_tagline_logo);
 
 typedef void (* ButtonCreateFunc)();
 typedef void (* ConfirmChoiceCb)(lv_event_t* evt);
+typedef void (* WindowConfigCb)(lv_obj_t* window);
 typedef void (* LabelConfigCb)(lv_obj_t* label, uint8_t label_idx);
 
 lv_obj_t* open_option_dialog(const char* title, bool enable_close_button = false);
@@ -64,7 +65,7 @@ extern lv_obj_t* active_floating_window;
 /************************************************/
 lv_obj_t*
 open_yes_no_dialog(const char* title, bool enable_close_button, const char* confirm_text, const char* decline_text,
-        ConfirmChoiceCb confirm_cb);
+        ConfirmChoiceCb confirm_cb, WindowConfigCb window_config_cb = nullptr);
 
 void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, LabelConfigCb label_config_cb = nullptr);
 

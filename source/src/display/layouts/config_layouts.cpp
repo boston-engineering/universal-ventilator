@@ -3,7 +3,7 @@
 #include "layouts.h"
 
 #define CONFIG_BUTTONS_PER_PAGE     4
-#define CONFIG_BUTTON_COUNT         8
+#define CONFIG_BUTTON_COUNT         9
 // Don't add an extra page if we're evenly divisible
 #if CONFIG_BUTTON_COUNT % CONFIG_BUTTONS_PER_PAGE == 0
 #define CONFIG_PAGES            (CONFIG_BUTTON_COUNT / CONFIG_BUTTONS_PER_PAGE)
@@ -34,6 +34,7 @@ const char* pagination_button_map[] = {LV_SYMBOL_LEFT, "00000000", LV_SYMBOL_RIG
 
 static void open_sensor_select_dialog(lv_event_t* evt);
 static void open_about_dialog(lv_event_t* evt);
+static void open_reset_eeprom_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb);
 
 static void register_button(ButtonCreateFunc func);
 
@@ -214,6 +215,29 @@ static void add_about_button()
     lv_obj_add_event_cb(button, open_about_dialog, LV_EVENT_RELEASED, nullptr);
 }
 
+static void add_reset_eeprom_button()
+{
+
+    lv_obj_t* button = add_config_button("Reset EEPROM");
+
+    auto event_cb = [](lv_event_t* evt) {
+
+        open_reset_eeprom_dialog(
+                evt,
+                [](lv_event_t* evt) {
+#if ENABLE_CONTROL
+                    control_eeprom_write_default();
+#else
+                    LV_LOG_ERROR("EEPROM FORCIBLY RESET.");
+#endif
+                }
+        );
+
+    };
+
+    lv_obj_add_event_cb(button, event_cb, LV_EVENT_RELEASED, nullptr);
+}
+
 /************************************************/
 /*      Helper functions for Config Styles      */
 /*                                              */
@@ -270,7 +294,7 @@ static void close_floating_window_evt_cb(lv_event_t* evt)
 
 lv_obj_t*
 open_yes_no_dialog(const char* title, bool enable_close_button, const char* confirm_text, const char* decline_text,
-        ConfirmChoiceCb confirm_cb)
+        ConfirmChoiceCb confirm_cb, WindowConfigCb window_config_cb)
 {
     if (active_floating_window) {
         LV_LOG_USER("Can't open a second window");
@@ -279,6 +303,9 @@ open_yes_no_dialog(const char* title, bool enable_close_button, const char* conf
     LV_LOG_TRACE("Opened confirm dialog...");
     // TODO disable start button, settings buttons, etc until home is complete
     lv_obj_t* window = open_option_dialog(title, enable_close_button);
+    if (window_config_cb) {
+        window_config_cb(window);
+    }
     lv_obj_t* main_area = lv_win_get_content(window);
     lv_obj_set_style_pad_left(main_area, 0 px, LV_PART_MAIN);
     lv_obj_set_style_pad_right(main_area, 0 px, LV_PART_MAIN);
@@ -361,7 +388,6 @@ void open_control_confirm_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb, La
 
     if (label_config_cb != nullptr) {
         label_config_cb(warning_label_2, 1);
-
     }
     else {
         lv_label_set_text(
@@ -448,10 +474,10 @@ static void open_about_dialog(lv_event_t* evt)
     lv_spangroup_set_mode(spangroup, LV_SPAN_MODE_BREAK);
     lv_spangroup_set_align(spangroup, LV_TEXT_ALIGN_LEFT);
 
-    char buf[12];
+    char buf[13];
     lv_span_t* version_title = lv_spangroup_new_span(spangroup);
     lv_span_set_text(version_title, "Version: ");
-    lv_snprintf(buf, 12, "%d.%d.%d\n", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
+    lv_snprintf(buf, 13, "%d.%d.%d\n", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
     lv_span_t* version_number = lv_spangroup_new_span(spangroup);
     lv_span_set_text(version_number, buf);
     lv_style_set_text_font(&version_number->style, &lv_font_montserrat_20);
@@ -464,6 +490,45 @@ static void open_about_dialog(lv_event_t* evt)
     lv_style_set_text_font(&serial_number->style, &lv_font_montserrat_20);
 
     lv_spangroup_refr_mode(spangroup);
+}
+
+static void open_reset_eeprom_dialog(lv_event_t* evt, ConfirmChoiceCb confirm_cb)
+{
+
+    auto window_cb = [](lv_obj_t* window) {
+        lv_obj_set_style_max_width(window, 550 px, LV_PART_MAIN);
+        lv_obj_set_style_max_height(window, 350 px, LV_PART_MAIN);
+
+        lv_obj_invalidate(window);
+        lv_obj_update_layout(window);
+        lv_obj_align_to(window, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+    };
+
+    lv_obj_t* label_container = open_yes_no_dialog("Confirm Action", true, "Yes", "No", confirm_cb, window_cb);
+    if (!label_container) {
+        LV_LOG_WARN("Unable to create confirm/deny window. Another window could be open");
+        return;
+    }
+
+    lv_obj_t* warning_label_1 = lv_label_create(label_container);
+    lv_obj_set_style_text_align(warning_label_1, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_text_font(warning_label_1, &lv_font_montserrat_28, LV_PART_MAIN);
+
+    lv_label_set_text(warning_label_1, "WARNING");
+
+    lv_obj_t* warning_label_2 = lv_label_create(label_container);
+    lv_label_set_long_mode(warning_label_2, LV_LABEL_LONG_WRAP);
+
+    lv_label_set_text(
+            warning_label_2,
+            "This operation will completely overwrite all stored EEPROM values and reset to the default.\n"
+            "This shouldn't be attempted unless you are absolutely sure of what you're doing.\n"
+            "Are you sure you want to continue?"
+    );
+
+    lv_obj_set_style_text_align(warning_label_2, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_set_style_text_font(warning_label_2, &lv_font_montserrat_24, LV_PART_MAIN);
+    lv_obj_set_width(warning_label_2, LV_PCT(100));
 }
 
 lv_obj_t* open_option_dialog(const char* title, bool enable_close_button)
@@ -592,6 +657,7 @@ void setup_config_window()
     register_button(add_display_waveform_button);
     register_button(add_alarm_off_button);
     register_button(add_about_button);
+    register_button(add_reset_eeprom_button);
 
     create_pagination();
 

@@ -229,31 +229,31 @@ void control_update_waveform_param(AdjValueType type, float new_value)
     switch (type) {
         case TIDAL_VOLUME:
             wave_params->volume_ml = new_value;
-            LV_LOG_USER("Tidal Volume is now %.1f", new_value);
+            LV_LOG_INFO("Tidal Volume is now %.1f", new_value);
             break;
         case RESPIRATION_RATE:
             wave_params->bpm = (uint16_t) new_value;
-            LV_LOG_USER("Respiration Rate is now %.1f", new_value);
+            LV_LOG_INFO("Respiration Rate is now %.1f", new_value);
             break;
         case PIP:
             wave_params->pip = (uint16_t) new_value;
-            LV_LOG_USER("PIP is now %.1f", new_value);
+            LV_LOG_INFO("PIP is now %.1f", new_value);
             break;
         case PEEP:
             wave_params->peep = (uint16_t) new_value;
-            LV_LOG_USER("PEEP is now %.1f", new_value);
+            LV_LOG_INFO("PEEP is now %.1f", new_value);
             break;
         case PLATEAU_TIME:
             // TODO
-            LV_LOG_USER("TO ADD: PLATEAU TIME");
+            LV_LOG_INFO("TO ADD: PLATEAU TIME");
             break;
         case IE_RATIO_LEFT:
             wave_params->ie_i = new_value;
-            LV_LOG_USER("IE Inspiration is now %.1f", new_value);
+            LV_LOG_INFO("IE Inspiration is now %.1f", new_value);
             break;
         case IE_RATIO_RIGHT:
             wave_params->ie_e = new_value;
-            LV_LOG_USER("IE Expiration is now %.1f", new_value);
+            LV_LOG_INFO("IE Expiration is now %.1f", new_value);
             break;
         default:
             break;
@@ -449,6 +449,14 @@ double control_get_actuator_position()
 int8_t control_get_actuator_position_raw(double& angle)
 {
     return actuator.get_position_raw(angle);
+}
+
+/**
+ * DO NOT USE UNLESS ABSOLUTELY NECESSARY
+ */
+void control_eeprom_write_default()
+{
+    storage.load_defaults();
 }
 
 /* Set the current angular position of the actuator as home
