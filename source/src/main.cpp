@@ -31,10 +31,6 @@ static void on_startup_confirm_button(lv_event_t* evt)
     startup_screen.cleanup();
     // Need to be able to create new windows later
     active_floating_window = nullptr;
-    // Assume that we've homed the actuator
-#if ENABLE_CONTROL
-    control_zero_actuator_position();
-#endif
     // Tell LVGL this is the currently loaded screen
     main_screen.select_screen();
     // Init containers, styles, defaults...
