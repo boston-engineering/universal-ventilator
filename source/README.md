@@ -2,9 +2,9 @@
 The folder contains code for the Universal Ventilator project.
 
 # Setup
-The hardware used in this project uses an Arduino Due. This project has been developed using VSCode and Platform IO as an extension.
+The hardware used in this project uses an Arduino Due. This project has been developed using VSCode and PlatformIO as an extension.
 
-Both of the above are open source. Using Platform IO with VSCode offers alot of flexibility, and also extensions for development and debugging.
+Both of the above are open source. Using PlatformIO with VSCode offers alot of flexibility, and also extensions for development and debugging.
 
 ## Hardware Setup
 
@@ -25,12 +25,17 @@ Connect a USB cable between the PC and the USB connector away from the push butt
 Install the latest VSCode for your architecture from [code.visualstudio.com](https://code.visualstudio.com/download)
 
 ### Install Platform IO IDE
-Open VSCode and browse to the extensions tab(on the right side). Search for Platform IO and install it.
+Open VSCode and browse to the extensions tab(on the right side). Search for PlatformIO and install it.
+
+### Install Segger J-Link Software
+If the Segger J-Link probe is being used, download and install the software for your architecture from [Segger](https://www.segger.com/downloads/jlink/).
+
+On Windows, if PlatformIO throws a *Jlink.exe not found* error, add the J-Link folder to the Path, under Environmental Variables.
 
 ## Workspace Setup
 
 ### Opening the project
-Open VS code, click File->Open... and browse to the source/ folder. This should be the root folder for vscode to pick up the platformIO setup file(platformio.ini)
+Open VS code, click File->Open... and browse to the source/ folder. This should be the root folder for vscode to pick up the PlatformIO setup file(platformio.ini)
 
 ### Choose a PlatformIO Environment
 In order to build and upload, one of the PlatformIO build environments must be selected.\
