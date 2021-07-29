@@ -166,6 +166,8 @@ void loop_update_readouts(lv_timer_t* timer)
     screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
 
+    // TODO add more sensors HERE
+
     // Check to see if it's time to refresh the readout boxes
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels

@@ -123,10 +123,18 @@ static void border_span(lv_span_t* span)
 
 void setup_adjustable_readout(AdjValueType type, const char* override_str)
 {
+    setup_adjustable_readout(type, SCR_C(VISUAL_AREA_1), override_str);
+}
+
+void setup_adjustable_readout(AdjValueType type, lv_obj_t* parent_container)
+{
+    setup_adjustable_readout(type, parent_container, nullptr);
+}
+
+void setup_adjustable_readout(AdjValueType type, lv_obj_t* parent_container, const char* override_str)
+{
     auto value_class = &adjustable_values[type];
     AdjValueParams settings = value_class->get_settings();
-
-    lv_obj_t* parent_container = SCR_C(VISUAL_AREA_1);
 
     lv_obj_t* obj = lv_obj_create(parent_container);
     lv_obj_add_event_cb(obj, on_readout_update, LV_EVENT_REFRESH, value_class);

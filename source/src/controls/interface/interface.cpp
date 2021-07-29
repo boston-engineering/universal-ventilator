@@ -10,7 +10,7 @@ AdjustableValue adjustable_values[AdjValueType::ADJ_VALUE_COUNT];
 
 const AdjValueParams adj_value_settings[] = {
         {"Tidal Volume",        "vT",         "%ld",  "%ld",  "mL",    MIN_BAG_VOL_ML, MAX_BAG_VOL_ML,
-                                                                                                    DEF_BAG_VOL_ML, 50,  palette_color_1},
+                                                                                                    DEF_BAG_VOL_ML, 20,  palette_color_1},
         {"Respiration Rate",    "Resp. Rate", "%ld",  "%ld",  "/min",  BPM_MIN,        BPM_MAX,     DEF_BPM,        2,   palette_color_1},
         {"PEEP Limit (Floor)",  "PEEP",       "%ld",  "%ld",  cmh20,   PEEP_MIN,       PEEP_MAX,    DEF_PEEP,       1,   palette_color_1},
         {"PIP Limit (Ceiling)", "PIP",        "%ld",  "%ld",  cmh20,   PIP_MIN,        PIP_MAX,     DEF_PIP,        1,   palette_color_1},

@@ -34,6 +34,8 @@ void setup_visual_2();
  * @param override_str Any string that should represent the readout value instead of the adjustable value
  */
 void setup_adjustable_readout(AdjValueType type, const char* override_str = nullptr);
+void setup_adjustable_readout(AdjValueType type, lv_obj_t* parent_container);
+void setup_adjustable_readout(AdjValueType type, lv_obj_t* parent_container, const char* override_str);
 /**
  * Sets up an adjustable control on the right side of the screen (unless the config screen is open)
  * @param type The type of adjustable readout this will control
