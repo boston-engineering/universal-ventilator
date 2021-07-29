@@ -5,6 +5,7 @@
 
 #include <Arduino.h>
 #include "parser.h"
+#include "../config/uvent_conf.h"
 
 /* Initialize the parser.
  * Show the MOTD and reset the command buffer.
@@ -16,6 +17,9 @@ void Parser::init(command_type* pComArr, uint16_t comArrSize)
     Serial.print(__TIME__);
     Serial.print(" ");
     Serial.println(__DATE__);
+    char buf[20];
+    snprintf(buf, sizeof(buf), "Version: %d.%d.%d", UVENT_VERSION_MAJOR, UVENT_VERSION_MINOR, UVENT_VERSION_PATCH);
+    Serial.println(buf);
     Serial.println("----------------------------------");
 
     // Reset the command payload
@@ -49,51 +53,51 @@ void Parser::service()
 void Parser::handle_input(char c)
 {
     switch (c) {
-    /* CR or LF detected. Parse the input buffer. */
-    case '\r':
-    case '\n':
-        Serial.print(PARSER_NEXT_LINE);
-        if (payload.index > 0) {
-            argument_parse();
-            payload.index = 0;
+        /* CR or LF detected. Parse the input buffer. */
+        case '\r':
+        case '\n':
+            Serial.print(PARSER_NEXT_LINE);
+            if (payload.index > 0) {
+                argument_parse();
+                payload.index = 0;
 
-            // Command has been serviced, clear the payload.
-            memset(payload.buf, 0, sizeof(payload.buf));
-        }
-        prompt();
-        break;
+                // Command has been serviced, clear the payload.
+                memset(payload.buf, 0, sizeof(payload.buf));
+            }
+            prompt();
+            break;
 
-    /* Backspace detected, terminate '\0' the captured buffer,
+        /* Backspace detected, terminate '\0' the captured buffer,
         * move input buffer index back by one,
         * issue backspace \b so that the cursor moves back,
         * display a "space" to clear the character,
         * issue backspace again.
         */
-    case '\b':
-        if (payload.index) {
-            payload.buf[payload.index - 1] = '\0';
-            payload.index--;
-            Serial.print(c);
-            Serial.print(' ');
-            Serial.print(c);
-        }
-        break;
-    /* This default case streams data back to the serial port,
+        case '\b':
+            if (payload.index) {
+                payload.buf[payload.index - 1] = '\0';
+                payload.index--;
+                Serial.print(c);
+                Serial.print(' ');
+                Serial.print(c);
+            }
+            break;
+        /* This default case streams data back to the serial port,
          * as an echo. It also accumulates each character into the
          * payload buffer.
          */
-    default:
-        // Make sure, buffer does not overflow
-        if (payload.index < PARSER_CMD_BUFFER_LEN - 1) {
-            Serial.print(c);
-            payload.buf[payload.index] = c;
-            payload.index++;
-        }
-        else {
-            Serial.println("Command buffer full");
-            Serial.println("Unable to accecpt more characters.");
-            Serial.println("Press ENTER to reset.");
-        }
+        default:
+            // Make sure, buffer does not overflow
+            if (payload.index < PARSER_CMD_BUFFER_LEN - 1) {
+                Serial.print(c);
+                payload.buf[payload.index] = c;
+                payload.index++;
+            }
+            else {
+                Serial.println("Command buffer full");
+                Serial.println("Unable to accecpt more characters.");
+                Serial.println("Press ENTER to reset.");
+            }
     }
 }
 
