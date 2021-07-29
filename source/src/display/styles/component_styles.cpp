@@ -439,6 +439,8 @@ STYLE_INIT_FUNC(SPACER)
     lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
     lv_style_set_pad_all(style, 0 px);
+    lv_style_set_pad_left(style, 10 px);
+    lv_style_set_pad_right(style, 10 px);
     lv_style_set_pad_row(style, 4 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
     // Inside Flex
