@@ -9,7 +9,7 @@
 // Version numbers
 #define UVENT_VERSION_MAJOR 0
 #define UVENT_VERSION_MINOR 0
-#define UVENT_VERSION_PATCH 2
+#define UVENT_VERSION_PATCH 3
 
 // Screen Dimensions
 #define SCREEN_WIDTH 800
