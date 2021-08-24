@@ -165,6 +165,10 @@ void loop_update_readouts(lv_timer_t* timer)
     screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
 
+    // Waveform parameters
+    waveform_params* p_wave_params = control_get_waveform_params();
+    set_readout(AdjValueType::PEEP, p_wave_params->m_peep);
+
     // TODO add more sensors HERE
 
     // Check to see if it's time to refresh the readout boxes
