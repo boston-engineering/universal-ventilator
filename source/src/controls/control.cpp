@@ -35,8 +35,7 @@ AlarmManager alarm_manager{SPEAKER_PIN, &cycle_count};
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
  */
-// Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm);
-Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm_manager, &cycle_count);
+Machine machine(States::ST_STARTUP, &actuator, &waveform, &gauge_sensor, &alarm_manager, &cycle_count);
 
 // Bool to keep track of the alert box
 static bool alert_box_already_visible = false;

@@ -19,8 +19,7 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-// Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
-Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al, uint32_t* cc)
+Machine::Machine(States st, Actuator* act, Waveform* wave, PressureSensor* gp, AlarmManager* al, uint32_t* cc)
 {
     p_actuator = act;
     state = st;
@@ -32,6 +31,7 @@ Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al, uin
 
     p_alarm_manager = al;
     cycle_count = cc;
+    p_gauge_pressure = gp;
 }
 
 // Set the current state in the state machine
