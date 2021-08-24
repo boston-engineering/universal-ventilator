@@ -16,6 +16,11 @@ struct waveform_params {
     float ie_e;     // Expiration of IE ratio
     uint16_t pip;   // Peak inspiratory pressure (cmH2O)
     uint16_t peep;  // Peak end expiratory pressure (cmH2O)
+
+    // Measured
+    float m_pip;          // Measured pip
+    float m_peep;         // Measured peep
+    float m_plateau_press;// Measured plateau pressure
 };
 
 class Waveform {
