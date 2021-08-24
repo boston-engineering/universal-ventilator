@@ -102,6 +102,8 @@ void Machine::state_inspiration_hold()
         state_first_entry = false;
     }
     if (p_waveform->is_inspiration_hold_done()) {
+        // Save the plateau pressure.
+        p_waveparams->m_plateau_press = p_gauge_pressure->get_pressure(units_pressure::cmH20);
         set_state(States::ST_EXPR);
     }
 }
@@ -136,6 +138,8 @@ void Machine::state_peep_pause()
     }
 
     if (p_waveform->is_peep_pause_done()) {
+        // Save the peep pressure.
+        p_waveparams->m_peep = p_gauge_pressure->get_pressure(units_pressure::cmH20);
         set_state(States::ST_EXPR_HOLD);
     }
 }
