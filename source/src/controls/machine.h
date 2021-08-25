@@ -6,6 +6,7 @@
 #include "../config/uvent_conf.h"
 #include "waveform.h"
 #include "alarm/alarm.h"
+#include "sensors/pressure_sensor.h"
 
 #define stringify(name) #name
 
@@ -27,8 +28,7 @@ enum class States {
 class Machine {
 public:
     // Constructor
-    // Machine(States, Actuator*, Waveform*, AlarmManager*);
-    Machine(States, Actuator*, Waveform*, AlarmManager*, uint32_t* cycle_count);
+    Machine(States, Actuator*, Waveform*, PressureSensor* gauge_pressure, AlarmManager*, uint32_t* cycle_count);
 
     void setup();
     void run();
@@ -68,6 +68,8 @@ private:
     waveform_params* p_waveparams;
 
     AlarmManager* p_alarm_manager;
+
+    PressureSensor* p_gauge_pressure;
 
     // Set the current state in the state machine
     void set_state(States);

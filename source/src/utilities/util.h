@@ -15,6 +15,13 @@ constexpr auto min(const Tpa& a, const Tpb& b) -> decltype(a < b ? a : b)
 {
     return b < a ? b : a;
 }
+
+#undef max
+template<typename Tpa, typename Tpb>
+inline auto max(const Tpa& a, const Tpb& b) -> decltype(b > a ? b : a)
+{
+    return b > a ? b : a;
+}
 #endif// __cplusplus
 
 #define EPSILON 0.0000001
@@ -31,4 +38,4 @@ inline float now_s() { return millis() * 1e-3; }
 
 bool is_whole(double x, double epsilon = EPSILON);
 
-#endif //UVENT_UTIL_H
+#endif//UVENT_UTIL_H

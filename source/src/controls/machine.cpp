@@ -19,8 +19,7 @@ const char* state_string[] =
                 stringify(ST_DEBUG),
                 stringify(ST_OFF)};
 
-// Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al)
-Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al, uint32_t* cc)
+Machine::Machine(States st, Actuator* act, Waveform* wave, PressureSensor* gp, AlarmManager* al, uint32_t* cc)
 {
     p_actuator = act;
     state = st;
@@ -32,6 +31,7 @@ Machine::Machine(States st, Actuator* act, Waveform* wave, AlarmManager* al, uin
 
     p_alarm_manager = al;
     cycle_count = cc;
+    p_gauge_pressure = gp;
 }
 
 // Set the current state in the state machine
@@ -92,6 +92,8 @@ void Machine::state_inspiration()
 
     // Check if target has been reached.
     if (p_waveform->is_inspiration_done()) {
+        // Keep track of max pip.
+        p_waveform->set_current_pip(p_gauge_pressure->get_pressure(units_pressure::cmH20));
         set_state(States::ST_INSPR_HOLD);
     }
 }
@@ -102,6 +104,8 @@ void Machine::state_inspiration_hold()
         state_first_entry = false;
     }
     if (p_waveform->is_inspiration_hold_done()) {
+        // Save the plateau pressure.
+        p_waveparams->m_plateau_press = p_gauge_pressure->get_pressure(units_pressure::cmH20);
         set_state(States::ST_EXPR);
     }
 }
@@ -136,6 +140,9 @@ void Machine::state_peep_pause()
     }
 
     if (p_waveform->is_peep_pause_done()) {
+        // Save the peep pressure.
+        p_waveparams->m_peep = p_gauge_pressure->get_pressure(units_pressure::cmH20);
+        p_waveform->set_pip_peak_and_reset();
         set_state(States::ST_EXPR_HOLD);
     }
 }
@@ -165,6 +172,9 @@ void Machine::state_actuator_home()
             // Let the motor driver know that this is 0 position
             p_actuator->set_position_as_home();
 
+            // Reset measured parameters.
+            p_waveform->reset_measured_params();
+
             set_state(States::ST_OFF);
         }
         else {
@@ -179,6 +189,9 @@ void Machine::state_actuator_home()
         p_actuator->set_speed(Tick_Type::TT_DEGREES, 0);
         // Let the motor driver know that this is 0 position
         p_actuator->set_position_as_home();
+
+        // Reset measured parameters.
+        p_waveform->reset_measured_params();
 
         set_state(States::ST_OFF);
     }

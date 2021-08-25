@@ -35,8 +35,7 @@ AlarmManager alarm_manager{SPEAKER_PIN, &cycle_count};
 /* State machine instance. Takes in a pointer to actuator
  * as there are actuator commands within the state machine.
  */
-// Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm);
-Machine machine(States::ST_STARTUP, &actuator, &waveform, &alarm_manager, &cycle_count);
+Machine machine(States::ST_STARTUP, &actuator, &waveform, &gauge_sensor, &alarm_manager, &cycle_count);
 
 // Bool to keep track of the alert box
 static bool alert_box_already_visible = false;
@@ -165,6 +164,11 @@ void loop_update_readouts(lv_timer_t* timer)
     double cur_tidal_volume = control_get_degrees_to_volume_ml();
     screen->get_chart(CHART_IDX_VT)->add_data_point(cur_tidal_volume);
     set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
+
+    // Waveform parameters
+    waveform_params* p_wave_params = control_get_waveform_params();
+    set_readout(AdjValueType::PEEP, p_wave_params->m_peep);
+    set_readout(AdjValueType::PIP, p_wave_params->m_pip);
 
     // TODO add more sensors HERE
 

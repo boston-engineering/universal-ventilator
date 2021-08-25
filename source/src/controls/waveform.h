@@ -16,6 +16,11 @@ struct waveform_params {
     float ie_e;     // Expiration of IE ratio
     uint16_t pip;   // Peak inspiratory pressure (cmH2O)
     uint16_t peep;  // Peak end expiratory pressure (cmH2O)
+
+    // Measured
+    float m_pip;          // Measured pip
+    float m_peep;         // Measured peep
+    float m_plateau_press;// Measured plateau pressure
 };
 
 class Waveform {
@@ -27,11 +32,17 @@ public:
     bool is_expiration_done();
     bool is_peep_pause_done();
     void display_details() const;
+    void set_pip_peak_and_reset();
+    void set_current_pip(float pip_value);
+    void reset_measured_params();
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
     const float MIN_PEEP_PAUSE = 0.05; // Time (s) to pause after exhalation / before watching for an assisted inhalation
     const float MAX_EX_DURATION = 1.00;// Maximum exhale duration (s)
+
+    float m_pip_peak;        // Max of pip.
+    float current_m_pip_peak;// Keeps track of max measured pip in a breath cycle.
 
     waveform_params params = {
             .tCycleTimer = 0,
