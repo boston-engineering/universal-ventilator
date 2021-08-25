@@ -168,6 +168,7 @@ void loop_update_readouts(lv_timer_t* timer)
     // Waveform parameters
     waveform_params* p_wave_params = control_get_waveform_params();
     set_readout(AdjValueType::PEEP, p_wave_params->m_peep);
+    set_readout(AdjValueType::PIP, p_wave_params->m_pip);
 
     // TODO add more sensors HERE
 

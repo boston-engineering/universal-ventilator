@@ -92,6 +92,8 @@ void Machine::state_inspiration()
 
     // Check if target has been reached.
     if (p_waveform->is_inspiration_done()) {
+        // Keep track of max pip.
+        p_waveform->set_current_pip(p_gauge_pressure->get_pressure(units_pressure::cmH20));
         set_state(States::ST_INSPR_HOLD);
     }
 }
@@ -140,6 +142,7 @@ void Machine::state_peep_pause()
     if (p_waveform->is_peep_pause_done()) {
         // Save the peep pressure.
         p_waveparams->m_peep = p_gauge_pressure->get_pressure(units_pressure::cmH20);
+        p_waveform->set_pip_peak_and_reset();
         set_state(States::ST_EXPR_HOLD);
     }
 }

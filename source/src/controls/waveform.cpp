@@ -63,3 +63,16 @@ void Waveform::display_details() const
     serial_printf("pip:\t\t %d\n", params.pip);
     serial_printf("peep:\t\t %d\n", params.peep);
 }
+
+void Waveform::set_pip_peak_and_reset()
+{
+    m_pip_peak = current_m_pip_peak;
+    current_m_pip_peak = 0.0;
+}
+
+void Waveform::set_current_pip(float pip_value)
+{
+    // Set measured pip. Compare the incoming with previous value, to get the max.
+    params.m_pip = max(pip_value, current_m_pip_peak);
+    current_m_pip_peak = params.m_pip;
+}

@@ -32,11 +32,16 @@ public:
     bool is_expiration_done();
     bool is_peep_pause_done();
     void display_details() const;
+    void set_pip_peak_and_reset();
+    void set_current_pip(float pip_value);
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
     const float MIN_PEEP_PAUSE = 0.05; // Time (s) to pause after exhalation / before watching for an assisted inhalation
     const float MAX_EX_DURATION = 1.00;// Maximum exhale duration (s)
+
+    float m_pip_peak;        // Max of pip.
+    float current_m_pip_peak;// Keeps track of max measured pip in a breath cycle.
 
     waveform_params params = {
             .tCycleTimer = 0,
