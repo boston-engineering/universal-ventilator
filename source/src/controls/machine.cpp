@@ -172,6 +172,9 @@ void Machine::state_actuator_home()
             // Let the motor driver know that this is 0 position
             p_actuator->set_position_as_home();
 
+            // Reset measured parameters.
+            p_waveform->reset_measured_params();
+
             set_state(States::ST_OFF);
         }
         else {
@@ -186,6 +189,9 @@ void Machine::state_actuator_home()
         p_actuator->set_speed(Tick_Type::TT_DEGREES, 0);
         // Let the motor driver know that this is 0 position
         p_actuator->set_position_as_home();
+
+        // Reset measured parameters.
+        p_waveform->reset_measured_params();
 
         set_state(States::ST_OFF);
     }

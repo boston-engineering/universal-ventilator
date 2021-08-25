@@ -76,3 +76,10 @@ void Waveform::set_current_pip(float pip_value)
     params.m_pip = max(pip_value, current_m_pip_peak);
     current_m_pip_peak = params.m_pip;
 }
+
+void Waveform::reset_measured_params()
+{
+    params.m_pip = 0.0;
+    params.m_peep = 0.0;
+    params.m_plateau_press = 0.0;
+}
