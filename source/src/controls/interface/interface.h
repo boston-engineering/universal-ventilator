@@ -16,7 +16,7 @@ typedef enum AdjValueType {
     PEEP,
     PIP,
     PLATEAU_TIME,
-    CUR_PRESSURE,
+    PLAT_PRESSURE,
     IE_RATIO_LEFT,
     IE_RATIO_RIGHT,
     ADJ_VALUE_COUNT,
