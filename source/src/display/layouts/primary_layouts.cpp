@@ -48,7 +48,7 @@ void setup_readouts()
 
     setup_adjustable_readout(PEEP);
     setup_adjustable_readout(PIP);
-    setup_adjustable_readout(CUR_PRESSURE);
+    setup_adjustable_readout(PLAT_PRESSURE);
 }
 
 void setup_controls()

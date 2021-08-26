@@ -84,7 +84,7 @@ void loop_test_readout(lv_timer_t* timer)
     // Will not refresh until explicitly told
     static double cur_pressure = -2;
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
-    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
+    set_readout(AdjValueType::PLAT_PRESSURE, cur_pressure);
     cur_pressure += 1;
     cur_pressure += random(100) / 100.0;
     if (cur_pressure > 40) {
@@ -157,7 +157,6 @@ void loop_update_readouts(lv_timer_t* timer)
     // Will not refresh until explicitly told
     double cur_pressure = control_get_gauge_pressure();
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
-    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
 
     // Poll vT sensor, add point to graph and update readout obj.
     // Will not refresh until explicitly told
@@ -169,6 +168,7 @@ void loop_update_readouts(lv_timer_t* timer)
     waveform_params* p_wave_params = control_get_waveform_params();
     set_readout(AdjValueType::PEEP, p_wave_params->m_peep);
     set_readout(AdjValueType::PIP, p_wave_params->m_pip);
+    set_readout(AdjValueType::PLAT_PRESSURE, p_wave_params->m_plateau_press);
 
     // TODO add more sensors HERE
 
