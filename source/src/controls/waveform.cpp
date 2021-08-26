@@ -97,3 +97,42 @@ void Waveform::calculate_respiration_rate()
     // Convert to breaths per minute
     params.m_rr = 60.0 / breath_time_s;
 }
+
+void Waveform::mark_inspiration_time(float now)
+{
+    inspiration_time = now - params.tCycleTimer;
+}
+
+void Waveform::mark_expiration_time(float now)
+{
+    // Substract inspiration time.
+    expiration_time = now - params.tCycleTimer - inspiration_time;
+}
+
+void Waveform::calculate_current_parameters()
+{
+    // Current respiration rate in breaths per minute
+    params.m_rr = round(60.0 / (now_s() - params.tCycleTimer));
+
+    float total_i_e_time = inspiration_time + expiration_time;
+
+    // Calculate slice of each part from the total ie time.
+    float i_slice = inspiration_time / total_i_e_time;
+    float e_slice = expiration_time / total_i_e_time;
+
+    // Calculated IE ratios change on which time was larger.
+    if (expiration_time > inspiration_time) {
+        // Current i in ie
+        params.m_ie_i = 1;// i_slice / i_slice;
+
+        // Current e in ie
+        params.m_ie_e = e_slice / i_slice;
+    }
+    else {
+        // Current i in ie
+        params.m_ie_i = i_slice / e_slice;// i_slice / i_slice;
+
+        // Current e in ie
+        params.m_ie_e = 1;// e_slice / e_slice;
+    }
+}

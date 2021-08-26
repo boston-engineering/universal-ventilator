@@ -106,6 +106,10 @@ void Machine::state_inspiration_hold()
     if (p_waveform->is_inspiration_hold_done()) {
         // Save the plateau pressure.
         p_waveparams->m_plateau_press = p_gauge_pressure->get_pressure(units_pressure::cmH20);
+
+        // Mark the inspiration time
+        p_waveform->mark_inspiration_time(now_s());
+
         set_state(States::ST_EXPR);
     }
 }
@@ -156,6 +160,12 @@ void Machine::state_expiration_hold()
     if (p_waveform->is_expiration_done()) {
         set_state(States::ST_INSPR);
         p_waveform->calculate_respiration_rate();
+
+        // Mark the inspiration time
+        p_waveform->mark_expiration_time(now_s());
+
+        // Calculate waveform params for UI reporting
+        p_waveform->calculate_current_parameters();
     }
 }
 

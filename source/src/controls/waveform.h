@@ -39,6 +39,9 @@ public:
     void set_current_pip(float pip_value);
     void reset_measured_params();
     void calculate_respiration_rate();
+    void mark_inspiration_time(float now);
+    void mark_expiration_time(float now);
+    void calculate_current_parameters();
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
@@ -46,6 +49,8 @@ private:
 
     float m_pip_peak;        // Max of pip.
     float current_m_pip_peak;// Keeps track of max measured pip in a breath cycle.
+    float inspiration_time;
+    float expiration_time;
 
     waveform_params params = {
             .tCycleTimer = 0,
