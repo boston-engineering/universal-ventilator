@@ -49,6 +49,7 @@ void MainScreen::setup()
 
     // VISUAL_AREA_2
     setup_visual_2();
+    setup_extra_readouts();
     generate_charts();
 
     setup_buttons();

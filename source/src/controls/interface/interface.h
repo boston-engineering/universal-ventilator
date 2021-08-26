@@ -19,6 +19,8 @@ typedef enum AdjValueType {
     PLAT_PRESSURE,
     IE_RATIO_LEFT,
     IE_RATIO_RIGHT,
+    FLOW,
+    CUR_PRESSURE,
     ADJ_VALUE_COUNT,
     UNKNOWN,
 } AdjValueType;

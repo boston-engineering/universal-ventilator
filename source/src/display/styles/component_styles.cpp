@@ -419,7 +419,7 @@ STYLE_INIT_FUNC(ALERT_BOX)
 }
 
 /**
-* ComponentType::ALERT_BOX
+* ComponentType::SPACER
 */
 STYLE_INIT_FUNC(SPACER)
 {
@@ -436,13 +436,38 @@ STYLE_INIT_FUNC(SPACER)
 
     lv_style_set_bg_opa(style, LV_OPA_TRANSP);
     // Flexbox
-    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);
     lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
     lv_style_set_pad_all(style, 0 px);
-    lv_style_set_pad_left(style, 10 px);
-    lv_style_set_pad_right(style, 10 px);
-    lv_style_set_pad_row(style, 4 px);
+    lv_style_set_pad_column(style, 0 px);
     lv_style_set_layout(style, LV_LAYOUT_FLEX);
     // Inside Flex
     lv_style_set_flex_grow(style, 2);
+}
+
+STYLE_INIT_FUNC(READOUT_EXTRA)
+{
+    lv_style_t* style = STYLE_PTR_CM(READOUT_EXTRA);
+
+    // Size
+    lv_style_set_width(style, LV_PCT(100));
+    lv_style_set_max_height(style, 90 px);
+    lv_style_set_height(style, LV_PCT(100));
+
+    // Colors & Borders
+
+    // Debug in case we need to visualize the spacers
+    // lv_style_set_bg_color(style, LV_COLOR_MAKE(0x00, 0xff, 0xaa));
+    // lv_style_set_border_width(style, 1 px);
+
+    lv_style_set_bg_opa(style, LV_OPA_TRANSP);
+    // Flexbox
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_COLUMN);
+    lv_style_set_flex_cross_place(style, LV_FLEX_ALIGN_START);
+    lv_style_set_pad_all(style, 4 px);
+    lv_style_set_pad_left(style, 6 px);
+    lv_style_set_pad_right(style, 6 px);
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    // Inside Flex
+    lv_style_set_flex_grow(style, 1);
 }
