@@ -85,4 +85,7 @@ void Waveform::reset_measured_params()
     params.m_pip = 0.0;
     params.m_peep = 0.0;
     params.m_plateau_press = 0.0;
+    params.m_rr = 0.0;
+    params.m_ie_i = 0.0;
+    params.m_ie_e = 0.0;
 }
