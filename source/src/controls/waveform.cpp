@@ -89,3 +89,11 @@ void Waveform::reset_measured_params()
     params.m_ie_i = 0.0;
     params.m_ie_e = 0.0;
 }
+
+void Waveform::calculate_respiration_rate()
+{
+    float breath_time_s = now_s() - params.tCycleTimer;
+
+    // Convert to breaths per minute
+    params.m_rr = 60.0 / breath_time_s;
+}

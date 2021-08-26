@@ -155,6 +155,7 @@ void Machine::state_expiration_hold()
 
     if (p_waveform->is_expiration_done()) {
         set_state(States::ST_INSPR);
+        p_waveform->calculate_respiration_rate();
     }
 }
 

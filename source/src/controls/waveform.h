@@ -38,6 +38,7 @@ public:
     void set_pip_peak_and_reset();
     void set_current_pip(float pip_value);
     void reset_measured_params();
+    void calculate_respiration_rate();
 
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
