@@ -69,6 +69,15 @@ void setup_controls()
     setup_adjustable_control(PLATEAU_TIME);
 }
 
+void setup_extra_readouts()
+{
+    lv_obj_t* visual_2 = SCR_C(VISUAL_AREA_2);
+    lv_obj_t* spacer = lv_obj_get_child(visual_2, 1);
+
+    setup_adjustable_readout(FLOW, lv_obj_get_child(spacer, 0));
+    setup_adjustable_readout(CUR_PRESSURE, lv_obj_get_child(spacer, 1));
+}
+
 void setup_buttons()
 {
     // Wipe areas
@@ -97,6 +106,12 @@ void setup_visual_2()
 
     lv_obj_t* spacer = lv_obj_create(visual_area_2);
     lv_obj_add_style(spacer, STYLE_PTR_CM(SPACER), LV_PART_MAIN);
+
+    lv_obj_t* extra_readout_1 = lv_obj_create(spacer);
+    lv_obj_add_style(extra_readout_1, STYLE_PTR_CM(READOUT_EXTRA), LV_PART_MAIN);
+
+    lv_obj_t* extra_readout_2 = lv_obj_create(spacer);
+    lv_obj_add_style(extra_readout_2, STYLE_PTR_CM(READOUT_EXTRA), LV_PART_MAIN);
 
     setup_alert_box();
 }
