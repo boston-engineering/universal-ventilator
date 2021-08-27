@@ -16,16 +16,19 @@ int8_t Waveform::calculate_waveform()
     // Seconds in each breathing cycle period
     params.tPeriod = 60 / params.bpm;
 
-    // Inspiration hold time
-    params.tHoldIn = params.tPeriod / (1.0 + (params.ie_i / params.ie_e));
+    // Calculate the total inspiration time, including holdin.
+    params.tHoldIn = (params.ie_i * params.tPeriod) / (params.ie_i + params.ie_e);
 
+    // Calculate the time for the paddle to profile an inspiration.
     params.tIn = params.tHoldIn - HOLD_IN_DURATION;
-    if (params.tIn < 0.0) {
+
+    // The remaining is expiration.
+    params.tEx = params.tPeriod - params.tHoldIn;
+
+    if ((params.tIn < 0.0) || (params.tEx < 0.0)) {
         // tIn Cannot be negative.
         return -1;
     }
-
-    params.tEx = min(params.tHoldIn + MAX_EX_DURATION, params.tPeriod - MIN_PEEP_PAUSE);
 
     return 0;
 }
