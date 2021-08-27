@@ -39,7 +39,6 @@ public:
 private:
     const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
     const float MIN_PEEP_PAUSE = 0.05; // Time (s) to pause after exhalation / before watching for an assisted inhalation
-    const float MAX_EX_DURATION = 1.00;// Maximum exhale duration (s)
 
     float m_pip_peak;        // Max of pip.
     float current_m_pip_peak;// Keeps track of max measured pip in a breath cycle.
