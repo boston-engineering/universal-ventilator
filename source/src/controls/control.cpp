@@ -167,6 +167,9 @@ void loop_update_readouts(lv_timer_t* timer)
 
     // Waveform parameters
     waveform_params* p_wave_params = control_get_waveform_params();
+    set_readout(AdjValueType::RESPIRATION_RATE, p_wave_params->m_rr);
+    set_readout(AdjValueType::IE_RATIO_LEFT, p_wave_params->m_ie_i);
+    set_readout(AdjValueType::IE_RATIO_RIGHT, p_wave_params->m_ie_e);
     set_readout(AdjValueType::PEEP, p_wave_params->m_peep);
     set_readout(AdjValueType::PIP, p_wave_params->m_pip);
     set_readout(AdjValueType::PLAT_PRESSURE, p_wave_params->m_plateau_press);
