@@ -20,7 +20,7 @@ int8_t Waveform::calculate_waveform()
     params.tHoldIn = (params.ie_i * params.tPeriod) / (params.ie_i + params.ie_e);
 
     // Calculate the time for the paddle to profile an inspiration.
-    params.tIn = params.tHoldIn - HOLD_IN_DURATION;
+    params.tIn = params.tHoldIn - (params.plateau_time / 1000.0);// plateau time is in milliseconds.
 
     // The remaining is expiration.
     params.tEx = params.tPeriod - params.tHoldIn;
@@ -65,6 +65,7 @@ void Waveform::display_details() const
     serial_printf("Vt:\t\t %0.1f\n", params.volume_ml);
     serial_printf("pip:\t\t %d\n", params.pip);
     serial_printf("peep:\t\t %d\n", params.peep);
+    serial_printf("plateau:\t %d\n", params.plateau_time);
 }
 
 void Waveform::set_pip_peak_and_reset()

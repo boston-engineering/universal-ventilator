@@ -186,9 +186,9 @@
 #define DEF_PIP 40// Default
 
 // Plateau
-#define PLATEAU_MIN 200
-#define PLATEAU_MAX 800
-#define DEF_PLATEAU 200// Default
+#define PLATEAU_MIN 100
+#define PLATEAU_MAX 300
+#define DEF_PLATEAU 100// Default
 
 // Flow
 #define FLOW_MIN 0

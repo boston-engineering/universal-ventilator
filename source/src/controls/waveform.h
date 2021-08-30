@@ -10,12 +10,13 @@ struct waveform_params {
     float tEx;        // Calculated time (s) since tCycleTimer for end of EX_STATE
     float tPeriod;    // Calculated time (s) since tCycleTimer for end of cycle
 
-    uint16_t bpm;   // Breaths per minute
-    float volume_ml;// Tidal volume
-    float ie_i;     // Inspiration of IE ratio
-    float ie_e;     // Expiration of IE ratio
-    uint16_t pip;   // Peak inspiratory pressure (cmH2O)
-    uint16_t peep;  // Peak end expiratory pressure (cmH2O)
+    uint16_t bpm;         // Breaths per minute
+    float volume_ml;      // Tidal volume
+    float ie_i;           // Inspiration of IE ratio
+    float ie_e;           // Expiration of IE ratio
+    uint16_t pip;         // Peak inspiratory pressure (cmH2O)
+    uint16_t peep;        // Peak end expiratory pressure (cmH2O)
+    uint16_t plateau_time;// Plateau(time to hold after inspiration) in ms
 
     // Measured
     float m_pip;          // Measured pip
@@ -44,8 +45,7 @@ public:
     void calculate_current_parameters();
 
 private:
-    const float HOLD_IN_DURATION = 0.1;// Duration (s) to pause after inhalation
-    const float MIN_PEEP_PAUSE = 0.05; // Time (s) to pause after exhalation / before watching for an assisted inhalation
+    const float MIN_PEEP_PAUSE = 0.05;// Time (s) to pause after exhalation / before watching for an assisted inhalation
 
     float m_pip_peak;        // Max of pip.
     float current_m_pip_peak;// Keeps track of max measured pip in a breath cycle.
@@ -63,6 +63,7 @@ private:
             .ie_i = DEF_IE,
             .ie_e = DEF_IE,
             .pip = DEF_PIP,
-            .peep = DEF_PEEP};
+            .peep = DEF_PEEP,
+            .plateau_time = DEF_PLATEAU};
 };
 #endif//UVENT_WAVEFORM_H
