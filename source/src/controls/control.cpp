@@ -255,8 +255,8 @@ void control_update_waveform_param(AdjValueType type, float new_value)
             LV_LOG_INFO("PEEP is now %.1f", new_value);
             break;
         case PLATEAU_TIME:
-            // TODO
-            LV_LOG_INFO("TO ADD: PLATEAU TIME");
+            wave_params->plateau_time = (uint16_t) new_value;
+            LV_LOG_INFO("PLATEAU TIME is now %.1f", new_value);
             break;
         case IE_RATIO_LEFT:
             wave_params->ie_i = new_value;
