@@ -77,6 +77,9 @@ void Machine::state_inspiration()
             fault_id = Fault::FT_WAVEFORM_CALC_ERROR;
             // Error in waveform calculation. Switch to error state
             set_state(States::ST_FAULT);
+
+            // Return early. Don't setup the actuator.
+            return;
         }
 
         float goal_pos_deg = p_actuator->volume_to_degrees(C_Stat::FIFTY, p_waveparams->volume_ml / 1000);
