@@ -65,6 +65,7 @@ void Waveform::display_details() const
     serial_printf("Vt:\t\t %0.1f\n", params.volume_ml);
     serial_printf("pip:\t\t %d\n", params.pip);
     serial_printf("peep:\t\t %d\n", params.peep);
+    serial_printf("plateau:\t %d\n", params.plateau_time);
 }
 
 void Waveform::set_pip_peak_and_reset()

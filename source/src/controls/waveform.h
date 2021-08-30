@@ -10,12 +10,13 @@ struct waveform_params {
     float tEx;        // Calculated time (s) since tCycleTimer for end of EX_STATE
     float tPeriod;    // Calculated time (s) since tCycleTimer for end of cycle
 
-    uint16_t bpm;   // Breaths per minute
-    float volume_ml;// Tidal volume
-    float ie_i;     // Inspiration of IE ratio
-    float ie_e;     // Expiration of IE ratio
-    uint16_t pip;   // Peak inspiratory pressure (cmH2O)
-    uint16_t peep;  // Peak end expiratory pressure (cmH2O)
+    uint16_t bpm;         // Breaths per minute
+    float volume_ml;      // Tidal volume
+    float ie_i;           // Inspiration of IE ratio
+    float ie_e;           // Expiration of IE ratio
+    uint16_t pip;         // Peak inspiratory pressure (cmH2O)
+    uint16_t peep;        // Peak end expiratory pressure (cmH2O)
+    uint16_t plateau_time;// Plateau(time to hold after inspiration) in ms
 
     // Measured
     float m_pip;          // Measured pip
@@ -63,6 +64,7 @@ private:
             .ie_i = DEF_IE,
             .ie_e = DEF_IE,
             .pip = DEF_PIP,
-            .peep = DEF_PEEP};
+            .peep = DEF_PEEP,
+            .plateau_time = DEF_PLATEAU};
 };
 #endif//UVENT_WAVEFORM_H
