@@ -20,7 +20,7 @@ int8_t Waveform::calculate_waveform()
     params.tHoldIn = (params.ie_i * params.tPeriod) / (params.ie_i + params.ie_e);
 
     // Calculate the time for the paddle to profile an inspiration.
-    params.tIn = params.tHoldIn - HOLD_IN_DURATION;
+    params.tIn = params.tHoldIn - (params.plateau_time / 1000.0);// plateau time is in milliseconds.
 
     // The remaining is expiration.
     params.tEx = params.tPeriod - params.tHoldIn;
