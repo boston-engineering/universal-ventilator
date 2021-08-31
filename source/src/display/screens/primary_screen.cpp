@@ -66,6 +66,13 @@ void MainScreen::attach_settings_cb()
         auto on_settings_check = [](lv_event_t* evt) {
             lv_obj_t* target = lv_event_get_target(evt);
             lv_state_t state = lv_obj_get_state(target);
+
+            // No No
+            if (active_floating_window) {
+                lv_obj_add_state(target, LV_STATE_CHECKED);
+                return;
+            }
+
             if (!lv_obj_has_flag(target, LV_OBJ_FLAG_CHECKABLE)) {
                 return;
             }
