@@ -609,7 +609,12 @@ void add_start_button()
 
         // No No
         if (active_floating_window) {
-            lv_obj_add_state(btn, LV_STATE_CHECKED);
+            if (lv_obj_has_state(btn, LV_STATE_CHECKED)) {
+                lv_obj_clear_state(btn, LV_STATE_CHECKED);
+            }
+            else {
+                lv_obj_add_state(btn, LV_STATE_CHECKED);
+            }
             return;
         }
 
@@ -660,7 +665,12 @@ void add_mute_button()
                 }
                 // No No
                 if (active_floating_window) {
-                    lv_obj_add_state(btn, LV_STATE_CHECKED);
+                    if (lv_obj_has_state(btn, LV_STATE_CHECKED)) {
+                        lv_obj_clear_state(btn, LV_STATE_CHECKED);
+                    }
+                    else {
+                        lv_obj_add_state(btn, LV_STATE_CHECKED);
+                    }
                     return;
                 }
                 control_toggle_alarm_snooze();
