@@ -606,6 +606,13 @@ void add_start_button()
 
     auto on_press_cb = [](lv_event_t* evt) {
         lv_obj_t* btn = lv_event_get_target(evt);
+
+        // No No
+        if (active_floating_window) {
+            lv_obj_add_state(btn, LV_STATE_CHECKED);
+            return;
+        }
+
         lv_obj_t* btn_label = lv_obj_get_child(btn, 0);
         if (evt->code == LV_EVENT_VALUE_CHANGED) {
             bool enabled = (strcmp(lv_label_get_text(btn_label), "Standby") == 0);
@@ -647,6 +654,15 @@ void add_mute_button()
     lv_obj_add_event_cb(
             button,
             [](lv_event_t* evt) {
+                lv_obj_t* btn = lv_event_get_target(evt);
+                if (!btn) {
+                    return;
+                }
+                // No No
+                if (active_floating_window) {
+                    lv_obj_add_state(btn, LV_STATE_CHECKED);
+                    return;
+                }
                 control_toggle_alarm_snooze();
             },
             LV_EVENT_VALUE_CHANGED,
