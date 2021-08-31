@@ -81,9 +81,27 @@ void MainScreen::attach_settings_cb()
 
             if ((state & LV_STATE_CHECKED) != 0) {
                 screen_ptr->open_config();
+                lv_obj_t* start = get_start_button();
+                lv_obj_t* mute = get_mute_button();
+
+                if (start) {
+                    lv_obj_add_state(start, LV_STATE_DISABLED);
+                }
+                if (mute) {
+                    lv_obj_add_state(mute, LV_STATE_DISABLED);
+                }
             }
             else {
                 setup_controls();
+                lv_obj_t* start = get_start_button();
+                lv_obj_t* mute = get_mute_button();
+
+                if (start) {
+                    lv_obj_clear_state(start, LV_STATE_DISABLED);
+                }
+                if (mute) {
+                    lv_obj_clear_state(mute, LV_STATE_DISABLED);
+                }
             }
         };
 

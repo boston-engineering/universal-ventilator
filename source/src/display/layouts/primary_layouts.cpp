@@ -607,17 +607,6 @@ void add_start_button()
     auto on_press_cb = [](lv_event_t* evt) {
         lv_obj_t* btn = lv_event_get_target(evt);
 
-        // No No
-        if (active_floating_window) {
-            if (lv_obj_has_state(btn, LV_STATE_CHECKED)) {
-                lv_obj_clear_state(btn, LV_STATE_CHECKED);
-            }
-            else {
-                lv_obj_add_state(btn, LV_STATE_CHECKED);
-            }
-            return;
-        }
-
         lv_obj_t* btn_label = lv_obj_get_child(btn, 0);
         if (evt->code == LV_EVENT_VALUE_CHANGED) {
             bool enabled = (strcmp(lv_label_get_text(btn_label), "Standby") == 0);
@@ -660,19 +649,6 @@ void add_mute_button()
             button,
             [](lv_event_t* evt) {
                 lv_obj_t* btn = lv_event_get_target(evt);
-                if (!btn) {
-                    return;
-                }
-                // No No
-                if (active_floating_window) {
-                    if (lv_obj_has_state(btn, LV_STATE_CHECKED)) {
-                        lv_obj_clear_state(btn, LV_STATE_CHECKED);
-                    }
-                    else {
-                        lv_obj_add_state(btn, LV_STATE_CHECKED);
-                    }
-                    return;
-                }
                 control_toggle_alarm_snooze();
             },
             LV_EVENT_VALUE_CHANGED,
@@ -680,12 +656,32 @@ void add_mute_button()
     );
 }
 
+lv_obj_t* get_start_button()
+{
+    lv_obj_t* visual_3 = SCR_C(VISUAL_AREA_3);
+    if (!visual_3) {
+        return nullptr;
+    }
+    return lv_obj_get_child(visual_3, 0);
+}
+
 lv_obj_t* get_mute_button()
 {
     lv_obj_t* visual_3 = SCR_C(VISUAL_AREA_3);
-    lv_obj_t* button = lv_obj_get_child(visual_3, 1);
+    if (!visual_3) {
+        return nullptr;
+    }
+    return lv_obj_get_child(visual_3, 1);
+}
 
-    return button;
+lv_obj_t* get_settings_config_button()
+{
+    lv_obj_t* settings_button_container = SCR_C(CONTROL_AREA_2);
+    if (!settings_button_container) {
+        return nullptr;
+    }
+    lv_obj_t* settings_button = lv_obj_get_child(settings_button_container, 0);
+    return settings_button;
 }
 
 lv_obj_t* add_settings_button(const char* title, lv_obj_t* parent)
