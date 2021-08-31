@@ -414,6 +414,11 @@ static void open_sensor_select_dialog(lv_event_t* evt)
 
 static void open_about_dialog(lv_event_t* evt)
 {
+    if (active_floating_window) {
+        LV_LOG_USER("Can't open a second window");
+        return;
+    }
+
     lv_obj_t* window = open_option_dialog("About [WIP]", true);
     lv_obj_set_style_max_width(window, 425 px, LV_PART_MAIN);
     lv_obj_set_style_max_height(window, 250 px, LV_PART_MAIN);
