@@ -41,7 +41,6 @@ void setup_readouts()
     lv_obj_t* parent = SCR_C(VISUAL_AREA_1);
     lv_obj_clean(parent);
 
-    setup_adjustable_readout(TIDAL_VOLUME);
     setup_adjustable_readout(RESPIRATION_RATE);
 
     setup_ie_readout();
@@ -49,6 +48,7 @@ void setup_readouts()
     setup_adjustable_readout(PEEP);
     setup_adjustable_readout(PIP);
     setup_adjustable_readout(PLAT_PRESSURE);
+    setup_adjustable_readout(FLOW);
 }
 
 void setup_controls()
@@ -67,7 +67,6 @@ void setup_controls()
     setup_adjustable_control(PEEP);
     setup_adjustable_control(PIP);
     setup_adjustable_control(PLATEAU_TIME);
-    setup_adjustable_control(FLOW);
 }
 
 void setup_buttons()
