@@ -98,13 +98,7 @@ void setup_visual_2()
     lv_obj_t* spacer = lv_obj_create(visual_area_2);
     lv_obj_add_style(spacer, STYLE_PTR_CM(SPACER), LV_PART_MAIN);
 
-    lv_obj_t* extra_readout_1 = lv_obj_create(spacer);
-    lv_obj_add_style(extra_readout_1, STYLE_PTR_CM(READOUT_EXTRA), LV_PART_MAIN);
-
-    lv_obj_t* extra_readout_2 = lv_obj_create(spacer);
-    lv_obj_add_style(extra_readout_2, STYLE_PTR_CM(READOUT_EXTRA), LV_PART_MAIN);
-
-    setup_alert_box();
+   setup_alert_box();
 }
 
 /*******************************************************************/
