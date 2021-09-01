@@ -84,6 +84,7 @@ void loop_test_readout(lv_timer_t* timer)
     // Will not refresh until explicitly told
     static double cur_pressure = -2;
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
+    set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
     set_readout(AdjValueType::PLAT_PRESSURE, cur_pressure);
     cur_pressure += 1;
     cur_pressure += random(100) / 100.0;
