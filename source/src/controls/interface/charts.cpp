@@ -62,7 +62,7 @@ void SensorChart::generate_chart(lv_obj_t* parent, AdjValueType tracked_type = U
     lv_chart_set_point_count(chart, chart_points);
     lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
     lv_obj_t* readout_label = lv_label_create(chart);
-    lv_obj_set_style_text_font(readout_label, &lv_font_montserrat_20, LV_PART_MAIN);
+    lv_obj_set_style_text_font(readout_label, &lv_font_montserrat_28, LV_PART_MAIN);
     lv_label_set_text_fmt(readout_label, "--");
     lv_obj_align(readout_label, LV_ALIGN_TOP_LEFT, 0, -5);
 
