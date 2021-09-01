@@ -269,7 +269,6 @@ void control_update_waveform_param(AdjValueType type, float new_value)
         default:
             break;
     }
-    control_calculate_waveform();
 }
 
 /**
