@@ -4,19 +4,9 @@
 MainScreen::MainScreen()
         : Screen()
 {
-    charts[0] = SensorChart(
-            "Gauge Pressure",
-            GAUGE_PRESSURE_CHART_MIN_VALUE,
-            GAUGE_PRESSURE_CHART_MAX_VALUE,
-            GAUGE_PRESSURE_CHART_MAX_POINTS,
-            GAUGE_PRESSURE_CHART_REFRESH_TIME,
-            GAUGE_PRESSURE_CHART_LINE_MODE,
-            GAUGE_PRESSURE_CHART_DOT_SIZE,
-            GAUGE_PRESSURE_CHART_LINE_WIDTH
-    );
 
-    charts[1] = SensorChart(
-            "Tidal Volume",
+    charts[0] = SensorChart(
+            "Tidal Volume (mL)",
             VT_CHART_MIN_VALUE,
             VT_CHART_MAX_VALUE,
             VT_CHART_MAX_POINTS,
@@ -24,6 +14,17 @@ MainScreen::MainScreen()
             VT_CHART_LINE_MODE,
             VT_CHART_DOT_SIZE,
             VT_CHART_LINE_WIDTH
+    );
+
+    charts[1] = SensorChart(
+            "Gauge Pressure (cmH2O)",
+            GAUGE_PRESSURE_CHART_MIN_VALUE,
+            GAUGE_PRESSURE_CHART_MAX_VALUE,
+            GAUGE_PRESSURE_CHART_MAX_POINTS,
+            GAUGE_PRESSURE_CHART_REFRESH_TIME,
+            GAUGE_PRESSURE_CHART_LINE_MODE,
+            GAUGE_PRESSURE_CHART_DOT_SIZE,
+            GAUGE_PRESSURE_CHART_LINE_WIDTH
     );
 }
 
@@ -49,7 +50,6 @@ void MainScreen::setup()
 
     // VISUAL_AREA_2
     setup_visual_2();
-    setup_extra_readouts();
     generate_charts();
 
     setup_buttons();
@@ -119,8 +119,8 @@ void MainScreen::generate_charts()
     lv_obj_t* screen_container = SCR_C(VISUAL_AREA_2);
     lv_obj_t* chart_container = lv_obj_get_child(screen_container, 0);
 
-    charts[0].generate_chart(chart_container);
-    charts[1].generate_chart(chart_container);
+    charts[0].generate_chart(chart_container, TIDAL_VOLUME);
+    charts[1].generate_chart(chart_container, CUR_PRESSURE);
 }
 
 const SensorChart* MainScreen::get_chart(uint8_t idx)

@@ -67,15 +67,7 @@ void setup_controls()
     setup_adjustable_control(PEEP);
     setup_adjustable_control(PIP);
     setup_adjustable_control(PLATEAU_TIME);
-}
-
-void setup_extra_readouts()
-{
-    lv_obj_t* visual_2 = SCR_C(VISUAL_AREA_2);
-    lv_obj_t* spacer = lv_obj_get_child(visual_2, 1);
-
-//    setup_adjustable_readout(FLOW, lv_obj_get_child(spacer, 0));
-//    setup_adjustable_readout(CUR_PRESSURE, lv_obj_get_child(spacer, 1));
+    setup_adjustable_control(FLOW);
 }
 
 void setup_buttons()
