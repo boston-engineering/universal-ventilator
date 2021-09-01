@@ -66,6 +66,13 @@ void MainScreen::attach_settings_cb()
         auto on_settings_check = [](lv_event_t* evt) {
             lv_obj_t* target = lv_event_get_target(evt);
             lv_state_t state = lv_obj_get_state(target);
+
+            // No No
+            if (active_floating_window) {
+                lv_obj_add_state(target, LV_STATE_CHECKED);
+                return;
+            }
+
             if (!lv_obj_has_flag(target, LV_OBJ_FLAG_CHECKABLE)) {
                 return;
             }
@@ -74,9 +81,27 @@ void MainScreen::attach_settings_cb()
 
             if ((state & LV_STATE_CHECKED) != 0) {
                 screen_ptr->open_config();
+                lv_obj_t* start = get_start_button();
+                lv_obj_t* mute = get_mute_button();
+
+                if (start) {
+                    lv_obj_add_state(start, LV_STATE_DISABLED);
+                }
+                if (mute) {
+                    lv_obj_add_state(mute, LV_STATE_DISABLED);
+                }
             }
             else {
                 setup_controls();
+                lv_obj_t* start = get_start_button();
+                lv_obj_t* mute = get_mute_button();
+
+                if (start) {
+                    lv_obj_clear_state(start, LV_STATE_DISABLED);
+                }
+                if (mute) {
+                    lv_obj_clear_state(mute, LV_STATE_DISABLED);
+                }
             }
         };
 
