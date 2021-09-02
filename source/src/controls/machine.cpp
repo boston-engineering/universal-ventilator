@@ -220,14 +220,18 @@ void Machine::state_actuator_home()
         * only if home is not reached.
         * Also do the check after a time delay as it takes time for
         * the drive to respond.
+        * The || check for fault flag is for checking a forced fault through the parser.
         */
         if (machine_timer > check_actuator_move_in_ticks) {
-            if ((is_home == false) && (p_actuator->is_moving() == false)) {
+            if (((is_home == false) && (p_actuator->is_moving() == false)) || (actuator_force_fault_debug == true)) {
                 // Set the fault ID:
                 fault_id = Fault::FT_ACTUATOR_FAULT;
                 enable_start_button();
                 // Actuator is not moving. Switch to error state
                 set_state(States::ST_FAULT);
+
+                // Reset the force fault
+                actuator_force_fault_debug = false;
             }
         }
     }
@@ -353,4 +357,15 @@ void Machine::handle_errors()
     }
 
     p_alarm_manager->update();
+}
+
+void Machine::set_fault(Fault id)
+{
+    // Set the fault_id. It will get picked up at the right states.
+
+    // Service only the actuator fault for now.
+    if (id == Fault::FT_ACTUATOR_FAULT) {
+        // Set the special debug fault flag
+        actuator_force_fault_debug = true;
+    }
 }

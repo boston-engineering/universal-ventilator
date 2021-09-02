@@ -37,6 +37,7 @@ public:
     States get_current_state();
     void change_state(States);
     void handle_errors();
+    void set_fault(Fault);
 
 private:
     // Current state of the state machine.
@@ -58,6 +59,9 @@ private:
 
     const uint32_t check_actuator_move_in_ms = 400;// Wait time before checking for actuator movement.
     const uint32_t check_actuator_move_in_ticks = (check_actuator_move_in_ms * 1000) / CONTROL_HANDLER_PERIOD_US;
+
+    // Debug fault flag for actuator.
+    bool actuator_force_fault_debug = false;
 
     // Fault code
     Fault fault_id;

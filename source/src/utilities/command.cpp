@@ -19,6 +19,7 @@ static void command_eeprom(int argc, char** argv);
 static void command_waveform(int argc, char** argv);
 static void command_pressure(int argc, char** argv);
 static void command_alarm(int argc, char** argv);
+static void command_fault(int argc, char** argv);
 
 /* Command response, with error code. */
 static void print_response(Error_Codes error)
@@ -74,6 +75,7 @@ command_type commands[] =
                 {"ee", command_eeprom, "\t\tEEPROM related commands.\r\n"},
                 {"wave", command_waveform, "\t\tWaveform related commands.\r\n"},
                 {"press", command_pressure, "\t\tPressure related commands.\r\n"},
+                {"fault", command_fault, "\t\tForce a fault.\r\n"},
                 {"alarm", command_alarm, "\t\\Alarm related commands.\r\n"}};
 
 uint16_t const command_array_size = sizeof(commands) / sizeof(command_type);
@@ -88,6 +90,38 @@ command_help(int argc, char** argv)
         Serial.print(commands[i].name);
         Serial.print(commands[i].help);
     }
+}
+
+/* Force a fault(testing). */
+static void
+command_fault(int argc, char** argv)
+{
+    if (argc < 2) {
+        // Not enough arguments.
+        print_response(Error_Codes::ER_NOT_ENOUGH_ARGS);
+        return;
+    }
+    if (!(strcmp(argv[1], "help")) || (argc == 1)) {
+        Serial.println("Format: fault id_no");
+        Serial.println("1 - Actuator");
+        return;
+    }
+
+    int32_t fault_id;
+
+    // Check if the strings can be parsed. If False, abort.
+    if (!(sanitize_input(argv[1], &fault_id))) {
+        print_response(Error_Codes::ER_INVALID_ARG);
+        return;
+    }
+
+    // Only do actuator fault. Others are not supported
+    if (((Fault) fault_id != Fault::FT_ACTUATOR_FAULT)) {
+        print_response(Error_Codes::ER_INVALID_ARG);
+        return;
+    }
+
+    control_set_fault((Fault) fault_id);
 }
 
 /* Actuator function. */
