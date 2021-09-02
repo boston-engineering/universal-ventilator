@@ -64,8 +64,13 @@ void Machine::state_inspiration()
 
         // Check if paddle is at home.
         if (!(p_actuator->is_home())) {
+#if USE_AMS_FEEDBACK
             p_actuator->add_correction();
             state_first_entry = true;
+#else
+            set_state(States::ST_ACTUATOR_HOME);
+            inspiration_state_triggered = true;
+#endif
             return;
         }
         (*cycle_count)++;
@@ -212,6 +217,13 @@ void Machine::state_actuator_home()
 
         enable_start_button();
         set_state(States::ST_OFF);
+        if (inspiration_state_triggered) {
+            inspiration_state_triggered = false;
+            set_state(States::ST_INSPR);
+        }
+        else {
+            set_state(States::ST_OFF);
+        }
     }
     else {
         // Homing in progress.

@@ -75,6 +75,8 @@ private:
 
     PressureSensor* p_gauge_pressure;
 
+    bool inspiration_state_triggered;
+
     // Set the current state in the state machine
     void set_state(States);
 
