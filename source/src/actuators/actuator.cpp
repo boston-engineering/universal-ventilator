@@ -92,7 +92,7 @@ bool Actuator::is_home()
     // double current_position = stepper.get_position();
     double current_position = get_position();
 
-    /* Allow a degree of dither to detect home.
+/* Allow a degree of dither to detect home.
      * The stepper motor is setup to perform full steps.
      * The teeth ratio is 60/14, which is 1:4.29
      * which means, 4.29 revs of the stepper is 1 rev of the main wheel.
@@ -100,7 +100,13 @@ bool Actuator::is_home()
      * = 0.419~0.42 degrees on the wobbler shaft.
      * Check within a degree while homing.
      */
+#if USE_AMS_FEEDBACK
+    // The feedback sensor has a dither and sometimes rolls over. Add a forward band.
     return (((current_position >= 0.2) && (current_position <= 1.0)));
+#else
+    // For no feedback, the stepper steps are counted and does not roll over.
+    return (((current_position >= 0.0) && (current_position <= 1.0)));
+#endif
 }
 
 bool Actuator::is_running()
