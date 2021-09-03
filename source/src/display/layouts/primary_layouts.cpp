@@ -572,6 +572,24 @@ void set_alert_text(String* messages, uint16_t count, uint16_t buf_size)
 /*          Functions to generate buttons       */
 /************************************************/
 
+void disable_start_button()
+{
+    lv_obj_t* btn = get_start_button();
+    if (!btn) {
+        return;
+    }
+    lv_obj_add_state(btn, LV_STATE_DISABLED);
+}
+
+void enable_start_button()
+{
+    lv_obj_t* btn = get_start_button();
+    if (!btn) {
+        return;
+    }
+    lv_obj_clear_state(btn, LV_STATE_DISABLED);
+}
+
 void add_start_button()
 {
     lv_obj_t* button = lv_btn_create(SCR_C(VISUAL_AREA_3));

@@ -89,6 +89,7 @@ static void add_stepper_home_button()
 
         auto home_actuator_cb = [](lv_event_t* evt) {
             Serial.println("Homing actuator");
+            disable_start_button();
             control_change_state(States::ST_ACTUATOR_HOME);
         };
 
