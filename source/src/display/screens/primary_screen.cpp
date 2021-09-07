@@ -98,9 +98,6 @@ void MainScreen::attach_settings_cb()
                 lv_obj_t* start = get_start_button();
                 lv_obj_t* mute = get_mute_button();
 
-                Serial.print("Current State: ");
-                Serial.println(control_get_state_string());
-
                 if (start && (control_get_state() != States::ST_ACTUATOR_HOME)) {
                     lv_obj_clear_state(start, LV_STATE_DISABLED);
                 }

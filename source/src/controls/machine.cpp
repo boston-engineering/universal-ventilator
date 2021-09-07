@@ -180,6 +180,7 @@ void Machine::state_actuator_home()
 
     if (state_first_entry) {
         state_first_entry = false;
+        disable_start_button();
 
         // Check if the paddle is at home position
         // If not move the paddle to home.
