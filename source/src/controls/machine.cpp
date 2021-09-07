@@ -1,5 +1,6 @@
 
 #include <Arduino.h>
+#include <display/layouts/layouts.h>
 #include "machine.h"
 #include "actuators/actuator.h"
 #include "utilities/util.h"
@@ -179,6 +180,7 @@ void Machine::state_actuator_home()
 
     if (state_first_entry) {
         state_first_entry = false;
+        disable_start_button();
 
         // Check if the paddle is at home position
         // If not move the paddle to home.
@@ -189,6 +191,7 @@ void Machine::state_actuator_home()
             // Reset measured parameters.
             p_waveform->reset_measured_params();
 
+            enable_start_button();
             set_state(States::ST_OFF);
         }
         else {
@@ -207,6 +210,7 @@ void Machine::state_actuator_home()
         // Reset measured parameters.
         p_waveform->reset_measured_params();
 
+        enable_start_button();
         set_state(States::ST_OFF);
     }
     else {
@@ -221,6 +225,7 @@ void Machine::state_actuator_home()
             if ((is_home == false) && (p_actuator->is_moving() == false)) {
                 // Set the fault ID:
                 fault_id = Fault::FT_ACTUATOR_FAULT;
+                enable_start_button();
                 // Actuator is not moving. Switch to error state
                 set_state(States::ST_FAULT);
             }
