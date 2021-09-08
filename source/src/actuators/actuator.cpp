@@ -353,10 +353,8 @@ bool Actuator::add_correction()
     return true;
 }
 
-Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
+void Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
 {
-    if (duration_s <= 0) return Fault::FT_ACTUATOR_INVALID_TIME;// Invalid time.
-
     // Get the current position of the actuator
     const float cur_pos_deg = (float) get_position();
 
@@ -376,6 +374,4 @@ Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_
 #if DEBUG_WAVEFORM
     serial_printf("Pos: %f, Goal:%f, Speed: %f\n", cur_pos_deg, goal_pos_deg, vel_deg);
 #endif
-
-    return Fault::FT_NONE;
 }
