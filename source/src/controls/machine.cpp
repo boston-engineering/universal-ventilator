@@ -62,6 +62,9 @@ void Machine::state_inspiration()
 {
     if (state_first_entry) {
 
+        // Clear all faults. They will get processed as states run.
+        fault_id = Fault::FT_NONE;
+
         // Check if paddle is at home.
         if (!(p_actuator->is_home())) {
 #if USE_AMS_FEEDBACK
