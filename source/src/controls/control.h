@@ -80,4 +80,5 @@ int16_t control_get_alarm_count();
 void control_set_alarm_all_off();
 Alarm* control_get_alarm_list();
 void control_alarm_test();
+void control_set_fault(Fault);
 #endif

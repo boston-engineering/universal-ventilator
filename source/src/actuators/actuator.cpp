@@ -92,7 +92,7 @@ bool Actuator::is_home()
     // double current_position = stepper.get_position();
     double current_position = get_position();
 
-    /* Allow a degree of dither to detect home.
+/* Allow a degree of dither to detect home.
      * The stepper motor is setup to perform full steps.
      * The teeth ratio is 60/14, which is 1:4.29
      * which means, 4.29 revs of the stepper is 1 rev of the main wheel.
@@ -100,7 +100,13 @@ bool Actuator::is_home()
      * = 0.419~0.42 degrees on the wobbler shaft.
      * Check within a degree while homing.
      */
+#if USE_AMS_FEEDBACK
+    // The feedback sensor has a dither and sometimes rolls over. Add a forward band.
     return (((current_position >= 0.2) && (current_position <= 1.0)));
+#else
+    // For no feedback, the stepper steps are counted and does not roll over.
+    return (((current_position >= 0.0) && (current_position <= 1.0)));
+#endif
 }
 
 bool Actuator::is_running()
@@ -347,10 +353,8 @@ bool Actuator::add_correction()
     return true;
 }
 
-Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
+void Actuator::calculate_trajectory(const float& duration_s, const float& goal_pos_deg, float& vel_deg)
 {
-    if (duration_s <= 0) return Fault::FT_ACTUATOR_INVALID_TIME;// Invalid time.
-
     // Get the current position of the actuator
     const float cur_pos_deg = (float) get_position();
 
@@ -370,6 +374,4 @@ Fault Actuator::calculate_trajectory(const float& duration_s, const float& goal_
 #if DEBUG_WAVEFORM
     serial_printf("Pos: %f, Goal:%f, Speed: %f\n", cur_pos_deg, goal_pos_deg, vel_deg);
 #endif
-
-    return Fault::FT_NONE;
 }

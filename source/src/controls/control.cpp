@@ -608,6 +608,11 @@ void control_alarm_snooze()
     alarm_manager.snooze();
 }
 
+void control_set_fault(Fault id)
+{
+    machine.set_fault(id);
+}
+
 void control_toggle_alarm_snooze()
 {
     alarm_manager.toggle_snooze();
