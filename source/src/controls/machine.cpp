@@ -249,6 +249,10 @@ void Machine::state_actuator_home()
                 actuator_force_fault_debug = false;
             }
         }
+        else {
+            // Service is_moving, so that the prev_position is valid, when the above condition is true.
+            p_actuator->is_moving();
+        }
     }
 }
 
