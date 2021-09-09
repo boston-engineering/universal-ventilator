@@ -7,7 +7,7 @@
 
 #define clamp(n, low, high) max(low, min(n, high))
 
-#define CHART_IDX_VT 0
+#define CHART_IDX_FLOW 0
 #define CHART_IDX_PRESSURE 1
 
 typedef enum AdjValueType {

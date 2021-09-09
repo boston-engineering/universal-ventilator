@@ -227,12 +227,12 @@
 #define GAUGE_PRESSURE_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
 #define GAUGE_PRESSURE_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
 
-#define VT_CHART_MIN_VALUE (-2)
-#define VT_CHART_MAX_VALUE 1200
-#define VT_CHART_MAX_POINTS 100
-#define VT_CHART_REFRESH_TIME 250
-#define VT_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
-#define VT_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
-#define VT_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
+#define FLOW_CHART_MIN_VALUE (-10)
+#define FLOW_CHART_MAX_VALUE FLOW_MAX
+#define FLOW_CHART_MAX_POINTS 100
+#define FLOW_CHART_REFRESH_TIME 250
+#define FLOW_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
+#define FLOW_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
+#define FLOW_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
 
 #endif
