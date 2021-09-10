@@ -76,7 +76,8 @@ double PressureSensor::get_flow(Units_flow units, bool zero, Order_type order)
         determine_units_flow(flow, units);
     }
 
-    return flow;
+    // Reverse the flow, due to tubing layout. Blue line goes closest to patient.
+    return (-1.0)*flow;
 }
 
 void PressureSensor::reset_zero(int32_t& pressure_offset_adc_counts)
