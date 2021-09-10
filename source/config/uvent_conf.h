@@ -162,7 +162,7 @@
 #define BPM_MAX 30
 #define DEF_BPM 8
 
-// AMBU Bag limit, aka vt
+// AMBU Bag limit, aka vt(liters)
 #define MIN_BAG_VOL_L 0.1
 #define MAX_BAG_VOL_L 1.06
 #define DEF_BAG_VOL_L 1.06// Default
@@ -175,26 +175,26 @@
 #define IE_MAX 4.0
 #define DEF_IE 1.0// Default
 
-// PEEP
+// PEEP(cmh2o)
 #define PEEP_MIN 5
 #define PEEP_MAX 20
 #define DEF_PEEP 5// Default
 
-// PIP
+// PIP(cmh2o)
 #define PIP_MIN 15
 #define PIP_MAX 40
 #define DEF_PIP 40// Default
 
-// Plateau
+// Plateau(time in ms)
 #define PLATEAU_MIN 100
 #define PLATEAU_MAX 300
 #define DEF_PLATEAU 100// Default
 
-// Flow
-#define FLOW_MIN 0
-#define FLOW_MAX 180
+// Flow(lpm)
+#define FLOW_MIN -20
+#define FLOW_MAX 80
 
-// Pressure
+// Pressure(cmh2o)
 #define PRESSURE_MIN 0
 #define PRESSURE_MAX 40
 
@@ -219,15 +219,15 @@
 #define VERBOSE_DATA_POLLING 1
 
 // Chart Configuration
-#define GAUGE_PRESSURE_CHART_MIN_VALUE (-2)
-#define GAUGE_PRESSURE_CHART_MAX_VALUE 40
+#define GAUGE_PRESSURE_CHART_MIN_VALUE (-5)
+#define GAUGE_PRESSURE_CHART_MAX_VALUE PIP_MAX
 #define GAUGE_PRESSURE_CHART_MAX_POINTS 100
 #define GAUGE_PRESSURE_CHART_REFRESH_TIME 150
 #define GAUGE_PRESSURE_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
 #define GAUGE_PRESSURE_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
 #define GAUGE_PRESSURE_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
 
-#define FLOW_CHART_MIN_VALUE (-10)
+#define FLOW_CHART_MIN_VALUE FLOW_MIN
 #define FLOW_CHART_MAX_VALUE FLOW_MAX
 #define FLOW_CHART_MAX_POINTS 100
 #define FLOW_CHART_REFRESH_TIME 150
