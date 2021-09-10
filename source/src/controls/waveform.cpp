@@ -89,6 +89,7 @@ void Waveform::reset_measured_params()
     params.m_rr = 0.0;
     params.m_ie_i = 0.0;
     params.m_ie_e = 0.0;
+    params.m_tidal_volume = 0.0;
 }
 
 void Waveform::calculate_respiration_rate()
