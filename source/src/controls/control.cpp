@@ -181,7 +181,7 @@ void loop_update_readouts(lv_timer_t* timer)
     // Check to see if it's time to refresh the readout boxes
     if (has_time_elapsed(&last_readout_refresh, READOUT_REFRESH_INTERVAL)) {
         // Refresh all of the readout labels
-        for (auto& value: adjustable_values) {
+        for (auto& value : adjustable_values) {
             if (!value.is_dirty()) {
                 continue;
             }
@@ -384,6 +384,13 @@ void control_init()
     //  Storage init
     storage.init();
 
+    // Check EEPROM CRC. Load defaults if CRC fails.
+    if (!storage.is_crc_ok()) {
+        Serial.println("CRC failed. Loading defaults.");
+        // No settings found, or settings corrupted.
+        storage.load_defaults();
+    }
+
     // Initialize the actuator
     actuator.init();
 
@@ -429,12 +436,6 @@ void control_init()
     Timer1.attachInterrupt(actuator_handler);
     Timer1.start(ACTUATOR_HANDLER_PERIOD_US);
 
-    // Check EEPROM CRC. Load defaults if CRC fails.
-    if (!storage.is_crc_ok()) {
-        Serial.println("CRC failed. Loading defaults.");
-        // No settings found, or settings corrupted.
-        storage.load_defaults();
-    }
 #endif
 }
 
