@@ -56,7 +56,7 @@ void SensorChart::generate_chart(lv_obj_t* parent, AdjValueType tracked_type = U
 
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, range_min, range_max);
-    lv_chart_set_div_line_count(chart, 1, 11); /*Divide the graph area into 10(11 lines) equal parts*/
+    lv_chart_set_div_line_count(chart, 2, 11); /*Divide the graph area into 10(11 lines) equal parts*/
 
 
     /*Add data series*/
