@@ -380,6 +380,7 @@ void Machine::handle_errors()
         p_alarm_manager->badPlateau(false);
         p_alarm_manager->lowPressure(false);
         p_alarm_manager->noTidalPres(false);
+        p_alarm_manager->highPressure(p_gauge_pressure->get_pressure(units_pressure::cmH20) > PRESSURE_MAX);
     }
 
     p_alarm_manager->update();
