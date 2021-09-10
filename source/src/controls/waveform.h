@@ -25,6 +25,7 @@ struct waveform_params {
     float m_rr;           // Measured respiration rate as breaths per minute
     float m_ie_i;         // Measured I of IE ratio
     float m_ie_e;         // Measured E of IE ratio
+    float m_tidal_volume; // Estimated volume during inspiration.
 };
 
 class Waveform {

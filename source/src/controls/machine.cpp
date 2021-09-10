@@ -106,6 +106,10 @@ void Machine::state_inspiration()
     if (p_waveform->is_inspiration_done()) {
         // Keep track of max pip.
         p_waveform->set_current_pip(p_gauge_pressure->get_pressure(units_pressure::cmH20));
+
+        // Note the volume dispensed. Keep this as a copy of the command volume.
+        p_waveparams->m_tidal_volume = p_waveparams->volume_ml;
+
         set_state(States::ST_INSPR_HOLD);
     }
 }

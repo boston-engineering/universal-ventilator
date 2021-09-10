@@ -160,13 +160,11 @@ void loop_update_readouts(lv_timer_t* timer)
     screen->get_chart(CHART_IDX_PRESSURE)->add_data_point(cur_pressure);
     set_readout(AdjValueType::CUR_PRESSURE, cur_pressure);
 
-    // Poll vT sensor, update readout obj.
+    // Poll sensors, update readout obj.
     // Will not refresh until explicitly told
-    double cur_tidal_volume = control_get_degrees_to_volume_ml();
-    set_readout(AdjValueType::TIDAL_VOLUME, cur_tidal_volume);
-
     // Waveform parameters
     waveform_params* p_wave_params = control_get_waveform_params();
+    set_readout(AdjValueType::TIDAL_VOLUME, p_wave_params->m_tidal_volume);
     set_readout(AdjValueType::RESPIRATION_RATE, p_wave_params->m_rr);
     set_readout(AdjValueType::IE_RATIO_LEFT, p_wave_params->m_ie_i);
     set_readout(AdjValueType::IE_RATIO_RIGHT, p_wave_params->m_ie_e);
