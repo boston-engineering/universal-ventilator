@@ -211,7 +211,7 @@
 // Chart & Readout values will be updated every time the sensor polls
 // These changes will not be visible until the next chart refresh time or
 // READOUT_REFRESH_INTERVAL
-#define SENSOR_POLL_INTERVAL 100
+#define SENSOR_POLL_INTERVAL 200
 // How long to delay before polling data (ms). Allows for startup time of hardware components
 #define SENSOR_POLL_STARTUP_DELAY 5000
 
@@ -230,7 +230,7 @@
 #define FLOW_CHART_MIN_VALUE (-10)
 #define FLOW_CHART_MAX_VALUE FLOW_MAX
 #define FLOW_CHART_MAX_POINTS 100
-#define FLOW_CHART_REFRESH_TIME 250
+#define FLOW_CHART_REFRESH_TIME 150
 #define FLOW_CHART_LINE_MODE 1  /**< 0: No dots, only display line. 1: Use dots as data points */
 #define FLOW_CHART_DOT_SIZE 5   /**< Dot LxW in px. Only applies to LINE_MODE 1 (Default: 5)*/
 #define FLOW_CHART_LINE_WIDTH 2 /**< Changes the width of the line on the graph (Default: 2)*/
