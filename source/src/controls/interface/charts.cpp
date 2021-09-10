@@ -56,6 +56,8 @@ void SensorChart::generate_chart(lv_obj_t* parent, AdjValueType tracked_type = U
 
     lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
     lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, range_min, range_max);
+    lv_chart_set_div_line_count(chart, 2, 11); /*Divide the graph area into 10(11 lines) equal parts*/
+
 
     /*Add data series*/
     lv_chart_add_series(chart, lv_palette_main(LV_PALETTE_GREEN), LV_CHART_AXIS_PRIMARY_Y);
@@ -80,7 +82,9 @@ void SensorChart::add_data_point(double data) const
     }
     lv_chart_series_t* series = lv_chart_get_series_next(chart, nullptr);
 
-    lv_chart_set_next_value(chart, series, data);
+    uint16_t point_count = lv_chart_get_point_count(chart);
+    series->y_points[series->start_point] = data;
+    series->start_point = (series->start_point + 1) % point_count;
 }
 
 bool SensorChart::should_refresh()

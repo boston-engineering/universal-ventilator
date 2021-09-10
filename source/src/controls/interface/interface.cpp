@@ -15,11 +15,11 @@ const AdjValueParams adj_value_settings[] = {
         {"PEEP",             "PEEP",       "%.1f", "%ld",  cmh20,   PEEP_MIN,       PEEP_MAX,     DEF_PEEP,       1,   palette_color_1},
         {"PIP",              "PIP",        "%.1f", "%ld",  cmh20,   PIP_MIN,        PIP_MAX,      DEF_PIP,        1,   palette_color_1},
         {"Plateau Time",     "Plateau",    "%.1f", "%ld",  "ms",    PLATEAU_MIN,    PLATEAU_MAX,  DEF_PLATEAU,    50,  palette_color_1},
-        {"Plateau Pressure", nullptr,      "%.2f", "%.2f", cmh20,   PEEP_MIN,       PIP_MAX, 5,                   1,   palette_color_2},
+        {"Plateau Pressure", nullptr,      "%.2f", "%.2f", cmh20,   PEEP_MIN,       PIP_MAX, 5,                   1,   palette_color_1},
         {"I:E Ratio",        "",           "%.1f", "%.1f", nullptr, IE_MIN,         IE_MAX,       DEF_IE,         0.1, palette_color_1},
         {"I:E Ratio",        "",           "%.1f", "%.1f", nullptr, IE_MIN,         IE_MAX,       DEF_IE,         0.1, palette_color_1},
-        {"Flow",             "",           "%.1f", "%.1f", "L/m",   FLOW_MIN,       FLOW_MAX,     FLOW_MIN,       0.1, palette_color_2},
-        {"Pressure",         "",           "%.2f", "%.2f", "cmH2O", PRESSURE_MIN,   PRESSURE_MAX, PRESSURE_MIN,   0.1, palette_color_2},
+        {"Flow",             "",           "%.1f", "%.1f", "L/m",   FLOW_MIN,       FLOW_MAX,     FLOW_MIN,       0.1, palette_color_1},
+        {"Pressure",         "",           "%.2f", "%.2f", "cmH2O", PRESSURE_MIN,   PRESSURE_MAX, PRESSURE_MIN,   0.1, palette_color_1},
 
 };
 

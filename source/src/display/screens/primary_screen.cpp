@@ -7,18 +7,18 @@ MainScreen::MainScreen()
         : Screen()
 {
 
-    charts[0] = SensorChart(
-            "Tidal Volume (mL)",
-            VT_CHART_MIN_VALUE,
-            VT_CHART_MAX_VALUE,
-            VT_CHART_MAX_POINTS,
-            VT_CHART_REFRESH_TIME,
-            VT_CHART_LINE_MODE,
-            VT_CHART_DOT_SIZE,
-            VT_CHART_LINE_WIDTH
+    charts[CHART_IDX_FLOW] = SensorChart(
+            "Flow (Lpm)",
+            FLOW_CHART_MIN_VALUE,
+            FLOW_CHART_MAX_VALUE,
+            FLOW_CHART_MAX_POINTS,
+            FLOW_CHART_REFRESH_TIME,
+            FLOW_CHART_LINE_MODE,
+            FLOW_CHART_DOT_SIZE,
+            FLOW_CHART_LINE_WIDTH
     );
 
-    charts[1] = SensorChart(
+    charts[CHART_IDX_PRESSURE] = SensorChart(
             "Gauge Pressure (cmH2O)",
             GAUGE_PRESSURE_CHART_MIN_VALUE,
             GAUGE_PRESSURE_CHART_MAX_VALUE,
@@ -121,8 +121,8 @@ void MainScreen::generate_charts()
     lv_obj_t* screen_container = SCR_C(VISUAL_AREA_2);
     lv_obj_t* chart_container = lv_obj_get_child(screen_container, 0);
 
-    charts[0].generate_chart(chart_container, TIDAL_VOLUME);
-    charts[1].generate_chart(chart_container, CUR_PRESSURE);
+    charts[CHART_IDX_FLOW].generate_chart(chart_container, FLOW);
+    charts[CHART_IDX_PRESSURE].generate_chart(chart_container, CUR_PRESSURE);
 }
 
 const SensorChart* MainScreen::get_chart(uint8_t idx)
