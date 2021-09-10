@@ -82,7 +82,9 @@ void SensorChart::add_data_point(double data) const
     }
     lv_chart_series_t* series = lv_chart_get_series_next(chart, nullptr);
 
-    lv_chart_set_next_value(chart, series, data);
+    uint16_t point_count = lv_chart_get_point_count(chart);
+    series->y_points[series->start_point] = data;
+    series->start_point = (series->start_point + 1) % point_count;
 }
 
 bool SensorChart::should_refresh()
