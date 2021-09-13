@@ -93,12 +93,12 @@ void setup_visual_2()
 
     lv_obj_t* chart_holder = lv_obj_create(visual_area_2);
     lv_obj_add_style(chart_holder, STYLE_PTR_CM(CHART_HOLDER), LV_PART_MAIN);
-//    lv_obj_set_style_pad_all(chart_holder, 10 px, LV_PART_MAIN);
+    //    lv_obj_set_style_pad_all(chart_holder, 10 px, LV_PART_MAIN);
 
     lv_obj_t* spacer = lv_obj_create(visual_area_2);
     lv_obj_add_style(spacer, STYLE_PTR_CM(SPACER), LV_PART_MAIN);
 
-   setup_alert_box();
+    setup_alert_box();
 }
 
 /*******************************************************************/
@@ -365,7 +365,7 @@ void setup_ie_controls()
     lv_obj_t* text_container = lv_obj_create(obj);
     auto change_selected_cb = [](lv_event_t* evt) {
         if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-                || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+              || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
             return;
         }
         toggle_ie_select();
@@ -620,10 +620,10 @@ void add_start_button()
             else {
                 lv_label_set_text_fmt(btn_label, "Standby");
                 control_change_state(States::ST_INSPR);
-            }
 #if ENABLE_CONTROL
-            control_write_ventilator_params();
+                control_write_ventilator_params();
 #endif
+            }
         }
     };
 
@@ -655,8 +655,7 @@ void add_mute_button()
                 control_toggle_alarm_snooze();
             },
             LV_EVENT_VALUE_CHANGED,
-            nullptr
-    );
+            nullptr);
 }
 
 lv_obj_t* get_start_button()
@@ -735,7 +734,6 @@ static void on_readout_update(lv_event_t* evt)
 
 void clear_top_alert_cb(lv_event_t* evt)
 {
-
 }
 
 /************************************************/
@@ -875,7 +873,7 @@ static void readout_update_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 static void control_press_cb(AdjustableValue* this_ptr, lv_event_t* evt)
 {
     if (!(evt->code == LV_EVENT_PRESSED || evt->code == LV_EVENT_LONG_PRESSED
-            || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
+          || evt->code == LV_EVENT_LONG_PRESSED_REPEAT)) {
         return;
     }
 
