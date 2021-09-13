@@ -13,8 +13,6 @@ struct __attribute__((packed)) uvent_settings {
     char serial[13];            // YYMMDDLXXXX
     uint16_t diff_pressure_type;// 0: ±0.07, 1: ±0.09
     uint16_t actuator_home_offset_adc_counts;
-    int32_t gpressure_offset_adc_counts;
-    int32_t dpressure_offset_adc_counts;
     /***************************************************/
     /*             Adjustable Value Storage            */
     /***************************************************/
@@ -44,8 +42,6 @@ private:
             .serial = UVENT_SERIAL_IDENTIFIER,
             .diff_pressure_type = PRESSURE_SENSOR_TYPE_0,
             .actuator_home_offset_adc_counts = 0,
-            .gpressure_offset_adc_counts = 0,
-            .dpressure_offset_adc_counts = 0,
             .tidal_volume = (uint16_t) (DEF_BAG_VOL_ML),
             .respiration_rate = DEF_BPM,
             .peep_limit = DEF_PEEP,

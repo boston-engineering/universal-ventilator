@@ -45,10 +45,6 @@ void Storage::display_storage()
     Serial.println(temp_set.diff_pressure_type);
     Serial.print("Actuator home offset: ");
     Serial.println(temp_set.actuator_home_offset_adc_counts);
-    Serial.print("Gauge Pressure offset: ");
-    Serial.println(temp_set.gpressure_offset_adc_counts);
-    Serial.print("Diff. Pressure offset: ");
-    Serial.println(temp_set.dpressure_offset_adc_counts);
     serial_printf("Tidal Volume: %d\n", temp_set.tidal_volume);
     serial_printf("Resp. Rate: %d\n", temp_set.respiration_rate);
     serial_printf("PEEP: %d\n", temp_set.peep_limit);
