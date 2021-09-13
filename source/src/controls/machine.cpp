@@ -240,7 +240,9 @@ void Machine::state_actuator_home()
         * Also do the check after a time delay as it takes time for
         * the drive to respond.
         * The || check for fault flag is for checking a forced fault through the parser.
+        * Only check if feedback position chip is enabled.
         */
+#if USE_AMS_FEEDBACK
         if (machine_timer > check_actuator_move_in_ticks) {
             if (((is_home == false) && (p_actuator->is_moving() == false)) || (actuator_force_fault_debug == true)) {
                 // Set the fault ID:
@@ -257,6 +259,7 @@ void Machine::state_actuator_home()
             // Service is_moving, so that the prev_position is valid, when the above condition is true.
             p_actuator->is_moving();
         }
+#endif
     }
 }
 
