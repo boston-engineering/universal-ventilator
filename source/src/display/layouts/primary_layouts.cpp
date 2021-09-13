@@ -620,10 +620,10 @@ void add_start_button()
             else {
                 lv_label_set_text_fmt(btn_label, "Standby");
                 control_change_state(States::ST_INSPR);
-            }
 #if ENABLE_CONTROL
-            control_write_ventilator_params();
+                control_write_ventilator_params();
 #endif
+            }
         }
     };
 
