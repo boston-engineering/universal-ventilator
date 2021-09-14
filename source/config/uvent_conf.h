@@ -196,7 +196,7 @@
 
 // Pressure(cmh2o)
 #define PRESSURE_MIN 0
-#define PRESSURE_MAX 40
+#define PRESSURE_MAX 41
 
 // The 'None' value for a readout.
 // Setting any adjustable value to this constant (or below) will force the label to show "--" as the value

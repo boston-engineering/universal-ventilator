@@ -78,8 +78,8 @@ public:
                                                      cycle_count_(cycle_count)
     {
         alarms_[HIGH_PRESSU] = Alarm("HIGH PRESSURE", 1, 2, EMERGENCY);
-        alarms_[LOW_PRESSUR] = Alarm("LOW PRES DISCONNECT?", 1, 1, EMERGENCY);
-        alarms_[BAD_PLATEAU] = Alarm("HIGH RESIST PRES", 1, 1, NOTIFY);
+        alarms_[LOW_PRESSUR] = Alarm("LOW PRES DISCONNECT", 1, 1, EMERGENCY);
+        alarms_[BAD_PLATEAU] = Alarm("HIGH RESIST PRESSURE", 1, 1, NOTIFY);
         alarms_[UNMET_VOLUM] = Alarm("UNMET TIDAL VOLUME", 1, 1, EMERGENCY);
         alarms_[NO_TIDAL_PR] = Alarm("NO TIDAL PRESSURE", 2, 1, EMERGENCY);
         alarms_[OVER_CURREN] = Alarm("OVER CURRENT FAULT", 1, 2, EMERGENCY);
@@ -137,7 +137,6 @@ public:
         alarms_[MECH_FAILUR].setCondition(value, *cycle_count_);
     }
 
-
     inline void turningOFF(const bool& value)
     {
         alarms_[TURNING_OFF].setCondition(value, *cycle_count_);
@@ -157,7 +156,6 @@ public:
     inline const bool& getOverCurrent() { return alarms_[OVER_CURREN].isON(); }
 
     inline const bool& getMechanicalFailure() { return alarms_[MECH_FAILUR].isON(); }
-
 
     inline void set_snooze_cb(void (*snooze_cb)())
     {
