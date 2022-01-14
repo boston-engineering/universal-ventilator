@@ -1,6 +1,21 @@
 # Introduction
 The folder contains code for the Universal Ventilator project.
 
+# Attributions
+
+The Universal Ventilator code uses the following repositories in some form or the other. 
+
+- [AccelStepper (GPL V3)](https://github.com/waspinator/AccelStepper)
+- [LVGL (MIT)](https://github.com/lvgl/lvgl)
+- [Due Timer (MIT)](https://github.com/ivanseidel/DueTimer)
+- [AMS_AS5048B (BSD)](https://github.com/boston-engineering/AMS_AS5048B)
+- [Sparkfun External EEPROM Lib (MIT)](https://github.com/sparkfun/SparkFun_External_EEPROM_Arduino_Library.git)
+- [CRC32 (MIT)](https://github.com/bakercp/CRC32)
+- [MIT e-vent (No license)](https://github.com/mit-drl/e-vent)
+- [Adafruit BusIO (MIT)](https://github.com/adafruit/Adafruit_BusIO)
+- [Adafruit-GFX-Library (BSD)](https://github.com/adafruit/Adafruit-GFX-Library)
+- [Adafruit STMPE610 (MIT)](https://github.com/adafruit/Adafruit_STMPE610)
+
 # Setup
 The hardware used in this project uses an Arduino Due. This project has been developed using VSCode and PlatformIO as an extension.
 
@@ -9,7 +24,9 @@ Both of the above are open source. Using PlatformIO with VSCode offers alot of f
 ## Hardware Setup
 
 ### Downloading code
+
 **Recommended**:
+
 The firmware for this project is verly large and occupies almost 90% of the flash. Using the USB port to download and/or debug code is not recommended as it will take almost 2-3 minutes to upload code.
 
 The recommended hardware to debug is the [Segger J-Link Educational probe](https://www.segger.com/products/debug-probes/j-link/models/j-link-edu-mini/).
@@ -17,11 +34,13 @@ The recommended hardware to debug is the [Segger J-Link Educational probe](https
 Connect the USB end of the J-Link to the PC and the 10-pin connector on the other end goes to the JTAG port on the Arduino Due.
 
 ### Debugging code
+
 Connect a USB cable between the PC and the USB connector away from the push button. This will give a serial port where print statements can be viewed and commands can be sent to the ventilator via a command set. 
 
 ## Environment Setup
 
 ### Install VSCode
+
 Install the latest VSCode for your architecture from [code.visualstudio.com](https://code.visualstudio.com/download)
 
 ### Install Platform IO IDE
@@ -43,12 +62,15 @@ In the VSCode toolbar, the environment may be labelled as `Default (Universal Ve
 To avoid confusion it is recommended to change your env from default.
 
 #### due-common
+
 The default option, uses the `Programming Port` to upload to the Arduino.
 
 #### due-jlink
+
 Select this if using a JLink device. Provides faster upload through the JTag port, as well as PlatformIO debugging features
 
 ### Serial Monitor
+
 Click the plug icon in the bottom toolbar to open a serial monitor window.
 
 ### Building the Project
@@ -61,6 +83,7 @@ Select the right arrow(→) to upload code to the Arduino.
 
 
 # Transforms
+
 ## Pressure Sensor Equations
 
 - Equation taken from data
