@@ -3,6 +3,8 @@ The folder contains code for the Universal Ventilator project.
 
 # Attributions
 
+The Universal Ventilator code uses the following repositories in some form or the other. 
+
 - [AccelStepper (GPL V3)](https://github.com/waspinator/AccelStepper)
 - [LVGL (MIT)](https://github.com/lvgl/lvgl)
 - [Due Timer (MIT)](https://github.com/ivanseidel/DueTimer)
@@ -10,6 +12,9 @@ The folder contains code for the Universal Ventilator project.
 - [Sparkfun External EEPROM Lib (MIT)](https://github.com/sparkfun/SparkFun_External_EEPROM_Arduino_Library.git)
 - [CRC32 (MIT)](https://github.com/bakercp/CRC32)
 - [MIT e-vent (No license)](https://github.com/mit-drl/e-vent)
+- [Adafruit BusIO (MIT)](https://github.com/adafruit/Adafruit_BusIO)
+- [Adafruit-GFX-Library (BSD)](https://github.com/adafruit/Adafruit-GFX-Library)
+- [Adafruit STMPE610 (MIT)](https://github.com/adafruit/Adafruit_STMPE610)
 
 # Setup
 The hardware used in this project uses an Arduino Due. This project has been developed using VSCode and PlatformIO as an extension.
